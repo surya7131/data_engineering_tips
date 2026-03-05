@@ -4,322 +4,797 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snowflake & Data Engineering Interview Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #0d0f14;
+            --surface: #13161d;
+            --surface2: #1a1e28;
+            --surface3: #1f2433;
+            --border: #252a38;
+            --border2: #2e3448;
+            --accent: #3b82f6;
+            --accent2: #60a5fa;
+            --accent-glow: rgba(59,130,246,0.15);
+            --green: #10b981;
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --pink: #ec4899;
+            --purple: #a855f7;
+            --text: #e2e8f0;
+            --text2: #94a3b8;
+            --text3: #64748b;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'Inter', sans-serif;
+            --display: 'Syne', sans-serif;
+            --sidebar-w: 280px;
+            --header-h: 64px;
+            --pre-bg: #080a0f;
+            --pre-color: #c9d1d9;
+            --top-bar-bg: rgba(13,15,20,0.92);
         }
-        
+
+        :root.light {
+            --bg: #f0f2f7;
+            --surface: #ffffff;
+            --surface2: #e8ecf4;
+            --surface3: #dde2ee;
+            --border: #d4d9e8;
+            --border2: #c2c9de;
+            --accent: #2563eb;
+            --accent2: #3b82f6;
+            --accent-glow: rgba(37,99,235,0.10);
+            --green: #059669;
+            --amber: #d97706;
+            --red: #dc2626;
+            --pink: #db2777;
+            --purple: #9333ea;
+            --text: #0f172a;
+            --text2: #334155;
+            --text3: #64748b;
+            --pre-bg: #1e2030;
+            --pre-color: #cdd6f4;
+            --top-bar-bg: rgba(240,242,247,0.92);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.7;
-            color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        
-        .container {
-            width: 100%;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            padding: 50px 40px;
+
+        /* ── TOP HEADER ── */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--header-h);
+            background: var(--top-bar-bg);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            gap: 16px;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
-        
-        header {
-            border-bottom: 4px solid #007acc;
-            padding-bottom: 30px;
-            margin-bottom: 50px;
-            text-align: center;
+
+        .top-bar-logo {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 1.15em;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        h1 {
-            color: #007acc;
-            font-size: 2.8em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1.2em;
-            font-weight: 300;
-        }
-        
-        /* TOC Styling */
-        .toc-container {
-            background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
-            border: 2px solid #007acc;
+
+        .top-bar-logo .logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--accent), #818cf8);
             border-radius: 8px;
-            padding: 35px;
-            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
-        
-        .toc-container h2 {
-            color: #007acc;
-            font-size: 1.8em;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        
-        #toc ul {
-            list-style: none;
-            columns: 2;
+
+        .top-bar-meta {
+            font-size: 0.78em;
+            color: var(--text3);
+            font-family: var(--mono);
+            margin-left: auto;
+            display: flex;
+            align-items: center;
             gap: 20px;
         }
-        
-        #toc li {
-            margin-bottom: 12px;
-            break-inside: avoid;
-            background: white;
-            padding: 10px;
-            border-radius: 4px;
-            border-left: 3px solid #0066cc;
+
+        .progress-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 0.75em;
+            color: var(--text2);
         }
-        
-        #toc a {
-            color: #0066cc;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
+
+        .progress-bar-mini {
+            width: 80px;
+            height: 4px;
+            background: var(--border2);
+            border-radius: 2px;
+            overflow: hidden;
         }
-        
-        #toc a:hover {
-            color: #007acc;
-            text-decoration: underline;
+
+        .progress-bar-mini-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
         }
-        
-        /* Question Styling */
-        .question {
-            margin-bottom: 45px;
-            border-left: 5px solid #007acc;
-            padding-left: 25px;
-            padding-right: 15px;
-            padding-top: 15px;
-            padding-bottom: 15px;
-            scroll-margin-top: 100px;
-            background: #fafbfc;
-            border-radius: 4px;
+
+        .sidebar-toggle {
+            display: none;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 14px;
         }
-        
-        .question-number {
-            font-size: 0.9em;
-            color: #e74c3c;
-            font-weight: bold;
+
+        /* ── LAYOUT ── */
+        .layout {
+            display: flex;
+            padding-top: var(--header-h);
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            position: fixed;
+            top: var(--header-h);
+            left: 0;
+            bottom: 0;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0 40px;
+            z-index: 50;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border2) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+        .sidebar-heading {
+            padding: 0 20px 12px;
+            font-family: var(--mono);
+            font-size: 0.65em;
+            color: var(--text3);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
         }
-        
-        .question-title {
-            font-size: 1.5em;
-            color: #2980b9;
-            margin: 12px 0;
-            font-weight: 700;
-            line-height: 1.4;
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 20px;
+            text-decoration: none;
+            color: var(--text3);
+            font-size: 0.78em;
+            font-weight: 400;
+            transition: all 0.15s ease;
+            border-left: 2px solid transparent;
+            line-height: 1.3;
         }
-        
+
+        .sidebar-item:hover {
+            color: var(--text2);
+            background: var(--surface2);
+            border-left-color: var(--border2);
+        }
+
+        .sidebar-item.active {
+            color: var(--accent2);
+            background: var(--accent-glow);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+
+        .sidebar-item .q-num {
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--text3);
+            min-width: 24px;
+            transition: color 0.15s;
+        }
+
+        .sidebar-item.active .q-num { color: var(--accent); }
+        .sidebar-item:hover .q-num { color: var(--text2); }
+
+        /* ── MAIN CONTENT ── */
+        .main {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            padding: 40px 48px 80px;
+            max-width: calc(100% - var(--sidebar-w));
+        }
+
+        /* ── HERO ── */
+        .hero {
+            margin-bottom: 52px;
+            padding: 40px;
+            background: linear-gradient(135deg, var(--surface2) 0%, rgba(59,130,246,0.05) 100%);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 240px; height: 240px;
+            background: radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.72em;
+            font-family: var(--mono);
+            color: var(--accent2);
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: 2.4em;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent2), #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text2);
+            font-size: 1em;
+            font-weight: 300;
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-num {
+            font-family: var(--display);
+            font-size: 1.6em;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.72em;
+            color: var(--text3);
+            margin-top: 2px;
+        }
+
+        .stat-divider {
+            width: 1px;
+            background: var(--border2);
+            align-self: stretch;
+        }
+
+        /* ── QUESTIONS ── */
+        .question {
+            margin-bottom: 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            scroll-margin-top: calc(var(--header-h) + 16px);
+            transition: border-color 0.2s;
+        }
+
+        .question:hover {
+            border-color: var(--border2);
+        }
+
+        .question:target {
+            border-color: rgba(59,130,246,0.4);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+        }
+
+        .question-header {
+            padding: 20px 28px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .q-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 0.72em;
+            font-weight: 600;
+            color: var(--accent2);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .question-meta {
+            flex: 1;
+        }
+
+
+
+        .question-toggle {
+            color: var(--text3);
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: transform 0.25s ease;
+        }
+
+        .question.collapsed .question-toggle {
+            transform: rotate(-90deg);
+        }
+
+        /* ── ANSWER ── */
         .answer {
-            margin-top: 20px;
-            color: #333;
+            padding: 24px 28px 20px;
+            color: var(--text2);
+            font-size: 0.92em;
             line-height: 1.8;
         }
-        
+
         .answer p {
-            margin-bottom: 15px;
-            text-align: justify;
+            margin-bottom: 14px;
         }
-        
+
         .answer strong {
-            color: #0066cc;
+            color: var(--text);
             font-weight: 600;
         }
-        
+
+        .answer ul, .answer ol {
+            margin: 10px 0 16px 20px;
+            padding-left: 4px;
+        }
+
+        .answer li {
+            margin-bottom: 6px;
+            padding-left: 4px;
+        }
+
+        /* ── CODE BLOCKS ── */
         pre {
-            background: #f5f7fa;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
+            background: var(--pre-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px 20px;
             overflow-x: auto;
-            margin: 15px 0;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 0.85em;
-            line-height: 1.5;
-            color: #333;
+            margin: 14px 0;
+            font-family: var(--mono);
+            font-size: 0.82em;
+            line-height: 1.65;
+            color: var(--pre-color);
+            position: relative;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
-        
+
+        pre::before {
+            content: 'SQL';
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 0.65em;
+            font-family: var(--mono);
+            color: var(--text3);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
         code {
-            background: #f5f7fa;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            color: #d63384;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 0.85em;
+            color: var(--accent2);
         }
-        
-        ul, ol {
-            margin: 15px 0 15px 30px;
-            padding-left: 10px;
-        }
-        
-        li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-        
+
+        /* ── TABLES ── */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin: 16px 0;
+            font-size: 0.88em;
         }
-        
+
         table th {
-            background: linear-gradient(135deg, #007acc 0%, #0066cc 100%);
-            color: white;
-            padding: 12px 15px;
+            background: var(--surface2);
+            color: var(--text);
+            padding: 10px 14px;
             text-align: left;
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 0.85em;
+            letter-spacing: 0.02em;
+            border-bottom: 1px solid var(--border2);
         }
-        
+
+        table th:first-child { border-radius: 6px 0 0 0; }
+        table th:last-child { border-radius: 0 6px 0 0; }
+
         table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text2);
+            vertical-align: top;
         }
-        
-        table tr:hover {
-            background: #f9f9f9;
-        }
-        
-        table tr:last-child td {
-            border-bottom: none;
-        }
-        
+
+        table tr:last-child td { border-bottom: none; }
+        table tr:hover td { background: rgba(255,255,255,0.01); }
+
+        /* ── HIGHLIGHT BLOCK ── */
         .highlight {
-            background: #e7f3ff;
-            padding: 12px 15px;
-            border-left: 4px solid #0066cc;
-            margin: 15px 0;
-            border-radius: 4px;
-        }
-        
-        .back-to-toc {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 8px 15px;
-            background: linear-gradient(135deg, #007acc 0%, #0066cc 100%);
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
+            background: rgba(59,130,246,0.06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 6px 6px 0;
+            padding: 12px 16px;
+            margin: 14px 0;
             font-size: 0.9em;
-            transition: all 0.3s ease;
-            font-weight: 500;
         }
-        
+
+        /* ── BACK TO TOP ── */
+        .back-to-toc {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 7px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.78em;
+            font-family: var(--mono);
+            color: var(--text3);
+            transition: all 0.15s;
+        }
+
         .back-to-toc:hover {
-            background: linear-gradient(135deg, #0066cc 0%, #005aa3 100%);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            color: var(--accent2);
+            border-color: rgba(59,130,246,0.4);
+            background: var(--accent-glow);
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 1.8em;
-            }
-            
-            .question-title {
-                font-size: 1.2em;
-            }
-            
-            #toc ul {
-                columns: 1;
-            }
-            
-            table {
-                font-size: 0.9em;
-            }
+
+        /* ── SCROLL TO TOP BUTTON ── */
+        .scroll-top {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 40px; height: 40px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text2);
+            font-size: 16px;
+            transition: all 0.2s;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 200;
         }
-        
-        html {
-            scroll-behavior: smooth;
+
+        .scroll-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-top:hover {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--accent2);
+        }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 40px;
+            padding: 5px 5px 5px 12px;
+            cursor: pointer;
+            transition: background 0.3s ease, border-color 0.3s ease;
+            margin-left: 12px;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .theme-toggle-label {
+            font-family: var(--mono);
+            font-size: 0.68em;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--text3);
+            user-select: none;
+            transition: color 0.3s ease;
+            min-width: 30px;
+        }
+
+        .theme-toggle-knob {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+
+        .theme-toggle:hover .theme-toggle-knob {
+            transform: scale(1.1);
+        }
+
+        /* ── QUESTION TITLE — improved readability ── */
+        .question-title {
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+            font-size: 1.05em;
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.4;
+            letter-spacing: -0.005em;
+        }
+
+        :root.light .question-title {
+            color: #0f172a;
+        }
+
+        .question-number {
+            font-family: var(--mono);
+            font-size: 0.68em;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 5px;
+        }
+
+        /* ── SECTION DIVIDERS ── */
+        .section-label {
+            font-family: var(--mono);
+            font-size: 0.68em;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 6px 0 12px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+                z-index: 200;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 24px 20px 60px;
+            }
+
+            .sidebar-toggle { display: block; }
+
+            .hero h1 { font-size: 1.8em; }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 150;
+            }
+
+            .sidebar-overlay.visible { display: block; }
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 24px; }
+            .main { padding: 16px 16px 60px; }
+            .answer { padding: 18px 20px 16px; }
+            .question-header { padding: 16px 20px 12px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📊 Snowflake & Data Engineering Interview Guide</h1>
-            <p class="subtitle">50 Essential Questions with Comprehensive Answers</p>
-        </header>
 
-        <div id="toc" class="toc-container">
-            <h2>📘 Table of Contents</h2>
-            <ul>
-                <li><a href="#q1">Q1: Compute Hours Query</a></li>
-                <li><a href="#q2">Q2: Snowflake Architecture</a></li>
-                <li><a href="#q3">Q3: Time-Travel Features</a></li>
-                <li><a href="#q4">Q4: Query Performance Optimization</a></li>
-                <li><a href="#q5">Q5: Partitions & Micro-partitions</a></li>
-                <li><a href="#q6">Q6: SCD Scenarios</a></li>
-                <li><a href="#q7">Q7: JSON Data Ingestion</a></li>
-                <li><a href="#q8">Q8: Large File Ingestion (50GB)</a></li>
-                <li><a href="#q9">Q9: Internal vs External Stages</a></li>
-                <li><a href="#q10">Q10: Data Pipeline Scheduling</a></li>
-                <li><a href="#q11">Q11: Stored Procedures</a></li>
-                <li><a href="#q12">Q12: User Defined Functions</a></li>
-                <li><a href="#q13">Q13: Git Basics</a></li>
-                <li><a href="#q14">Q14: QUALIFY Clause</a></li>
-                <li><a href="#q15">Q15: Snowflake Benefits</a></li>
-                <li><a href="#q16">Q16: CDC Fundamentals</a></li>
-                <li><a href="#q17">Q17: Python - List and Tuple</a></li>
-                <li><a href="#q18">Q18: File Formats (AVRO, Parquet, ORC)</a></li>
-                <li><a href="#q19">Q19: CTE vs Temp Tables</a></li>
-                <li><a href="#q20">Q20: Table Types in Snowflake</a></li>
-                <li><a href="#q21">Q21: Schema Changes</a></li>
-                <li><a href="#q22">Q22: Ephemeral vs Permanent Tables</a></li>
-                <li><a href="#q23">Q23: CDC Implementation</a></li>
-                <li><a href="#q24">Q24: DBT - The Data Build Tool</a></li>
-                <li><a href="#q25">Q25: Continuous Data Loading</a></li>
-                <li><a href="#q26">Q26: End-to-End Data Pipeline</a></li>
-                <li><a href="#q27">Q27: CDC Use Cases</a></li>
-                <li><a href="#q28">Q28: Snowflake Tasks</a></li>
-                <li><a href="#q29">Q29: Zero Copy Clone</a></li>
-                <li><a href="#q30">Q30: Timezone Conversion</a></li>
-                <li><a href="#q31">Q31: Clustering Keys</a></li>
-                <li><a href="#q32">Q32: Performance Monitoring</a></li>
-                <li><a href="#q33">Q33: Ataccama vs Collibra</a></li>
-                <li><a href="#q34">Q34: Snowpipe Integration</a></li>
-                <li><a href="#q35">Q35: Salary Queries (Window Functions)</a></li>
-                <li><a href="#q36">Q36: Gender Swap Query</a></li>
-                <li><a href="#q37">Q37: DBT Project Structure</a></li>
-                <li><a href="#q38">Q38: MERGE vs UPSERT</a></li>
-                <li><a href="#q39">Q39: Data Masking</a></li>
-                <li><a href="#q40">Q40: Hashing vs Encryption</a></li>
-                <li><a href="#q41">Q41: Snowflake S3 Integration</a></li>
-                <li><a href="#q42">Q42: DBT Models & Tests</a></li>
-                <li><a href="#q43">Q43: DBT Materializations</a></li>
-                <li><a href="#q44">Q44: DBT Dependencies</a></li>
-                <li><a href="#q45">Q45: Jinja in DBT</a></li>
-                <li><a href="#q46">Q46: Data Governance</a></li>
-                <li><a href="#q47">Q47: Data Quality Testing</a></li>
-                <li><a href="#q48">Q48: Modern Data Stack</a></li>
-                <li><a href="#q49">Q49: Future Trends</a></li>
-                <li><a href="#q50">Q50: DBT Snapshots</a></li>
-            </ul>
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="top-bar-logo">
+            <div class="logo-icon">❄</div>
+            <span>DE Interview Guide</span>
         </div>
+        <div class="top-bar-meta">
+            <div class="progress-pill">
+                <span id="progress-label">0 / 50 viewed</span>
+                <div class="progress-bar-mini">
+                    <div class="progress-bar-mini-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle theme">
+                <span class="theme-toggle-label" id="themeLabel">DARK</span>
+                <span class="theme-toggle-knob" id="themeKnob">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-heading">50 Questions</div>
+            <a href="#q1" class="sidebar-item" data-q="q1"><span class="q-num">01</span> Compute Hours Query</a>
+            <a href="#q2" class="sidebar-item" data-q="q2"><span class="q-num">02</span> Snowflake Architecture</a>
+            <a href="#q3" class="sidebar-item" data-q="q3"><span class="q-num">03</span> Time-Travel Features</a>
+            <a href="#q4" class="sidebar-item" data-q="q4"><span class="q-num">04</span> Query Performance</a>
+            <a href="#q5" class="sidebar-item" data-q="q5"><span class="q-num">05</span> Micro-partitions</a>
+            <a href="#q6" class="sidebar-item" data-q="q6"><span class="q-num">06</span> SCD Types 0–4</a>
+            <a href="#q7" class="sidebar-item" data-q="q7"><span class="q-num">07</span> JSON Ingestion</a>
+            <a href="#q8" class="sidebar-item" data-q="q8"><span class="q-num">08</span> Large File (50GB)</a>
+            <a href="#q9" class="sidebar-item" data-q="q9"><span class="q-num">09</span> Internal vs External Stages</a>
+            <a href="#q10" class="sidebar-item" data-q="q10"><span class="q-num">10</span> Pipeline Scheduling</a>
+            <a href="#q11" class="sidebar-item" data-q="q11"><span class="q-num">11</span> Stored Procedures</a>
+            <a href="#q12" class="sidebar-item" data-q="q12"><span class="q-num">12</span> UDFs</a>
+            <a href="#q13" class="sidebar-item" data-q="q13"><span class="q-num">13</span> Git Basics</a>
+            <a href="#q14" class="sidebar-item" data-q="q14"><span class="q-num">14</span> QUALIFY Clause</a>
+            <a href="#q15" class="sidebar-item" data-q="q15"><span class="q-num">15</span> Snowflake Benefits</a>
+            <a href="#q16" class="sidebar-item" data-q="q16"><span class="q-num">16</span> CDC Fundamentals</a>
+            <a href="#q17" class="sidebar-item" data-q="q17"><span class="q-num">17</span> Python: List vs Tuple</a>
+            <a href="#q18" class="sidebar-item" data-q="q18"><span class="q-num">18</span> AVRO / Parquet / ORC</a>
+            <a href="#q19" class="sidebar-item" data-q="q19"><span class="q-num">19</span> CTE vs Temp Tables</a>
+            <a href="#q20" class="sidebar-item" data-q="q20"><span class="q-num">20</span> Table Types</a>
+            <a href="#q21" class="sidebar-item" data-q="q21"><span class="q-num">21</span> Schema Changes</a>
+            <a href="#q22" class="sidebar-item" data-q="q22"><span class="q-num">22</span> Ephemeral vs Permanent</a>
+            <a href="#q23" class="sidebar-item" data-q="q23"><span class="q-num">23</span> CDC in Snowflake</a>
+            <a href="#q24" class="sidebar-item" data-q="q24"><span class="q-num">24</span> DBT Overview</a>
+            <a href="#q25" class="sidebar-item" data-q="q25"><span class="q-num">25</span> Continuous Loading</a>
+            <a href="#q26" class="sidebar-item" data-q="q26"><span class="q-num">26</span> End-to-End Pipeline</a>
+            <a href="#q27" class="sidebar-item" data-q="q27"><span class="q-num">27</span> CDC vs Full Loads</a>
+            <a href="#q28" class="sidebar-item" data-q="q28"><span class="q-num">28</span> Snowflake Tasks</a>
+            <a href="#q29" class="sidebar-item" data-q="q29"><span class="q-num">29</span> Zero Copy Clone</a>
+            <a href="#q30" class="sidebar-item" data-q="q30"><span class="q-num">30</span> Timezone Conversion</a>
+            <a href="#q31" class="sidebar-item" data-q="q31"><span class="q-num">31</span> Clustering Keys</a>
+            <a href="#q32" class="sidebar-item" data-q="q32"><span class="q-num">32</span> Performance Monitoring</a>
+            <a href="#q33" class="sidebar-item" data-q="q33"><span class="q-num">33</span> Ataccama vs Collibra</a>
+            <a href="#q34" class="sidebar-item" data-q="q34"><span class="q-num">34</span> Snowpipe</a>
+            <a href="#q35" class="sidebar-item" data-q="q35"><span class="q-num">35</span> Window Functions</a>
+            <a href="#q36" class="sidebar-item" data-q="q36"><span class="q-num">36</span> Gender Swap Query</a>
+            <a href="#q37" class="sidebar-item" data-q="q37"><span class="q-num">37</span> DBT Project Structure</a>
+            <a href="#q38" class="sidebar-item" data-q="q38"><span class="q-num">38</span> MERGE vs UPSERT</a>
+            <a href="#q39" class="sidebar-item" data-q="q39"><span class="q-num">39</span> Data Masking</a>
+            <a href="#q40" class="sidebar-item" data-q="q40"><span class="q-num">40</span> Hashing vs Encryption</a>
+            <a href="#q41" class="sidebar-item" data-q="q41"><span class="q-num">41</span> S3 Integration</a>
+            <a href="#q42" class="sidebar-item" data-q="q42"><span class="q-num">42</span> DBT Models & Tests</a>
+            <a href="#q43" class="sidebar-item" data-q="q43"><span class="q-num">43</span> DBT Materializations</a>
+            <a href="#q44" class="sidebar-item" data-q="q44"><span class="q-num">44</span> DBT Dependencies</a>
+            <a href="#q45" class="sidebar-item" data-q="q45"><span class="q-num">45</span> Jinja in DBT</a>
+            <a href="#q46" class="sidebar-item" data-q="q46"><span class="q-num">46</span> Data Governance</a>
+            <a href="#q47" class="sidebar-item" data-q="q47"><span class="q-num">47</span> Data Quality Testing</a>
+            <a href="#q48" class="sidebar-item" data-q="q48"><span class="q-num">48</span> Modern Data Stack</a>
+            <a href="#q49" class="sidebar-item" data-q="q49"><span class="q-num">49</span> Future Trends</a>
+            <a href="#q50" class="sidebar-item" data-q="q50"><span class="q-num">50</span> DBT Snapshots</a>
+        </nav>
+
+        <!-- MAIN -->
+        <main class="main" id="main-content">
+            <div class="hero">
+                <div class="hero-tag">❄ Interview Prep</div>
+                <h1>Snowflake &<br><span>Data Engineering</span></h1>
+                <p>50 essential questions with comprehensive answers. From architecture to DBT, CDC to data governance.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-num">50</div>
+                        <div class="stat-label">Questions</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <div class="stat-num">12</div>
+                        <div class="stat-label">Topics</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">SQL Examples</div>
+                    </div>
+                </div>
+            </div>
 
         <!-- Questions Start -->
 
         <div class="question" id="q1">
-            <div class="question-number">Question 1</div>
-            <div class="question-title">Write a Query to Get Compute Hours Consumed</div>
+            <div class="question-header">
+                <div class="q-badge">01</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 1</div>
+                    <div class="question-title">Write a Query to Get Compute Hours Consumed</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Calculate total compute hours consumed overall and by day using start/end event markers:</strong></p>
                 <pre>WITH EventSequence AS (
@@ -355,13 +830,19 @@ ORDER BY Compute_Date;</pre>
                     <li>Converts seconds to hours by dividing by 3600</li>
                     <li>Sums total and groups by date for daily breakdown</li>
                 </ul>
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q2">
-            <div class="question-number">Question 2</div>
-            <div class="question-title">Snowflake Architecture Explained</div>
+            <div class="question-header">
+                <div class="q-badge">02</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 2</div>
+                    <div class="question-title">Snowflake Architecture Explained</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Snowflake uses a unique three-layer shared architecture that separates compute from storage.</strong></p>
                 
@@ -375,13 +856,19 @@ ORDER BY Compute_Date;</pre>
                 <p>The orchestration brain handling authentication, metadata management, query optimization, transaction management, infrastructure provisioning, and security. Automatically scales and remains invisible to users.</p>
                 
                 <p><strong>Key Benefit:</strong> Compute and storage scale independently. Add storage without increasing compute costs. Multiple teams can work simultaneously without resource contention.</p>
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q3">
-            <div class="question-number">Question 3</div>
-            <div class="question-title">Time-Travel Features: OFFSET, TIMESTAMP, STATEMENT</div>
+            <div class="question-header">
+                <div class="q-badge">03</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 3</div>
+                    <div class="question-title">Time-Travel Features: OFFSET, TIMESTAMP, STATEMENT</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Snowflake's Time Travel allows querying data as it existed at any point in the past (default 1 day, up to 90 days for Enterprise).</strong></p>
                 
@@ -412,13 +899,19 @@ SELECT * FROM my_table BEFORE (STATEMENT => 'query_id_123');</pre>
                     <li>Debugging failed transformations</li>
                     <li>Point-in-time analysis</li>
                 </ul>
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q4">
-            <div class="question-number">Question 4</div>
-            <div class="question-title">Query Performance Optimization Strategy</div>
+            <div class="question-header">
+                <div class="q-badge">04</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 4</div>
+                    <div class="question-title">Query Performance Optimization Strategy</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Five-step approach to optimize slow queries:</strong></p>
                 
@@ -468,13 +961,19 @@ SELECT customer_id, order_id, amount FROM huge_table
 WHERE created_date = '2025-01-01'  -- Filter early
 QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_date DESC) = 1;</pre>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q5">
-            <div class="question-number">Question 5</div>
-            <div class="question-title">Partitions vs Micro-partitions: Key Differences</div>
+            <div class="question-header">
+                <div class="q-badge">05</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 5</div>
+                    <div class="question-title">Partitions vs Micro-partitions: Key Differences</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Partitions are logical divisions; Micro-partitions are Snowflake's intelligent physical chunks.</strong></p>
                 
@@ -529,13 +1028,19 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_date DESC) 
                         <td>Intelligent with Metadata</td>
                     </tr>
                 </table>
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q6">
-            <div class="question-number">Question 6</div>
-            <div class="question-title">SCD Types 0-4: Change Data Handling</div>
+            <div class="question-header">
+                <div class="q-badge">06</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 6</div>
+                    <div class="question-title">SCD Types 0-4: Change Data Handling</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Slowly Changing Dimensions (SCD) are methods to handle data that changes over time in dimension tables.</strong></p>
                 
@@ -573,7 +1078,7 @@ When change happens: move current to previous, update current value</pre>
                     <li><strong>Type 1 for:</strong> Attributes that don't need historical tracking</li>
                     <li><strong>Type 2 via dbt snapshots:</strong> Automated in modern workflows</li>
                 </ul>
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
@@ -581,8 +1086,14 @@ When change happens: move current to previous, update current value</pre>
         <!-- Due to space, showing sample of remaining with same structure -->
 
         <div class="question" id="q7">
-            <div class="question-number">Question 7</div>
-            <div class="question-title">How to Ingest JSON Data into Snowflake</div>
+            <div class="question-header">
+                <div class="q-badge">07</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 7</div>
+                    <div class="question-title">How to Ingest JSON Data into Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Six-step process to ingest JSON data:</strong></p>
                 
@@ -634,13 +1145,19 @@ SELECT
     json_data:contact.email::VARCHAR as email
 FROM raw_json;</pre>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q8">
-            <div class="question-number">Question 8</div>
-            <div class="question-title">How to Ingest 50GB File into Snowflake</div>
+            <div class="question-header">
+                <div class="q-badge">08</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 8</div>
+                    <div class="question-title">How to Ingest 50GB File into Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Strategy for large file ingestion:</strong></p>
                 
@@ -671,13 +1188,19 @@ PURGE = TRUE;</pre>
                     <li><strong>Monitor progress:</strong> Check query history and COPY_HISTORY view</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q9">
-            <div class="question-number">Question 9</div>
-            <div class="question-title">Internal vs External Stages</div>
+            <div class="question-header">
+                <div class="q-badge">09</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 9</div>
+                    <div class="question-title">Internal vs External Stages</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Snowflake supports two types of stages for file management:</strong></p>
                 
@@ -731,13 +1254,19 @@ PURGE = TRUE;</pre>
                     </tr>
                 </table>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q10">
-            <div class="question-number">Question 10</div>
-            <div class="question-title">Scheduling Data Pipelines in Snowflake</div>
+            <div class="question-header">
+                <div class="q-badge">10</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 10</div>
+                    <div class="question-title">Scheduling Data Pipelines in Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Two approaches: Native Snowflake Tasks or External Orchestration</strong></p>
                 
@@ -781,13 +1310,19 @@ ALTER TASK transform_task RESUME;</pre>
                 
                 <p><strong>When to use External:</strong> Multiple systems, complex dependencies, error recovery, ML pipelines</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q11">
-            <div class="question-number">Question 11</div>
-            <div class="question-title">Stored Procedures Fundamentals</div>
+            <div class="question-header">
+                <div class="q-badge">11</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 11</div>
+                    <div class="question-title">Stored Procedures Fundamentals</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is a Stored Procedure?</strong></p>
                 <p>A set of SQL statements and procedural logic compiled and stored in the database. Executes by name with parameters. Encapsulates complex business logic.</p>
@@ -836,13 +1371,19 @@ CALL calculate_monthly_sales('2025-01-01');</pre>
                     <li>Prefer DBT for transformations in modern stacks</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q12">
-            <div class="question-number">Question 12</div>
-            <div class="question-title">User Defined Functions (UDFs)</div>
+            <div class="question-header">
+                <div class="q-badge">12</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 12</div>
+                    <div class="question-title">User Defined Functions (UDFs)</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is a UDF?</strong></p>
                 <p>A custom-built function that encapsulates logic reusable in SQL queries, similar to built-in functions.</p>
@@ -881,13 +1422,19 @@ FROM orders;</pre>
                     <li>Masking sensitive data</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q13">
-            <div class="question-number">Question 13</div>
-            <div class="question-title">Git Fundamentals for Data Teams</div>
+            <div class="question-header">
+                <div class="q-badge">13</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 13</div>
+                    <div class="question-title">Git Fundamentals for Data Teams</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is Git?</strong></p>
                 <p>A free, open-source distributed version control system that tracks code changes, enables collaboration, and maintains complete history.</p>
@@ -921,13 +1468,19 @@ git merge feature/new-model                           # Merge feature</pre>
                     <li>Easy rollback if issues occur</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q14">
-            <div class="question-number">Question 14</div>
-            <div class="question-title">QUALIFY Clause in Snowflake</div>
+            <div class="question-header">
+                <div class="q-badge">14</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 14</div>
+                    <div class="question-title">QUALIFY Clause in Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is QUALIFY?</strong></p>
                 <p>Unique Snowflake clause that filters window function results without subqueries or CTEs. Syntax sugar for cleaner SQL.</p>
@@ -965,13 +1518,19 @@ QUALIFY salary > LAG(salary) OVER (PARTITION BY employee_id ORDER BY year);</pre
                     <li>Performance improvements in some cases</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q15">
-            <div class="question-number">Question 15</div>
-            <div class="question-title">Key Benefits of Snowflake</div>
+            <div class="question-header">
+                <div class="q-badge">15</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 15</div>
+                    <div class="question-title">Key Benefits of Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Why Snowflake is the Modern Data Warehouse Choice:</strong></p>
                 
@@ -1014,13 +1573,19 @@ UNDROP TABLE my_table;</pre>
                 <p><strong>Cost Comparison Example:</strong></p>
                 <p>Traditional DW: Pay $100K/year for hardware (month 1-12). Snowflake: Pay $20K for actual compute, scale on demand.</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q16">
-            <div class="question-number">Question 16</div>
-            <div class="question-title">CDC (Change Data Capture): Concept & Mechanisms</div>
+            <div class="question-header">
+                <div class="q-badge">16</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 16</div>
+                    <div class="question-title">CDC (Change Data Capture): Concept & Mechanisms</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is CDC?</strong></p>
                 <p>A technique (not a tool) that identifies and captures INSERT/UPDATE/DELETE changes from source systems and delivers to target efficiently, instead of reprocessing entire datasets.</p>
@@ -1063,13 +1628,19 @@ WHERE last_updated_timestamp > previous_check_time;</pre>
                 
                 <p><strong>Use Cases:</strong> Real-time dashboards, microservices sync, database migration with zero downtime</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q17">
-            <div class="question-number">Question 17</div>
-            <div class="question-title">Python: Lists vs Tuples</div>
+            <div class="question-header">
+                <div class="q-badge">17</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 17</div>
+                    <div class="question-title">Python: Lists vs Tuples</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>List [] - Mutable (Changeable)</strong></p>
                 <pre>my_list = [10, "apple", 3.14, [1, 2]]  # Can contain mixed types
@@ -1135,13 +1706,19 @@ cache = {(0, 0): "origin", (1, 1): "diagonal"}</pre>
                     </tr>
                 </table>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q18">
-            <div class="question-number">Question 18</div>
-            <div class="question-title">File Formats: AVRO, Parquet, ORC</div>
+            <div class="question-header">
+                <div class="q-badge">18</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 18</div>
+                    <div class="question-title">File Formats: AVRO, Parquet, ORC</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Three major columnar/serialization formats and when to use each:</strong></p>
                 
@@ -1206,13 +1783,19 @@ cache = {(0, 0): "origin", (1, 1): "diagonal"}</pre>
                 
                 <p><strong>Recommendation:</strong> Use Parquet for data lakes and Snowflake. Use AVRO for streaming. ORC only if using Hadoop.</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q19">
-            <div class="question-number">Question 19</div>
-            <div class="question-title">CTE vs Temporary Tables</div>
+            <div class="question-header">
+                <div class="q-badge">19</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 19</div>
+                    <div class="question-title">CTE vs Temporary Tables</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>CTE (WITH Clause) - Query Scope</strong></p>
                 <pre>WITH top_customers AS (
@@ -1276,13 +1859,19 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
                     </tr>
                 </table>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q20">
-            <div class="question-number">Question 20</div>
-            <div class="question-title">Snowflake Table Types</div>
+            <div class="question-header">
+                <div class="q-badge">20</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 20</div>
+                    <div class="question-title">Snowflake Table Types</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Permanent Table (Default)</strong></p>
                 <ul>
@@ -1341,7 +1930,7 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
                     </tr>
                 </table>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
@@ -1397,13 +1986,19 @@ SELECT
     COALESCE(new_column, default_value) AS new_column
 FROM raw_data;</pre>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q22">
-            <div class="question-number">Question 22</div>
-            <div class="question-title">Ephemeral vs Permanent Tables in DBT</div>
+            <div class="question-header">
+                <div class="q-badge">22</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 22</div>
+                    <div class="question-title">Ephemeral vs Permanent Tables in DBT</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Note: Ephemeral is a DBT concept, not a Snowflake feature</strong></p>
                 
@@ -1439,13 +2034,19 @@ GROUP BY customer_id</pre>
                     <li>Best for final marts and dimensions</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q23">
-            <div class="question-number">Question 23</div>
-            <div class="question-title">Implementing CDC in Snowflake (Without Tools)</div>
+            <div class="question-header">
+                <div class="q-badge">23</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 23</div>
+                    <div class="question-title">Implementing CDC in Snowflake (Without Tools)</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Two native approaches to implement Change Data Capture in Snowflake:</strong></p>
                 
@@ -1494,13 +2095,19 @@ WHEN NOT MATCHED AND s.METADATA$ACTION = 'INSERT' THEN INSERT ...;</pre>
                     <li>Automatic cleanup of consumed records</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q24">
-            <div class="question-number">Question 24</div>
-            <div class="question-title">DBT (Data Build Tool) - Complete Overview</div>
+            <div class="question-header">
+                <div class="q-badge">24</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 24</div>
+                    <div class="question-title">DBT (Data Build Tool) - Complete Overview</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is DBT?</strong></p>
                 <p>An open-source framework for transforming data in your warehouse using SQL and software engineering best practices. It enables analysts to write, test, and document SQL transformations with version control.</p>
@@ -1541,13 +2148,19 @@ dbt debug    → Diagnose issues</pre>
                     <li><strong>Tests:</strong> not_null, unique, relationships, accepted_values, or custom</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q25">
-            <div class="question-number">Question 25</div>
-            <div class="question-title">Why Use Continuous Data Loading?</div>
+            <div class="question-header">
+                <div class="q-badge">25</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 25</div>
+                    <div class="question-title">Why Use Continuous Data Loading?</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Continuous loading: Data flows as soon as available (not batch windows)</strong></p>
                 
@@ -1599,13 +2212,19 @@ dbt debug    → Diagnose issues</pre>
                     </tr>
                 </table>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q26">
-            <div class="question-number">Question 26</div>
-            <div class="question-title">End-to-End Data Pipeline: Design & Tools</div>
+            <div class="question-header">
+                <div class="q-badge">26</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 26</div>
+                    <div class="question-title">End-to-End Data Pipeline: Design & Tools</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Complete modern data pipeline architecture:</strong></p>
                 
@@ -1643,13 +2262,19 @@ dbt debug    → Diagnose issues</pre>
     Power BI dashboard pulls from fct_orders
     (Data refreshes via Airflow every 6 hours)</pre>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q27">
-            <div class="question-number">Question 27</div>
-            <div class="question-title">Why CDC Over Full Loads - Real Use Case</div>
+            <div class="question-header">
+                <div class="q-badge">27</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 27</div>
+                    <div class="question-title">Why CDC Over Full Loads - Real Use Case</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Real-World Example: E-commerce Inventory System</strong></p>
                 
@@ -1683,13 +2308,19 @@ dbt debug    → Diagnose issues</pre>
                 
                 <p><strong>Business Impact:</strong> 15-20% reduction in overselling, better inventory turnover, happier customers</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q28">
-            <div class="question-number">Question 28</div>
-            <div class="question-title">Snowflake Tasks: Troubleshooting & Optimization</div>
+            <div class="question-header">
+                <div class="q-badge">28</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 28</div>
+                    <div class="question-title">Snowflake Tasks: Troubleshooting & Optimization</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Snowflake Tasks provide native orchestration with a DAG model.</strong></p>
                 
@@ -1725,13 +2356,19 @@ ORDER BY scheduled_time DESC;</pre>
                     <li>Set SUSPEND_TASK_AFTER_NUM_FAILURES to prevent cascading failures</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q29">
-            <div class="question-number">Question 29</div>
-            <div class="question-title">Zero Copy Clone: Instant Data Copies</div>
+            <div class="question-header">
+                <div class="q-badge">29</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 29</div>
+                    <div class="question-title">Zero Copy Clone: Instant Data Copies</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>What is Zero Copy Clone?</strong></p>
                 <p>Creates instant copy of database/schema/table without physically duplicating data. Uses copy-on-write for changes.</p>
@@ -1765,13 +2402,19 @@ Example: Clone 100GB table
 - If no changes: $0 storage
 - If 5GB modified: Pay only for 5GB</pre>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q30">
-            <div class="question-number">Question 30</div>
-            <div class="question-title">Timezone Conversion in Snowflake</div>
+            <div class="question-header">
+                <div class="q-badge">30</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 30</div>
+                    <div class="question-title">Timezone Conversion in Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Snowflake has three timestamp types. Convert between timezones easily.</strong></p>
                 
@@ -1806,13 +2449,19 @@ FROM events;</pre>
                     <li><strong>TIMESTAMP_TZ:</strong> With timezone offset</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q31">
-            <div class="question-number">Question 31</div>
-            <div class="question-title">Clustering Keys for Query Performance</div>
+            <div class="question-header">
+                <div class="q-badge">31</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 31</div>
+                    <div class="question-title">Clustering Keys for Query Performance</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Clustering Keys optimize data layout for faster queries on specific columns.</strong></p>
                 
@@ -1847,13 +2496,19 @@ ALTER TABLE orders DROP CLUSTERING KEY;</pre>
                 <p><strong>Cost Consideration:</strong></p>
                 <p>Automatic clustering consumes credits to reorganize data. Costs vs benefits of reduced query time.</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q32">
-            <div class="question-number">Question 32</div>
-            <div class="question-title">Monitoring Snowflake Performance</div>
+            <div class="question-header">
+                <div class="q-badge">32</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 32</div>
+                    <div class="question-title">Monitoring Snowflake Performance</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Three Layers of Monitoring:</strong></p>
                 
@@ -1895,13 +2550,19 @@ ORDER BY daily_credits DESC;</pre>
                     <li>Custom BI dashboards: Pull from ACCOUNT_USAGE</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q33">
-            <div class="question-number">Question 33</div>
-            <div class="question-title">Ataccama vs Collibra: Data Governance Tools</div>
+            <div class="question-header">
+                <div class="q-badge">33</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 33</div>
+                    <div class="question-title">Ataccama vs Collibra: Data Governance Tools</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Both are data governance platforms with different strengths.</strong></p>
                 
@@ -1951,13 +2612,19 @@ ORDER BY daily_credits DESC;</pre>
                 
                 <p><strong>Choice:</strong> Use Collibra if governance/stewardship is priority. Use Ataccama if data quality is critical.</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q34">
-            <div class="question-number">Question 34</div>
-            <div class="question-title">Snowpipe: Continuous Data Ingestion</div>
+            <div class="question-header">
+                <div class="q-badge">34</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 34</div>
+                    <div class="question-title">Snowpipe: Continuous Data Ingestion</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Snowpipe loads data as soon as files appear in cloud storage (AWS S3/Azure/GCS).</strong></p>
                 
@@ -1997,13 +2664,19 @@ CREATE TASK process_new_data
                 
                 <p><strong>Benefits:</strong> Automatic, serverless, minimal configuration</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q35">
-            <div class="question-number">Question 35</div>
-            <div class="question-title">Window Functions: Max & Nth Salary Query</div>
+            <div class="question-header">
+                <div class="q-badge">35</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 35</div>
+                    <div class="question-title">Window Functions: Max & Nth Salary Query</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Using window functions to find salary statistics by department:</strong></p>
                 
@@ -2046,13 +2719,19 @@ SELECT * FROM ranked_salaries WHERE salary_rank = 4;</pre>
                     <li><strong>ORDER BY salary DESC:</strong> Highest to lowest</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q36">
-            <div class="question-number">Question 36</div>
-            <div class="question-title">Swap Gender Values in Table</div>
+            <div class="question-header">
+                <div class="q-badge">36</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 36</div>
+                    <div class="question-title">Swap Gender Values in Table</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Simple SQL to swap Male ↔ Female values:</strong></p>
                 
@@ -2078,13 +2757,19 @@ WHERE gender IN ('Male', 'Female');</pre>
 SET gender = IIF(gender = 'Male', 'Female', IIF(gender = 'Female', 'Male', gender))
 WHERE gender IN ('Male', 'Female');</pre>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q37">
-            <div class="question-number">Question 37</div>
-            <div class="question-title">DBT Project Structure & Best Practices</div>
+            <div class="question-header">
+                <div class="q-badge">37</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 37</div>
+                    <div class="question-title">DBT Project Structure & Best Practices</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Industry-Standard DBT Project Layout:</strong></p>
                 
@@ -2124,13 +2809,19 @@ WHERE gender IN ('Male', 'Female');</pre>
                     <li><strong>fct_*:</strong> Facts (metrics, granular events)</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q38">
-            <div class="question-number">Question 38</div>
-            <div class="question-title">MERGE vs UPSERT Explained</div>
+            <div class="question-header">
+                <div class="q-badge">38</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 38</div>
+                    <div class="question-title">MERGE vs UPSERT Explained</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>UPSERT (Concept): UPDATE if exists, INSERT if not</strong></p>
                 <p><strong>MERGE (SQL Standard): Implements UPSERT with full flexibility</strong></p>
@@ -2148,17 +2839,17 @@ WHEN MATCHED AND s.is_deleted = TRUE THEN
                 
                 <p><strong>Example Flow:</strong></p>
                 <pre>Target Table (Before):
-- Customer 1: Alice, alice@old.com
-- Customer 2: Bob, bob@example.com
+- Customer 1: Alice, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6c3c5d3c4f6d3ced7dbc6dad398d5d9db">[email&#160;protected]</a>
+- Customer 2: Bob, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e0b0d1b0c3e1b061f130e121b501d1113">[email&#160;protected]</a>
 
 Source Data:
-- Customer 1: Alice, alice@new.com (UPDATE)
-- Customer 3: Charlie, charlie@example.com (INSERT)
+- Customer 1: Alice, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="afdadccaddefcad7cec2dfc3ca81ccc0c2">[email&#160;protected]</a> (UPDATE)
+- Customer 3: Charlie, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="afdadccaddefcad7cec2dfc3ca81ccc0c2">[email&#160;protected]</a> (INSERT)
 
 Target Table (After):
-- Customer 1: Alice, alice@new.com (UPDATED)
-- Customer 2: Bob, bob@example.com (unchanged)
-- Customer 3: Charlie, charlie@example.com (NEW)</pre>
+- Customer 1: Alice, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="067375637446637e676b766a632865696b">[email&#160;protected]</a> (UPDATED)
+- Customer 2: Bob, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6015130512200518010d100c054e030f0d">[email&#160;protected]</a> (unchanged)
+- Customer 3: Charlie, <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1065637562507568717d607c753e737f7d">[email&#160;protected]</a> (NEW)</pre>
                 
                 <p><strong>When to Use MERGE:</strong></p>
                 <ul>
@@ -2167,13 +2858,19 @@ Target Table (After):
                     <li>SCD Type 1 implementations</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q39">
-            <div class="question-number">Question 39</div>
-            <div class="question-title">Data Masking & Masking Policies</div>
+            <div class="question-header">
+                <div class="q-badge">39</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 39</div>
+                    <div class="question-title">Data Masking & Masking Policies</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Data Masking hides sensitive data while maintaining utility for dev/test/analytics.</strong></p>
                 
@@ -2206,13 +2903,19 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                     <li>Encryption: Reversible transformation</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q40">
-            <div class="question-number">Question 40</div>
-            <div class="question-title">Hashing vs Encryption</div>
+            <div class="question-header">
+                <div class="q-badge">40</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 40</div>
+                    <div class="question-title">Hashing vs Encryption</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Two fundamental cryptographic concepts with different purposes:</strong></p>
                 
@@ -2262,13 +2965,19 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                     </tr>
                 </table>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q41">
-            <div class="question-number">Question 41</div>
-            <div class="question-title">Snowflake S3 Storage Integration</div>
+            <div class="question-header">
+                <div class="q-badge">41</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 41</div>
+                    <div class="question-title">Snowflake S3 Storage Integration</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Secure, credential-less access to AWS S3 from Snowflake using IAM roles.</strong></p>
                 
@@ -2327,13 +3036,19 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 
                 <p><strong>Benefits:</strong> Secure (no exposed AWS keys), centralized control, easy to audit</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q42">
-            <div class="question-number">Question 42</div>
-            <div class="question-title">DBT Models, Tests & Seeds</div>
+            <div class="question-header">
+                <div class="q-badge">42</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 42</div>
+                    <div class="question-title">DBT Models, Tests & Seeds</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Three Core DBT Components:</strong></p>
                 
@@ -2382,13 +3097,19 @@ UK,United Kingdom
                     <li>Version controlled in Git</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q43">
-            <div class="question-number">Question 43</div>
-            <div class="question-title">DBT Materializations 101</div>
+            <div class="question-header">
+                <div class="q-badge">43</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 43</div>
+                    <div class="question-title">DBT Materializations 101</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Four Ways DBT Builds Models:</strong></p>
                 
@@ -2440,13 +3161,19 @@ GROUP BY customer_id</pre>
                     <li><strong>Use for:</strong> Intermediate cleaning steps</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q44">
-            <div class="question-number">Question 44</div>
-            <div class="question-title">Managing DBT Dependencies with ref()</div>
+            <div class="question-header">
+                <div class="q-badge">44</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 44</div>
+                    <div class="question-title">Managing DBT Dependencies with ref()</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>The ref() function is the magic glue connecting DBT models.</strong></p>
                 
@@ -2486,13 +3213,19 @@ stg_orders ↗     ↗                      ↗
                     <li>Keep dependencies clear and linear when possible</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q45">
-            <div class="question-number">Question 45</div>
-            <div class="question-title">Jinja Templating in DBT</div>
+            <div class="question-header">
+                <div class="q-badge">45</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 45</div>
+                    <div class="question-title">Jinja Templating in DBT</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Jinja adds programming logic to SQL. Processed before warehouse execution.</strong></p>
                 
@@ -2532,13 +3265,19 @@ WHERE created_at >= '2020-01-01'
                     <li>Macro reusability</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q46">
-            <div class="question-number">Question 46</div>
-            <div class="question-title">Data Governance Best Practices</div>
+            <div class="question-header">
+                <div class="q-badge">46</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 46</div>
+                    <div class="question-title">Data Governance Best Practices</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Comprehensive approach to governing data assets:</strong></p>
                 
@@ -2592,13 +3331,19 @@ WHERE created_at >= '2020-01-01'
                     <li>Change request process</li>
                 </ul>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q47">
-            <div class="question-number">Question 47</div>
-            <div class="question-title">Data Quality Testing Strategies</div>
+            <div class="question-header">
+                <div class="q-badge">47</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 47</div>
+                    <div class="question-title">Data Quality Testing Strategies</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Multi-Layer Approach to Data Quality:</strong></p>
                 
@@ -2648,13 +3393,19 @@ models:
                 
                 <p><strong>Tools:</strong> DBT built-in, Great Expectations, Soda SQL, Ataccama</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q48">
-            <div class="question-number">Question 48</div>
-            <div class="question-title">Building a Modern Data Stack</div>
+            <div class="question-header">
+                <div class="q-badge">48</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 48</div>
+                    <div class="question-title">Building a Modern Data Stack</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Typical Tech Stack Across Layers:</strong></p>
                 
@@ -2711,13 +3462,19 @@ models:
                 
                 <p><strong>Selection Criteria:</strong> Scalability, cost, ease of use, integrations, security, community support</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q49">
-            <div class="question-number">Question 49</div>
-            <div class="question-title">Future Trends in Data Engineering</div>
+            <div class="question-header">
+                <div class="q-badge">49</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 49</div>
+                    <div class="question-title">Future Trends in Data Engineering</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>Emerging Trends Shaping the Data Industry:</strong></p>
                 
@@ -2753,13 +3510,19 @@ models:
                 
                 <p><strong>Skills for Success:</strong> Cloud (AWS/Azure/GCP), DBT, Python, Spark, SQL, Docker, Git, ML basics</p>
                 
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
         </div>
 
         <div class="question" id="q50">
-            <div class="question-number">Question 50</div>
-            <div class="question-title">DBT Snapshots: Implementing SCD Type 2</div>
+            <div class="question-header">
+                <div class="q-badge">50</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 50</div>
+                    <div class="question-title">DBT Snapshots: Implementing SCD Type 2</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
             <div class="answer">
                 <p><strong>DBT Snapshots automate SCD Type 2 implementation without manual coding:</strong></p>
                 
@@ -2807,28 +3570,80 @@ FROM {{ ref('stg_products') }}
 SELECT * FROM dim_customer_snapshot 
 WHERE dbt_valid_to IS NULL;
 
--- Get customer state as of specific date
-SELECT * FROM dim_customer_snapshot 
-WHERE customer_id = 123
-  AND '2024-01-15'::DATE >= dbt_valid_from
-  AND ('2024-01-15'::DATE < dbt_valid_to OR dbt_valid_to IS NULL);
-
--- See all changes for one customer
-SELECT * FROM dim_customer_snapshot 
-WHERE customer_id = 123
-ORDER BY dbt_valid_from DESC;</pre>
-                
-                <p><strong>Why Snapshots are Better Than Manual SCD Type 2:</strong></p>
-                <ul>
-                    <li>Zero manual code for change tracking</li>
-                    <li>Automatic effective dating</li>
-                    <li>Easy to query historical states</li>
-                    <li>Handles deletes properly</li>
-                </ul>
-                <a href="#toc" class="back-to-toc">⬆ Back to Contents</a>
-            </div>
-        </div>
-
+        </main>
     </div>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // ── SIDEBAR ACTIVE LINK ──
+        const sections = document.querySelectorAll('.question[id]');
+        const sidebarLinks = document.querySelectorAll('.sidebar-item[data-q]');
+        const seen = new Set();
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    seen.add(id);
+                    sidebarLinks.forEach(a => {
+                        const isActive = a.dataset.q === id;
+                        a.classList.toggle('active', isActive);
+                        if (isActive) {
+                            a.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                        }
+                    });
+                    // update progress
+                    const pct = Math.round((seen.size / 50) * 100);
+                    document.getElementById('progress-fill').style.width = pct + '%';
+                    document.getElementById('progress-label').textContent = seen.size + ' / 50 viewed';
+                }
+            });
+        }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+
+        sections.forEach(s => observer.observe(s));
+
+        // ── SCROLL TO TOP ──
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        // ── SIDEBAR TOGGLE (MOBILE) ──
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('overlay');
+            sb.classList.toggle('open');
+            ov.classList.toggle('visible');
+        }
+
+        // ── QUESTION COLLAPSE ──
+        document.querySelectorAll('.question-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.closest('.question').classList.toggle('collapsed');
+            });
+        });
+
+        // ── THEME TOGGLE ──
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light');
+            document.getElementById('themeLabel').textContent = isLight ? 'LIGHT' : 'DARK';
+            document.getElementById('themeKnob').textContent = isLight ? '☀️' : '🌙';
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
+
+        // Apply saved theme on load
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                document.documentElement.classList.add('light');
+                const lbl = document.getElementById('themeLabel');
+                const knob = document.getElementById('themeKnob');
+                if (lbl) lbl.textContent = 'LIGHT';
+                if (knob) knob.textContent = '☀️';
+            }
+        })();
+    </script>
 </body>
 </html>
