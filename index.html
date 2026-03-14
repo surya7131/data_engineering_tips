@@ -1019,9 +1019,104 @@
             .answer { padding: 18px 20px 16px; }
             .question-header { padding: 16px 20px 12px; }
         }
+
+        /* ── CONTENT PROTECTION ── */
+        /* Block text selection on answer content */
+        .answer, .answer p, .answer li, .answer td, .answer th, pre {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        /* Allow inline code selection (convenience) */
+        code { -webkit-user-select: text; user-select: text; }
+
+        /* Subtle watermark on each code block */
+        .pre-watermark {
+            position: absolute;
+            bottom: 5px; right: 10px;
+            font-family: var(--mono);
+            font-size: 0.52em;
+            color: var(--text3);
+            opacity: 0.3;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-select: none;
+            letter-spacing: 0.04em;
+        }
+
+        /* Offline / local file block screen */
+        #offline-block {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--bg, #0d0f14);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+            padding: 40px;
+        }
+        #offline-block.visible { display: flex; }
+        #offline-block h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #e2e8f0;
+        }
+        #offline-block p {
+            color: #94a3b8;
+            font-size: 0.95em;
+            max-width: 420px;
+            line-height: 1.7;
+        }
+        #offline-block a {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 10px 24px;
+            background: #3b82f6;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Print protection */
+        @media print {
+            body > *:not(#print-notice) { display: none !important; }
+            #print-notice {
+                display: block !important;
+                font-size: 20px;
+                text-align: center;
+                padding: 60px 40px;
+                font-family: sans-serif;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- PRINT NOTICE (shown only when printing) -->
+    <div id="print-notice" style="display:none">
+        This content is protected.<br>
+        &copy; Vemula Suryateja &mdash; vsurya@duck.com<br>
+        <small>Visit: <strong>surya7131.github.io/data_engineering_tips</strong></small>
+    </div>
+
+    <!-- OFFLINE BLOCK (shown when opened as local file) -->
+    <div id="offline-block">
+        <h2>&#128274; Content Protected</h2>
+        <p>This page requires the live web environment to render correctly.<br>
+           Saved local copies cannot display content.</p>
+        <a href="https://surya7131.github.io/data_engineering_tips/" target="_blank">
+            Open Live Version &rarr;
+        </a>
+        <p style="font-size:0.75em; margin-top:16px; color:#64748b;">
+            &copy; Vemula Suryateja &nbsp;&middot;&nbsp; vsurya@duck.com
+        </p>
+    </div>
 
     <!-- ATTRIBUTION BAR -->
     <div class="attr-bar">
@@ -1226,7 +1321,8 @@
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Calculate total compute hours consumed using LAG() to capture the <code>start</code> state and timestamp, then LEAD() to look ahead to the next <code>end</code> timestamp — DATEDIFF between them gives run duration in seconds, which is summed and converted to hours.</strong></p>
+                <div class="answer">
+<p><strong>Calculate total compute hours consumed using LAG() to capture the <code>start</code> state and timestamp, then LEAD() to look ahead to the next <code>end</code> timestamp — DATEDIFF between them gives run duration in seconds, which is summed and converted to hours.</strong></p>
 
                 <p><strong>Sample Data</strong></p>
                 <pre>-- your_table_name
@@ -1320,6 +1416,7 @@ FROM run_seconds;</pre>
                 </ul>
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q2">
@@ -1332,7 +1429,8 @@ FROM run_seconds;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your BI team runs 50 concurrent Tableau dashboards while your data engineering team runs nightly dbt transforms. On a traditional monolith both workloads starve each other. On Snowflake you give each team a dedicated virtual warehouse — they share the same data but use completely independent compute. No contention, no queuing.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your BI team runs 50 concurrent Tableau dashboards while your data engineering team runs nightly dbt transforms. On a traditional monolith both workloads starve each other. On Snowflake you give each team a dedicated virtual warehouse — they share the same data but use completely independent compute. No contention, no queuing.</p>
 
                 <p><strong>The Three-Layer Architecture</strong></p>
                 <pre>┌─────────────────────────────────────────────────────┐
@@ -1405,6 +1503,7 @@ ALTER WAREHOUSE BI_WH SET
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q3">
@@ -1417,7 +1516,8 @@ ALTER WAREHOUSE BI_WH SET
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Snowflake's Time Travel allows querying data as it existed at any point in the past (default 1 day, up to 90 days for Enterprise).</strong></p>
+                <div class="answer">
+<p><strong>Snowflake's Time Travel allows querying data as it existed at any point in the past (default 1 day, up to 90 days for Enterprise).</strong></p>
                 
                 <p><strong>1. Using AT (OFFSET) - Relative Time</strong></p>
                 <pre>-- Query data from 5 minutes ago
@@ -1448,6 +1548,7 @@ SELECT * FROM my_table BEFORE (STATEMENT => 'query_id_123');</pre>
                 </ul>
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q4">
@@ -1460,7 +1561,8 @@ SELECT * FROM my_table BEFORE (STATEMENT => 'query_id_123');</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Five-step approach to optimize slow queries:</strong></p>
+                <div class="answer">
+<p><strong>Five-step approach to optimize slow queries:</strong></p>
                 
                 <p><strong>1. Profile the Query (Root Cause Analysis)</strong></p>
                 <ul>
@@ -1510,6 +1612,7 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_date DESC) 
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q5">
@@ -1522,7 +1625,8 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_date DESC) 
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Partitions are logical divisions; Micro-partitions are Snowflake's intelligent physical chunks.</strong></p>
+                <div class="answer">
+<p><strong>Partitions are logical divisions; Micro-partitions are Snowflake's intelligent physical chunks.</strong></p>
                 
                 <p><strong>Traditional Partitions:</strong></p>
                 <ul>
@@ -1577,6 +1681,7 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_date DESC) 
                 </table>
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q6">
@@ -1589,7 +1694,8 @@ QUALIFY ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_date DESC) 
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Slowly Changing Dimensions (SCD) are methods to handle data that changes over time in dimension tables.</strong></p>
+                <div class="answer">
+<p><strong>Slowly Changing Dimensions (SCD) are methods to handle data that changes over time in dimension tables.</strong></p>
                 
                 <p><strong>Type 0: Retain Original</strong></p>
                 <p>No updates. Historical value never changes.</p>
@@ -1627,6 +1733,7 @@ When change happens: move current to previous, update current value</pre>
                 </ul>
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <!-- Additional questions continue here (Q7-Q50) -->
@@ -1642,7 +1749,8 @@ When change happens: move current to previous, update current value</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A logistics partner sends webhook events in JSON — each event has a nested <code>shipment</code> object with an array of <code>items</code>. You need to land the raw JSON, query nested fields, and flatten the array into relational rows for downstream dbt models.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A logistics partner sends webhook events in JSON — each event has a nested <code>shipment</code> object with an array of <code>items</code>. You need to land the raw JSON, query nested fields, and flatten the array into relational rows for downstream dbt models.</p>
 
                 <p><strong>Step 1 — Create File Format &amp; Stage</strong></p>
                 <pre>CREATE FILE FORMAT json_fmt
@@ -1729,6 +1837,7 @@ LATERAL FLATTEN(input => event_raw:items) f</pre>
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q8">
@@ -1741,7 +1850,8 @@ LATERAL FLATTEN(input => event_raw:items) f</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Strategy for large file ingestion:</strong></p>
+                <div class="answer">
+<p><strong>Strategy for large file ingestion:</strong></p>
                 
                 <p><strong>1. Use External Stage (Mandatory for 50GB)</strong></p>
                 <ul>
@@ -1772,6 +1882,7 @@ PURGE = TRUE;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q9">
@@ -1784,7 +1895,8 @@ PURGE = TRUE;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Snowflake supports two types of stages for file management:</strong></p>
+                <div class="answer">
+<p><strong>Snowflake supports two types of stages for file management:</strong></p>
                 
                 <p><strong>Internal Stages (Snowflake-Managed)</strong></p>
                 <ul>
@@ -1838,6 +1950,7 @@ PURGE = TRUE;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q10">
@@ -1850,7 +1963,8 @@ PURGE = TRUE;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> You have a daily pipeline: ingest from S3 at 6 AM → run dbt transforms → run data quality tests → refresh Tableau extracts. If ingestion fails at 6 AM, dbt should not run. You need dependency-aware scheduling with failure alerting — not just a cron job.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> You have a daily pipeline: ingest from S3 at 6 AM → run dbt transforms → run data quality tests → refresh Tableau extracts. If ingestion fails at 6 AM, dbt should not run. You need dependency-aware scheduling with failure alerting — not just a cron job.</p>
 
                 <p><strong>Option 1: Snowflake Native Tasks (best for Snowflake-only pipelines)</strong></p>
                 <pre>-- Root task: fires daily at 6 AM UTC, only if stream has new data
@@ -1953,6 +2067,7 @@ with DAG(
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q11">
@@ -1965,7 +2080,8 @@ with DAG(
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your CDC pipeline receives deletes from Qlik Replicate as soft-deletes (a flag). Every night you run a stored procedure that physically removes expired records, rebuilds affected aggregates, and logs the cleanup to an audit table — all as a single transactional unit.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your CDC pipeline receives deletes from Qlik Replicate as soft-deletes (a flag). Every night you run a stored procedure that physically removes expired records, rebuilds affected aggregates, and logs the cleanup to an audit table — all as a single transactional unit.</p>
 
                 <p><strong>JavaScript Stored Procedure (classic Snowflake approach)</strong></p>
                 <pre>CREATE OR REPLACE PROCEDURE raw.sp_purge_expired_records(retention_days FLOAT)
@@ -2056,6 +2172,7 @@ CALL analytics.sp_rebuild_daily_aggregates('2024-01-15');</pre>
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q12">
@@ -2068,7 +2185,8 @@ CALL analytics.sp_rebuild_daily_aggregates('2024-01-15');</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>What is a UDF?</strong></p>
+                <div class="answer">
+<p><strong>What is a UDF?</strong></p>
                 <p>A custom-built function that encapsulates logic reusable in SQL queries, similar to built-in functions.</p>
                 
                 <p><strong>Types of UDFs:</strong></p>
@@ -2107,6 +2225,7 @@ FROM orders;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q13">
@@ -2119,7 +2238,8 @@ FROM orders;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Three data engineers work on the same dbt project. Without Git, two engineers overwrite each other's models on the same day. With Git, every change lives on its own branch, CI runs tests before merge, and the main branch always reflects production-verified code.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Three data engineers work on the same dbt project. Without Git, two engineers overwrite each other's models on the same day. With Git, every change lives on its own branch, CI runs tests before merge, and the main branch always reflects production-verified code.</p>
 
                 <p><strong>Core Git Workflow for Data Teams</strong></p>
                 <pre># Daily workflow for a data engineer
@@ -2194,6 +2314,7 @@ jobs:
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q14">
@@ -2206,7 +2327,8 @@ jobs:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>What is QUALIFY?</strong></p>
+                <div class="answer">
+<p><strong>What is QUALIFY?</strong></p>
                 <p>Unique Snowflake clause that filters window function results without subqueries or CTEs. Syntax sugar for cleaner SQL.</p>
                 
                 <p><strong>Problem QUALIFY Solves:</strong></p>
@@ -2244,6 +2366,7 @@ QUALIFY salary > LAG(salary) OVER (PARTITION BY employee_id ORDER BY year);</pre
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q15">
@@ -2256,7 +2379,8 @@ QUALIFY salary > LAG(salary) OVER (PARTITION BY employee_id ORDER BY year);</pre
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Why Snowflake is the Modern Data Warehouse Choice:</strong></p>
+                <div class="answer">
+<p><strong>Why Snowflake is the Modern Data Warehouse Choice:</strong></p>
                 
                 <p><strong>1. Separation of Compute & Storage (Most Important)</strong></p>
                 <p>Scale independently. Run light queries on XS warehouse ($1-2/hour), heavy queries on 3XL ($16-32/hour). Pay only when warehouse runs. No unused capacity costs.</p>
@@ -2299,6 +2423,7 @@ UNDROP TABLE my_table;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q16">
@@ -2311,7 +2436,8 @@ UNDROP TABLE my_table;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>What is CDC?</strong></p>
+                <div class="answer">
+<p><strong>What is CDC?</strong></p>
                 <p>A technique (not a tool) that identifies and captures INSERT/UPDATE/DELETE changes from source systems and delivers to target efficiently, instead of reprocessing entire datasets.</p>
                 
                 <p><strong>Why CDC Matters:</strong></p>
@@ -2354,6 +2480,7 @@ WHERE last_updated_timestamp > previous_check_time;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q17">
@@ -2366,7 +2493,8 @@ WHERE last_updated_timestamp > previous_check_time;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>List [] - Mutable (Changeable)</strong></p>
+                <div class="answer">
+<p><strong>List [] - Mutable (Changeable)</strong></p>
                 <pre>my_list = [10, "apple", 3.14, [1, 2]]  # Can contain mixed types
 
 # Modify
@@ -2432,6 +2560,7 @@ cache = {(0, 0): "origin", (1, 1): "diagonal"}</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q18">
@@ -2444,7 +2573,8 @@ cache = {(0, 0): "origin", (1, 1): "diagonal"}</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Three major columnar/serialization formats and when to use each:</strong></p>
+                <div class="answer">
+<p><strong>Three major columnar/serialization formats and when to use each:</strong></p>
                 
                 <p><strong>AVRO - Row-Oriented with Self-Describing Schema</strong></p>
                 <ul>
@@ -2509,6 +2639,7 @@ cache = {(0, 0): "origin", (1, 1): "diagonal"}</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q19">
@@ -2521,7 +2652,8 @@ cache = {(0, 0): "origin", (1, 1): "diagonal"}</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>CTE (WITH Clause) - Query Scope</strong></p>
+                <div class="answer">
+<p><strong>CTE (WITH Clause) - Query Scope</strong></p>
                 <pre>WITH top_customers AS (
     SELECT customer_id, SUM(amount) as total
     FROM orders
@@ -2585,6 +2717,7 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q20">
@@ -2597,7 +2730,8 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Permanent Table (Default)</strong></p>
+                <div class="answer">
+<p><strong>Permanent Table (Default)</strong></p>
                 <ul>
                     <li>Persistence: Until explicitly dropped</li>
                     <li>Time Travel: 1-90 days</li>
@@ -2656,6 +2790,7 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q21">
@@ -2668,7 +2803,8 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Seven strategies to handle source system schema changes gracefully:</strong></p>
+                <div class="answer">
+<p><strong>Seven strategies to handle source system schema changes gracefully:</strong></p>
                 
                 <p><strong>1. Communication & Governance</strong></p>
                 <ul>
@@ -2718,6 +2854,7 @@ FROM raw_data;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q22">
@@ -2730,7 +2867,8 @@ FROM raw_data;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Note: Ephemeral is a DBT concept, not a Snowflake feature</strong></p>
+                <div class="answer">
+<p><strong>Note: Ephemeral is a DBT concept, not a Snowflake feature</strong></p>
                 
                 <p><strong>Ephemeral Models</strong></p>
                 <pre>{{ config(materialized='ephemeral') }}
@@ -2766,6 +2904,7 @@ GROUP BY customer_id</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q23">
@@ -2778,7 +2917,8 @@ GROUP BY customer_id</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Two native approaches to implement Change Data Capture in Snowflake:</strong></p>
+                <div class="answer">
+<p><strong>Two native approaches to implement Change Data Capture in Snowflake:</strong></p>
                 
                 <p><strong>Method 1: Timestamp-Based CDC</strong></p>
                 <pre>CREATE TABLE staging (
@@ -2827,6 +2967,7 @@ WHEN NOT MATCHED AND s.METADATA$ACTION = 'INSERT' THEN INSERT ...;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q24">
@@ -2839,7 +2980,8 @@ WHEN NOT MATCHED AND s.METADATA$ACTION = 'INSERT' THEN INSERT ...;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>What is DBT?</strong></p>
+                <div class="answer">
+<p><strong>What is DBT?</strong></p>
                 <p>An open-source framework for transforming data in your warehouse using SQL and software engineering best practices. It enables analysts to write, test, and document SQL transformations with version control.</p>
                 
                 <p><strong>Problems DBT Solves:</strong></p>
@@ -2880,6 +3022,7 @@ dbt debug    → Diagnose issues</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q25">
@@ -2892,7 +3035,8 @@ dbt debug    → Diagnose issues</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Continuous loading: Data flows as soon as available (not batch windows)</strong></p>
+                <div class="answer">
+<p><strong>Continuous loading: Data flows as soon as available (not batch windows)</strong></p>
                 
                 <p><strong>Why It's Critical:</strong></p>
                 <ul>
@@ -2944,6 +3088,7 @@ dbt debug    → Diagnose issues</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q26">
@@ -2956,7 +3101,8 @@ dbt debug    → Diagnose issues</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A B2B SaaS company needs a pipeline that ingests from 4 sources (Oracle ERP, Salesforce, Stripe, S3 event files), transforms into clean analytics models, and serves 3 BI tools with different freshness SLAs — finance needs T+1, operations needs near-real-time, executives need daily snapshots.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A B2B SaaS company needs a pipeline that ingests from 4 sources (Oracle ERP, Salesforce, Stripe, S3 event files), transforms into clean analytics models, and serves 3 BI tools with different freshness SLAs — finance needs T+1, operations needs near-real-time, executives need daily snapshots.</p>
 
                 <p><strong>Full Architecture</strong></p>
                 <pre>SOURCES
@@ -3035,6 +3181,7 @@ models:
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q27">
@@ -3047,7 +3194,8 @@ models:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Example: E-commerce Inventory System</strong></p>
+                <div class="answer">
+<p><strong>Real-World Example: E-commerce Inventory System</strong></p>
                 
                 <p><strong>Problem Without CDC (Nightly Full Load):</strong></p>
                 <ul>
@@ -3081,6 +3229,7 @@ models:
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q28">
@@ -3093,7 +3242,8 @@ models:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Snowflake Tasks provide native orchestration with a DAG model.</strong></p>
+                <div class="answer">
+<p><strong>Snowflake Tasks provide native orchestration with a DAG model.</strong></p>
                 
                 <p><strong>Troubleshooting Failed Task Queries:</strong></p>
                 
@@ -3129,6 +3279,7 @@ ORDER BY scheduled_time DESC;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q29">
@@ -3141,7 +3292,8 @@ ORDER BY scheduled_time DESC;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your production Snowflake environment has 2TB of data. A developer needs to test a dbt refactor that touches 40 models. Provisioning a traditional dev environment would cost thousands in storage and take hours of data copying. With Zero Copy Clone, you get a full production-sized dev environment in seconds — at near-zero storage cost.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your production Snowflake environment has 2TB of data. A developer needs to test a dbt refactor that touches 40 models. Provisioning a traditional dev environment would cost thousands in storage and take hours of data copying. With Zero Copy Clone, you get a full production-sized dev environment in seconds — at near-zero storage cost.</p>
 
                 <p><strong>How Zero Copy Clone Works</strong></p>
                 <pre>-- Clone points to the SAME micro-partitions as source
@@ -3211,6 +3363,7 @@ ALTER TABLE marts.fact_orders_backup RENAME TO marts.fact_orders;
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q30">
@@ -3223,7 +3376,8 @@ ALTER TABLE marts.fact_orders_backup RENAME TO marts.fact_orders;
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Snowflake has three timestamp types. Convert between timezones easily.</strong></p>
+                <div class="answer">
+<p><strong>Snowflake has three timestamp types. Convert between timezones easily.</strong></p>
                 
                 <p><strong>Method 1: CONVERT_TIMEZONE (Recommended)</strong></p>
                 <pre>-- Convert UTC to EST
@@ -3258,6 +3412,7 @@ FROM events;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q31">
@@ -3270,7 +3425,8 @@ FROM events;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Clustering Keys optimize data layout for faster queries on specific columns.</strong></p>
+                <div class="answer">
+<p><strong>Clustering Keys optimize data layout for faster queries on specific columns.</strong></p>
                 
                 <p><strong>How They Work:</strong></p>
                 <ul>
@@ -3305,6 +3461,7 @@ ALTER TABLE orders DROP CLUSTERING KEY;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q32">
@@ -3317,7 +3474,8 @@ ALTER TABLE orders DROP CLUSTERING KEY;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Three Layers of Monitoring:</strong></p>
+                <div class="answer">
+<p><strong>Three Layers of Monitoring:</strong></p>
                 
                 <p><strong>1. Snowflake Web UI</strong></p>
                 <ul>
@@ -3359,6 +3517,7 @@ ORDER BY daily_credits DESC;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q33">
@@ -3371,7 +3530,8 @@ ORDER BY daily_credits DESC;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Both are data governance platforms with different strengths.</strong></p>
+                <div class="answer">
+<p><strong>Both are data governance platforms with different strengths.</strong></p>
                 
                 <p><strong>Collibra - Business-Centric Governance</strong></p>
                 <ul>
@@ -3421,6 +3581,7 @@ ORDER BY daily_credits DESC;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q34">
@@ -3433,7 +3594,8 @@ ORDER BY daily_credits DESC;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Snowpipe loads data as soon as files appear in cloud storage (AWS S3/Azure/GCS).</strong></p>
+                <div class="answer">
+<p><strong>Snowpipe loads data as soon as files appear in cloud storage (AWS S3/Azure/GCS).</strong></p>
                 
                 <p><strong>Architecture: S3 → SNS → SQS → Snowpipe → COPY INTO</strong></p>
                 
@@ -3473,6 +3635,7 @@ CREATE TASK process_new_data
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q35">
@@ -3485,7 +3648,8 @@ CREATE TASK process_new_data
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your analytics team needs: (1) rank customers by LTV within each region, (2) calculate running revenue totals per day, (3) find the previous order date for each customer, (4) flag the top 3 products per category for a promotional report. All solvable with window functions — no self-joins needed.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your analytics team needs: (1) rank customers by LTV within each region, (2) calculate running revenue totals per day, (3) find the previous order date for each customer, (4) flag the top 3 products per category for a promotional report. All solvable with window functions — no self-joins needed.</p>
 
                 <p><strong>Ranking Functions — RANK vs DENSE_RANK vs ROW_NUMBER</strong></p>
                 <pre>-- Find the 4th highest salary per department (classic interview question)
@@ -3595,6 +3759,7 @@ ORDER BY region, pct_of_region_revenue DESC;</pre>
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q36">
@@ -3607,7 +3772,8 @@ ORDER BY region, pct_of_region_revenue DESC;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Simple SQL to swap Male ↔ Female values:</strong></p>
+                <div class="answer">
+<p><strong>Simple SQL to swap Male ↔ Female values:</strong></p>
                 
                 <pre>UPDATE users
 SET gender = CASE
@@ -3633,6 +3799,7 @@ WHERE gender IN ('Male', 'Female');</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q37">
@@ -3645,7 +3812,8 @@ WHERE gender IN ('Male', 'Female');</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A 200-model dbt project with no naming conventions causes every new hire to ask "where does this model live?" and every PR to touch 10 unrelated files. A well-structured project makes every model's purpose, owner, and position in the DAG immediately obvious.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A 200-model dbt project with no naming conventions causes every new hire to ask "where does this model live?" and every PR to touch 10 unrelated files. A well-structured project makes every model's purpose, owner, and position in the DAG immediately obvious.</p>
 
                 <p><strong>Standard Project Layout</strong></p>
                 <pre>my_dbt_project/
@@ -3738,6 +3906,7 @@ models:
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q38">
@@ -3750,7 +3919,8 @@ models:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Qlik Replicate delivers CDC events into Snowflake — INSERTs, UPDATEs, and DELETEs mixed together. A naive INSERT OVERWRITE would blow away the table. You need MERGE to apply each operation correctly, handle duplicates from the CDC stream, and close old SCD2 records atomically.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Qlik Replicate delivers CDC events into Snowflake — INSERTs, UPDATEs, and DELETEs mixed together. A naive INSERT OVERWRITE would blow away the table. You need MERGE to apply each operation correctly, handle duplicates from the CDC stream, and close old SCD2 records atomically.</p>
 
                 <p><strong>Basic MERGE Pattern</strong></p>
                 <pre>-- Classic upsert: update if exists, insert if new, delete if flagged
@@ -3844,6 +4014,7 @@ WHEN MATCHED AND src.updated_at > tgt.updated_at
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q39">
@@ -3856,7 +4027,8 @@ WHEN MATCHED AND src.updated_at > tgt.updated_at
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Data Masking hides sensitive data while maintaining utility for dev/test/analytics.</strong></p>
+                <div class="answer">
+<p><strong>Data Masking hides sensitive data while maintaining utility for dev/test/analytics.</strong></p>
                 
                 <p><strong>Snowflake Masking Policy (Dynamic, at Query Time):</strong></p>
                 <pre>-- Create masking policy
@@ -3889,6 +4061,7 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q40">
@@ -3901,7 +4074,8 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Two fundamental cryptographic concepts with different purposes:</strong></p>
+                <div class="answer">
+<p><strong>Two fundamental cryptographic concepts with different purposes:</strong></p>
                 
                 <p><strong>Hashing - One-Way Function</strong></p>
                 <ul>
@@ -3951,6 +4125,7 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q41">
@@ -3963,7 +4138,8 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Secure, credential-less access to AWS S3 from Snowflake using IAM roles.</strong></p>
+                <div class="answer">
+<p><strong>Secure, credential-less access to AWS S3 from Snowflake using IAM roles.</strong></p>
                 
                 <p><strong>Step 1: AWS Setup - Create IAM Policy</strong></p>
                 <pre>{
@@ -4022,6 +4198,7 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q42">
@@ -4034,8 +4211,8 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-
-                <p><strong>Real-World Scenario:</strong> Your data team ingests Stripe payments, Salesforce CRM records and warehouse inventory into Snowflake. You use DBT to transform raw data into trusted analytics tables. One bad deploy introduced NULL order IDs in production — custom tests would have caught it before it reached the BI layer.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your data team ingests Stripe payments, Salesforce CRM records and warehouse inventory into Snowflake. You use DBT to transform raw data into trusted analytics tables. One bad deploy introduced NULL order IDs in production — custom tests would have caught it before it reached the BI layer.</p>
 
                 <p><strong>1. Models — SQL Transformations as Code</strong></p>
                 <pre>-- models/staging/stg_orders.sql
@@ -4290,6 +4467,7 @@ models:
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q43">
@@ -4302,8 +4480,8 @@ models:
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-
-                <p><strong>Real-World Scenario:</strong> Your e-commerce platform processes 2M orders/day into a Snowflake fact table. Running a full-refresh takes 45 minutes and costs $80 in credits. Incremental models reduce that to 3 minutes and $2 — but only if you choose the right strategy for your data pattern.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your e-commerce platform processes 2M orders/day into a Snowflake fact table. Running a full-refresh takes 45 minutes and costs $80 in credits. Incremental models reduce that to 3 minutes and $2 — but only if you choose the right strategy for your data pattern.</p>
 
                 <p><strong>Incremental Model Fundamentals</strong></p>
                 <p>On first run, DBT builds the full table. On subsequent runs, it only processes new/changed rows. The <code>is_incremental()</code> macro controls which rows to load:</p>
@@ -4578,6 +4756,7 @@ WHERE subscription_tier != LAG(subscription_tier) OVER (PARTITION BY customer_id
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q44">
@@ -4590,7 +4769,8 @@ WHERE subscription_tier != LAG(subscription_tier) OVER (PARTITION BY customer_id
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>The ref() function is the magic glue connecting DBT models.</strong></p>
+                <div class="answer">
+<p><strong>The ref() function is the magic glue connecting DBT models.</strong></p>
                 
                 <p><strong>What ref() Does:</strong></p>
                 <pre>-- In int_orders.sql
@@ -4630,6 +4810,7 @@ stg_orders ↗     ↗                      ↗
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q45">
@@ -4642,7 +4823,8 @@ stg_orders ↗     ↗                      ↗
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Jinja adds programming logic to SQL. Processed before warehouse execution.</strong></p>
+                <div class="answer">
+<p><strong>Jinja adds programming logic to SQL. Processed before warehouse execution.</strong></p>
                 
                 <p><strong>Simple Variable Example:</strong></p>
                 <pre>{% set start_date = '2020-01-01' %}
@@ -4682,6 +4864,7 @@ WHERE created_at >= '2020-01-01'
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q46">
@@ -4694,7 +4877,8 @@ WHERE created_at >= '2020-01-01'
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Comprehensive approach to governing data assets:</strong></p>
+                <div class="answer">
+<p><strong>Comprehensive approach to governing data assets:</strong></p>
                 
                 <p><strong>1. Define Ownership & Stewardship</strong></p>
                 <ul>
@@ -4748,6 +4932,7 @@ WHERE created_at >= '2020-01-01'
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q47">
@@ -4760,7 +4945,8 @@ WHERE created_at >= '2020-01-01'
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Multi-Layer Approach to Data Quality:</strong></p>
+                <div class="answer">
+<p><strong>Multi-Layer Approach to Data Quality:</strong></p>
                 
                 <p><strong>1. Schema Tests (Column Constraints)</strong></p>
                 <pre>not_null: Column has no NULLs
@@ -4810,6 +4996,7 @@ models:
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q48">
@@ -4822,7 +5009,8 @@ models:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Typical Tech Stack Across Layers:</strong></p>
+                <div class="answer">
+<p><strong>Typical Tech Stack Across Layers:</strong></p>
                 
                 <p><strong>1. Source Systems</strong></p>
                 <ul>
@@ -4879,6 +5067,7 @@ models:
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q49">
@@ -4891,7 +5080,8 @@ models:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Emerging Trends Shaping the Data Industry:</strong></p>
+                <div class="answer">
+<p><strong>Emerging Trends Shaping the Data Industry:</strong></p>
                 
                 <p><strong>1. DataOps</strong></p>
                 <p>Applying DevOps principles to data pipelines: CI/CD, monitoring, automation, version control</p>
@@ -4927,6 +5117,7 @@ models:
                 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q50">
@@ -4939,7 +5130,8 @@ models:
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>DBT Snapshots automate SCD Type 2 implementation without manual coding:</strong></p>
+                <div class="answer">
+<p><strong>DBT Snapshots automate SCD Type 2 implementation without manual coding:</strong></p>
                 
                 <p><strong>Timestamp Strategy (When source has updated_at):</strong></p>
                 <pre>{% snapshot dim_customer_snapshot %}
@@ -4992,6 +5184,7 @@ WHERE dbt_valid_from &lt;= '2024-01-15'
 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q51">
@@ -5004,7 +5197,8 @@ WHERE dbt_valid_from &lt;= '2024-01-15'
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Schema drift</strong> occurs when the structure of source data changes unexpectedly — new columns appear, data types change, or columns are removed — breaking downstream pipelines.</p>
+                <div class="answer">
+<p><strong>Schema drift</strong> occurs when the structure of source data changes unexpectedly — new columns appear, data types change, or columns are removed — breaking downstream pipelines.</p>
 
                 <p><strong>Real-World Scenario:</strong><br>
                 Your e-commerce source system adds a new column <code>loyalty_tier</code> to the <code>orders</code> table overnight. Your Snowflake pipeline that does <code>SELECT *</code> into a fixed schema now fails because the target table does not have that column.</p>
@@ -5135,6 +5329,7 @@ models:
 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q52">
@@ -5147,7 +5342,8 @@ models:
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Late-arriving data</strong> occurs when records arrive in your pipeline after the time window they logically belong to has already been processed — causing incorrect aggregations, incomplete reports, and stale dashboards.</p>
+                <div class="answer">
+<p><strong>Late-arriving data</strong> occurs when records arrive in your pipeline after the time window they logically belong to has already been processed — causing incorrect aggregations, incomplete reports, and stale dashboards.</p>
 
                 <p><strong>Real-World Scenario:</strong><br>
                 A mobile app records user click events locally and syncs when the device reconnects. Events from <code>2024-01-10</code> arrive in your pipeline on <code>2024-01-15</code>. Your daily revenue report for Jan 10 was already published — and it is now wrong.</p>
@@ -5303,6 +5499,7 @@ ORDER BY record_version;</pre>
 
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
+            </div>
         </div>
 
 
@@ -5320,7 +5517,8 @@ ORDER BY record_version;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your company supports 100+ business users across multiple teams. The source is a 500-table Oracle ERP with millions of rows mutating daily. Business needs sub-30-minute data freshness in Snowflake for operational dashboards. Design the full pipeline.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your company supports 100+ business users across multiple teams. The source is a 500-table Oracle ERP with millions of rows mutating daily. Business needs sub-30-minute data freshness in Snowflake for operational dashboards. Design the full pipeline.</p>
 
                 <p><strong>Architecture Overview</strong></p>
                 <pre>Oracle ERP / SQL Server / PostgreSQL
@@ -5443,6 +5641,7 @@ SELECT * FROM {{ ref('stg_orders') }}
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q54">
@@ -5455,7 +5654,8 @@ SELECT * FROM {{ ref('stg_orders') }}
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> You inherit a single monolithic SQL transformation running nightly on a 2XL warehouse, taking 4 hours, failing regularly, and blocking BI reports until morning. Design a production-grade ELT platform that is resilient, observable, and cost-efficient.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> You inherit a single monolithic SQL transformation running nightly on a 2XL warehouse, taking 4 hours, failing regularly, and blocking BI reports until morning. Design a production-grade ELT platform that is resilient, observable, and cost-efficient.</p>
 
                 <p><strong>Full Platform Architecture</strong></p>
                 <pre>┌─────────────────────────────────────────────────────────────┐
@@ -5600,6 +5800,7 @@ ORDER BY total_elapsed_time DESC;</pre>
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q55">
@@ -5612,7 +5813,8 @@ ORDER BY total_elapsed_time DESC;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Rather than scheduling dbt runs on a fixed clock, you want Snowflake to automatically trigger transformations the moment new data arrives from Qlik Replicate. Zero polling, zero wasted credits on empty runs.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Rather than scheduling dbt runs on a fixed clock, you want Snowflake to automatically trigger transformations the moment new data arrives from Qlik Replicate. Zero polling, zero wasted credits on empty runs.</p>
 
                 <p><strong>Streams — Change Data Capture Inside Snowflake</strong></p>
                 <pre>-- A Stream is a change-tracking cursor on a table
@@ -5710,6 +5912,7 @@ ORDER BY scheduled_time DESC;</pre>
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q56">
@@ -5722,7 +5925,8 @@ ORDER BY scheduled_time DESC;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your dbt project has grown to 200+ models. Developers are copy-pasting the same surrogate key logic, date spine generation, and column renaming patterns across dozens of files. Macros eliminate the duplication and make the whole project consistent.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your dbt project has grown to 200+ models. Developers are copy-pasting the same surrogate key logic, date spine generation, and column renaming patterns across dozens of files. Macros eliminate the duplication and make the whole project consistent.</p>
 
                 <p><strong>Macro 1 — Reusable Surrogate Key (used across all dimension tables)</strong></p>
                 <pre>-- macros/generate_surrogate_key.sql
@@ -5856,6 +6060,7 @@ exposures:
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q57">
@@ -5868,7 +6073,8 @@ exposures:
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> You are building the analytics data model for a B2B SaaS company with three subject areas — Sales, Finance, and Operations. BI teams in each area need to slice and dice independently, but the CEO needs a single cross-functional dashboard. You must design a model that works for both.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> You are building the analytics data model for a B2B SaaS company with three subject areas — Sales, Finance, and Operations. BI teams in each area need to slice and dice independently, but the CEO needs a single cross-functional dashboard. You must design a model that works for both.</p>
 
                 <p><strong>Star Schema Design — fact_orders</strong></p>
                 <pre>-- FACT TABLE: fact_orders (grain = one row per order line item)
@@ -5983,6 +6189,7 @@ FROM ( {{ date_spine("'2018-01-01'", "DATEADD('year',3,CURRENT_DATE)") }} )</pre
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q58">
@@ -5995,7 +6202,8 @@ FROM ( {{ date_spine("'2018-01-01'", "DATEADD('year',3,CURRENT_DATE)") }} )</pre
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A third-party logistics partner drops daily shipment files (Parquet) into an S3 bucket. You need these files auto-ingested into Snowflake within minutes of arrival — without polling, without a scheduler, and with full security via IAM roles (no hardcoded credentials).</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A third-party logistics partner drops daily shipment files (Parquet) into an S3 bucket. You need these files auto-ingested into Snowflake within minutes of arrival — without polling, without a scheduler, and with full security via IAM roles (no hardcoded credentials).</p>
 
                 <p><strong>Step 1: IAM Role-Based Trust (no credentials in Snowflake)</strong></p>
                 <pre>-- Step 1a: Create storage integration (Snowflake side)
@@ -6123,6 +6331,7 @@ ORDER BY 3 DESC;</pre>
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q59">
@@ -6135,7 +6344,8 @@ ORDER BY 3 DESC;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your dbt project has 300 models. Every PR currently runs the full project in CI — taking 45 minutes and costing $15 in credits per PR. With Slim CI, you only run models that changed in the PR and their downstream dependents. CI drops to 5 minutes and $2.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your dbt project has 300 models. Every PR currently runs the full project in CI — taking 45 minutes and costing $15 in credits per PR. With Slim CI, you only run models that changed in the PR and their downstream dependents. CI drops to 5 minutes and $2.</p>
 
                 <p><strong>How Slim CI Works</strong></p>
                 <pre>-- dbt generates a manifest.json after every production run
@@ -6244,6 +6454,7 @@ snowflake_profile:
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q60">
@@ -6256,7 +6467,8 @@ snowflake_profile:
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A Tableau dashboard querying <code>fact_orders</code> (800M rows) takes 45 seconds. The SLA is under 5 seconds. You have a $5,000/month Snowflake bill and need to cut it by 30% without impacting query performance.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A Tableau dashboard querying <code>fact_orders</code> (800M rows) takes 45 seconds. The SLA is under 5 seconds. You have a $5,000/month Snowflake bill and need to cut it by 30% without impacting query performance.</p>
 
                 <p><strong>Step 1: Profile the Slow Query</strong></p>
                 <pre>-- Find expensive queries in the last 7 days
@@ -6375,6 +6587,7 @@ SELECT DISTINCT customer_id FROM fact_orders;
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q61">
@@ -6387,7 +6600,8 @@ SELECT DISTINCT customer_id FROM fact_orders;
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> After a silent data quality failure corrupted the monthly revenue report — which went undetected for 3 days — you are asked to design a comprehensive data quality framework that catches issues at every layer before they reach BI consumers.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> After a silent data quality failure corrupted the monthly revenue report — which went undetected for 3 days — you are asked to design a comprehensive data quality framework that catches issues at every layer before they reach BI consumers.</p>
 
                 <p><strong>Quality Framework Architecture — 4 Layers of Defence</strong></p>
                 <pre>Layer 1: Source Freshness Checks
@@ -6522,6 +6736,7 @@ WHERE t.check_date = CURRENT_DATE - 1
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q62">
@@ -6534,7 +6749,8 @@ WHERE t.check_date = CURRENT_DATE - 1
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your client is migrating from a Redshift-based monolith (3TB, 800 tables, 50 reports) to a modern Snowflake + dbt + S3 Lakehouse. As the lead data engineer, you must design the migration, preserve data history, and ensure zero BI downtime.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your client is migrating from a Redshift-based monolith (3TB, 800 tables, 50 reports) to a modern Snowflake + dbt + S3 Lakehouse. As the lead data engineer, you must design the migration, preserve data history, and ensure zero BI downtime.</p>
 
                 <p><strong>Migration Architecture</strong></p>
                 <pre>PHASE 1 — ASSESSMENT (Week 1–2)
@@ -6661,6 +6877,7 @@ ALTER TABLE marts.dim_customers
 
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
 
@@ -6678,7 +6895,8 @@ ALTER TABLE marts.dim_customers
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your daily pipeline must: wait for an S3 file from a partner to arrive (unknown time), then ingest it into Snowflake, run dbt, and only email the finance team when all models pass tests. If any step fails, retry twice and alert Slack. You need Airflow — not just a cron job.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your daily pipeline must: wait for an S3 file from a partner to arrive (unknown time), then ingest it into Snowflake, run dbt, and only email the finance team when all models pass tests. If any step fails, retry twice and alert Slack. You need Airflow — not just a cron job.</p>
 
                 <p><strong>Core Airflow Concepts</strong></p>
                 <pre># DAG = Directed Acyclic Graph of tasks
@@ -6802,6 +7020,7 @@ def validate_count(ti, **kwargs):
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q64">
@@ -6814,7 +7033,8 @@ def validate_count(ti, **kwargs):
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your analytics team needs to run a customer churn prediction model. Traditionally this means pulling data out of Snowflake into a Jupyter notebook, running Python, and writing predictions back — with data leaving the secure environment. Snowpark lets you run the entire pipeline inside Snowflake — no data movement, no separate compute cluster.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your analytics team needs to run a customer churn prediction model. Traditionally this means pulling data out of Snowflake into a Jupyter notebook, running Python, and writing predictions back — with data leaving the secure environment. Snowpark lets you run the entire pipeline inside Snowflake — no data movement, no separate compute cluster.</p>
 
                 <p><strong>Snowpark Session &amp; DataFrame API</strong></p>
                 <pre>from snowflake.snowpark import Session
@@ -6924,6 +7144,7 @@ predictions.write.mode('overwrite').save_as_table('ML.churn_predictions')</pre>
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q65">
@@ -6936,7 +7157,8 @@ predictions.write.mode('overwrite').save_as_table('ML.churn_predictions')</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your finance team calculates "Monthly Recurring Revenue" one way in Tableau, the sales team calculates it differently in Looker, and the exec team uses yet another formula in Excel. Three definitions of MRR means three different numbers in board meetings. The dbt Semantic Layer solves this — define MRR once in dbt, all BI tools query the same definition.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your finance team calculates "Monthly Recurring Revenue" one way in Tableau, the sales team calculates it differently in Looker, and the exec team uses yet another formula in Excel. Three definitions of MRR means three different numbers in board meetings. The dbt Semantic Layer solves this — define MRR once in dbt, all BI tools query the same definition.</p>
 
                 <p><strong>dbt Semantic Layer Architecture</strong></p>
                 <pre># The Semantic Layer sits between dbt models and BI tools
@@ -7063,6 +7285,7 @@ mf query   --metrics monthly_recurring_revenue   --group-by metric_time__month,r
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q66">
@@ -7075,7 +7298,8 @@ mf query   --metrics monthly_recurring_revenue   --group-by metric_time__month,r
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> The backend team adds a new field to the orders API response and renames <code>customer_id</code> to <code>customerId</code> (camelCase). Your Snowflake pipeline breaks silently — orders still load, but all customer joins now return NULL. You find out when the weekly revenue report is wrong. Data contracts would have caught this before the change was deployed.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> The backend team adds a new field to the orders API response and renames <code>customer_id</code> to <code>customerId</code> (camelCase). Your Snowflake pipeline breaks silently — orders still load, but all customer joins now return NULL. You find out when the weekly revenue report is wrong. Data contracts would have caught this before the change was deployed.</p>
 
                 <p><strong>What is a Data Contract?</strong></p>
                 <pre># A data contract is a formal, versioned agreement between a data producer
@@ -7210,6 +7434,7 @@ WHERE a.col IS NULL OR c.expected_type != a.actual_type;</pre>
                 </ul>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q67">
@@ -7222,7 +7447,8 @@ WHERE a.col IS NULL OR c.expected_type != a.actual_type;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A customer moves from the "SMB" segment to "Enterprise". How you handle this change determines whether your historical revenue reports show correct segmentation — or silently backfill the customer's entire history as Enterprise, inflating enterprise metrics and deflating SMB metrics going back years.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A customer moves from the "SMB" segment to "Enterprise". How you handle this change determines whether your historical revenue reports show correct segmentation — or silently backfill the customer's entire history as Enterprise, inflating enterprise metrics and deflating SMB metrics going back years.</p>
 
                 <p><strong>SCD Type 0 — Never Changes (retain original)</strong></p>
                 <pre>-- Use when: the original value at acquisition time is the analytically correct one
@@ -7357,6 +7583,7 @@ CREATE TABLE dim_customers_t6 (
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q68">
@@ -7369,7 +7596,8 @@ CREATE TABLE dim_customers_t6 (
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your ride-sharing app emits 50,000 trip events per second. You need trip completion events in Snowflake within 30 seconds for operational monitoring, and in a clean aggregated form within 5 minutes for the driver payout system. Design the streaming pipeline.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your ride-sharing app emits 50,000 trip events per second. You need trip completion events in Snowflake within 30 seconds for operational monitoring, and in a clean aggregated form within 5 minutes for the driver payout system. Design the streaming pipeline.</p>
 
                 <p><strong>Architecture: Kafka → Kafka Connect → Snowflake</strong></p>
                 <pre>Mobile App / Backend Services
@@ -7493,6 +7721,7 @@ WHERE record_content:event_type::VARCHAR = 'TRIP_COMPLETED'
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q69">
@@ -7505,7 +7734,8 @@ WHERE record_content:event_type::VARCHAR = 'TRIP_COMPLETED'
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> Your Snowflake bill jumped from $8K to $22K in one month. No new pipelines were added. The culprit: a BI analyst accidentally left a LARGE warehouse running without auto-suspend, and a broken dbt model ran a full table scan on a 500M-row table 48 times due to a retry loop. Here's how to prevent and diagnose this.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> Your Snowflake bill jumped from $8K to $22K in one month. No new pipelines were added. The culprit: a BI analyst accidentally left a LARGE warehouse running without auto-suspend, and a broken dbt model ran a full table scan on a 500M-row table 48 times due to a retry loop. Here's how to prevent and diagnose this.</p>
 
                 <p><strong>Step 1: Find the Cost Drivers</strong></p>
                 <pre>-- Top credit consumers by warehouse (last 30 days)
@@ -7637,6 +7867,7 @@ CREATE TRANSIENT TABLE staging.orders_temp AS SELECT * FROM raw.orders;</pre>
                 </table>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
+            </div>
         </div>
 
         <div class="question" id="q70">
@@ -7649,7 +7880,8 @@ CREATE TRANSIENT TABLE staging.orders_temp AS SELECT * FROM raw.orders;</pre>
                 <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Real-World Scenario:</strong> A company hires both a Data Engineer and an Analytics Engineer. The Data Engineer builds and maintains the ingestion pipeline from Salesforce → Snowflake raw. The Analytics Engineer picks it up from there — they own the dbt models, define metrics, write documentation, and make sure the revenue number in Tableau matches the revenue number the CFO sees in the board pack.</p>
+                <div class="answer">
+<p><strong>Real-World Scenario:</strong> A company hires both a Data Engineer and an Analytics Engineer. The Data Engineer builds and maintains the ingestion pipeline from Salesforce → Snowflake raw. The Analytics Engineer picks it up from there — they own the dbt models, define metrics, write documentation, and make sure the revenue number in Tableau matches the revenue number the CFO sees in the board pack.</p>
 
                 <p><strong>Role Distinction</strong></p>
                 <table>
@@ -7735,6 +7967,7 @@ Tableau / Looker / Power BI dashboards
         ▼
 Business decisions (the whole point)</pre>
                 <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
             </div>
         </div>
 
@@ -8135,6 +8368,54 @@ Business decisions (the whole point)</pre>
             } else {
                 applyHighlighting();
             }
+        })();
+
+        // ── CONTENT PROTECTION ──────────────────────────────────────────────
+        (function() {
+
+            // 1. Block if opened as local file (file:// or blob://)
+            const proto = location.protocol;
+            if (proto === 'file:' || proto === 'blob:') {
+                document.getElementById('offline-block').classList.add('visible');
+                document.querySelector('.layout') && (document.querySelector('.layout').style.display = 'none');
+                document.querySelector('.top-bar') && (document.querySelector('.top-bar').style.display = 'none');
+                document.querySelector('.attr-bar') && (document.querySelector('.attr-bar').style.display = 'none');
+                return;
+            }
+
+            // 2. Block right-click context menu
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // 3. Block keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                const k = e.key.toLowerCase();
+                // Ctrl/Cmd + S, U, P
+                if ((e.ctrlKey || e.metaKey) && ['s','u','p'].includes(k)) {
+                    e.preventDefault(); return false;
+                }
+                // F12
+                if (e.key === 'F12') { e.preventDefault(); return false; }
+                // Ctrl+Shift+I / J / C  (devtools)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i','j','c'].includes(k)) {
+                    e.preventDefault(); return false;
+                }
+            });
+
+            // 4. Watermark every <pre> block
+            function watermark() {
+                document.querySelectorAll('pre:not([data-wm])').forEach(pre => {
+                    pre.dataset.wm = '1';
+                    const wm = document.createElement('span');
+                    wm.className = 'pre-watermark';
+                    wm.textContent = '© vsurya@duck.com';
+                    pre.style.position = 'relative';
+                    pre.appendChild(wm);
+                });
+            }
+            // Run now and after any future DOM additions
+            watermark();
+            new MutationObserver(watermark).observe(document.body, { childList: true, subtree: true });
+
         })();
     </script>
 </body>
