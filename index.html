@@ -30,6 +30,7 @@
             --display: 'Syne', sans-serif;
             --sidebar-w: 280px;
             --header-h: 64px;
+            --attr-bar-h: 26px;
             --pre-bg: #161b27;
             --pre-color: #e6edf3;
             --pre-border: #2a3245;
@@ -91,10 +92,62 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
+        /* ── ATTRIBUTION BAR ── */
+        .attr-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 26px;
+            background: linear-gradient(90deg, #1a1f2e 0%, #1e2435 100%);
+            border-bottom: 1px solid rgba(59,130,246,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 110;
+            transition: background 0.3s ease;
+        }
+
+        :root.light .attr-bar {
+            background: linear-gradient(90deg, #e8ecf6 0%, #dde4f0 100%);
+            border-bottom: 1px solid rgba(37,99,235,0.18);
+        }
+
+        .attr-bar-text {
+            font-family: var(--mono);
+            font-size: 0.62em;
+            color: var(--text3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .attr-bar-text strong {
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        .attr-bar-divider {
+            width: 1px;
+            height: 10px;
+            background: var(--border2);
+        }
+
+        .attr-bar-text a {
+            color: var(--green);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .attr-bar-text a:hover {
+            color: var(--accent2);
+            text-decoration: underline;
+        }
+
         /* ── TOP HEADER ── */
         .top-bar {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 26px; left: 0; right: 0;
             height: var(--header-h);
             background: var(--top-bar-bg);
             backdrop-filter: blur(16px);
@@ -253,7 +306,7 @@
         /* ── LAYOUT ── */
         .layout {
             display: flex;
-            padding-top: var(--header-h);
+            padding-top: calc(var(--header-h) + var(--attr-bar-h));
             min-height: 100vh;
         }
 
@@ -261,7 +314,7 @@
         .sidebar {
             width: var(--sidebar-w);
             position: fixed;
-            top: var(--header-h);
+            top: calc(var(--header-h) + var(--attr-bar-h));
             left: 0;
             bottom: 0;
             background: var(--surface);
@@ -960,6 +1013,17 @@
     </style>
 </head>
 <body>
+
+    <!-- ATTRIBUTION BAR -->
+    <div class="attr-bar">
+        <span class="attr-bar-text">
+            &#128203; Maintained by &nbsp;<strong>Vemula Suryateja</strong>
+        </span>
+        <div class="attr-bar-divider"></div>
+        <span class="attr-bar-text">
+            &#9993; <a href="mailto:vsurya@duck.com">vsurya@duck.com</a>
+        </span>
+    </div>
 
     <!-- TOP BAR -->
     <header class="top-bar">
