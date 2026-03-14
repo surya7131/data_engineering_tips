@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snowflake & Data Engineering Interview Guide</title>
+    <title>Data Engineering Prep — Snowflake, DBT, Cloud</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -96,16 +96,68 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            text-decoration: none;
         }
 
-        .top-bar-logo .logo-icon {
-            width: 32px; height: 32px;
-            background: linear-gradient(135deg, var(--accent), #818cf8);
-            border-radius: 8px;
+        .top-bar-logo .logo-icons {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+            width: 44px;
+            height: 36px;
+        }
+
+        .top-bar-logo .logo-icon-cloud {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(59,130,246,0.4);
+            position: absolute;
+            top: 0; left: 0;
+        }
+
+        .top-bar-logo .logo-icon-snow {
+            width: 22px; height: 22px;
+            background: linear-gradient(135deg, #29b5e8 0%, #38bdf8 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 0; right: 0;
+            box-shadow: 0 2px 8px rgba(41,181,232,0.5);
+            border: 2px solid var(--bg);
+        }
+
+        .top-bar-logo .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            gap: 3px;
+        }
+
+        .top-bar-logo .logo-title {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 1em;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, var(--text) 55%, var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .top-bar-logo .logo-sub {
+            font-family: var(--mono);
+            font-size: 0.5em;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            -webkit-text-fill-color: var(--text3);
+            color: var(--text3);
         }
 
         .top-bar-meta {
@@ -147,14 +199,35 @@
         }
 
         .sidebar-toggle {
-            display: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
             background: var(--surface2);
             border: 1px solid var(--border);
             color: var(--text2);
             border-radius: 6px;
-            padding: 6px 10px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--accent2);
+        }
+
+        /* ── SIDEBAR COLLAPSED (desktop) ── */
+        body.sidebar-collapsed .sidebar {
+            transform: translateX(-100%);
+        }
+
+        body.sidebar-collapsed .main {
+            margin-left: 0;
+            max-width: 100%;
         }
 
         /* ── LAYOUT ── */
@@ -178,6 +251,7 @@
             z-index: 50;
             scrollbar-width: thin;
             scrollbar-color: var(--border2) transparent;
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar::-webkit-scrollbar { width: 4px; }
@@ -238,13 +312,15 @@
             flex: 1;
             padding: 40px 48px 80px;
             max-width: calc(100% - var(--sidebar-w));
+            transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                        max-width  0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* ── HERO ── */
         .hero {
             margin-bottom: 52px;
-            padding: 40px;
-            background: linear-gradient(135deg, var(--surface2) 0%, rgba(59,130,246,0.05) 100%);
+            padding: 36px 40px 32px;
+            background: linear-gradient(135deg, var(--surface2) 0%, rgba(59,130,246,0.06) 100%);
             border: 1px solid var(--border2);
             border-radius: 16px;
             position: relative;
@@ -255,9 +331,20 @@
             content: '';
             position: absolute;
             top: -60px; right: -60px;
-            width: 240px; height: 240px;
-            background: radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%);
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(59,130,246,0.13), transparent 70%);
             border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; left: -40px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(129,140,248,0.08), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
         .hero-tag {
@@ -281,7 +368,7 @@
             letter-spacing: -0.03em;
             color: var(--text);
             line-height: 1.15;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .hero h1 span {
@@ -291,43 +378,137 @@
             background-clip: text;
         }
 
-        .hero p {
-            color: var(--text2);
-            font-size: 1em;
-            font-weight: 300;
-            max-width: 560px;
+        .hero-typewriter {
+            font-family: var(--mono);
+            font-size: 0.82em;
+            margin-bottom: 20px;
+            min-height: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
+
+        .hero-typewriter .tw-prefix { color: var(--text3); white-space: nowrap; }
+        .hero-typewriter .tw-text   { color: var(--green); font-weight: 600; }
+        .hero-typewriter .tw-cursor {
+            display: inline-block;
+            width: 2px; height: 0.9em;
+            background: var(--accent2);
+            border-radius: 1px;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        .hero-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 22px;
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 11px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-family: var(--mono);
+            font-weight: 500;
+            border: 1px solid;
+            letter-spacing: 0.03em;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .hero-chip.visible { opacity: 1; transform: translateY(0); }
+
+        .chip-blue   { background:rgba(59,130,246,.1);  border-color:rgba(59,130,246,.3);  color:#60a5fa; }
+        .chip-green  { background:rgba(16,185,129,.1);  border-color:rgba(16,185,129,.3);  color:#34d399; }
+        .chip-purple { background:rgba(168,85,247,.1);  border-color:rgba(168,85,247,.3);  color:#c084fc; }
+        .chip-amber  { background:rgba(245,158,11,.1);  border-color:rgba(245,158,11,.3);  color:#fbbf24; }
+        .chip-pink   { background:rgba(236,72,153,.1);  border-color:rgba(236,72,153,.3);  color:#f472b6; }
+        .chip-cyan   { background:rgba(6,182,212,.1);   border-color:rgba(6,182,212,.3);   color:#22d3ee; }
 
         .hero-stats {
-            display: flex;
-            gap: 24px;
-            margin-top: 24px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 4px;
         }
 
-        .stat {
+        .stat-card {
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 14px 11px;
             display: flex;
             flex-direction: column;
+            gap: 3px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
         }
+        .stat-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            border-radius: 2px 2px 0 0;
+        }
+        .stat-card.card-blue::before   { background: linear-gradient(90deg,#3b82f6,#6366f1); }
+        .stat-card.card-green::before  { background: linear-gradient(90deg,#10b981,#06b6d4); }
+        .stat-card.card-purple::before { background: linear-gradient(90deg,#a855f7,#ec4899); }
+
+        .stat-icon  { font-size: 1em; line-height: 1; margin-bottom: 1px; }
 
         .stat-num {
             font-family: var(--display);
-            font-size: 1.6em;
+            font-size: 1.65em;
             font-weight: 800;
             color: var(--text);
             line-height: 1;
+            letter-spacing: -0.02em;
         }
 
         .stat-label {
-            font-size: 0.72em;
+            font-family: var(--mono);
+            font-size: 0.6em;
             color: var(--text3);
-            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
         }
 
-        .stat-divider {
-            width: 1px;
+        .hero-progress {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hero-progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--mono);
+            font-size: 0.68em;
+            color: var(--text3);
+        }
+        .hero-progress-header .hp-label { color: var(--text2); font-weight: 500; }
+
+        .hero-progress-track {
+            height: 5px;
             background: var(--border2);
-            align-self: stretch;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .hero-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--green));
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
         }
 
         /* ── QUESTIONS ── */
@@ -392,6 +573,14 @@
 
         .question.collapsed .question-toggle {
             transform: rotate(-90deg);
+        }
+
+        .question.collapsed .answer {
+            display: none;
+        }
+
+        .question.collapsed .question-header {
+            border-bottom: none;
         }
 
         /* ── ANSWER ── */
@@ -642,21 +831,18 @@
         @media (max-width: 900px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.25s ease;
                 z-index: 200;
             }
 
             .sidebar.open {
-                transform: translateX(0);
+                transform: translateX(0) !important;
             }
 
             .main {
-                margin-left: 0;
-                max-width: 100%;
+                margin-left: 0 !important;
+                max-width: 100% !important;
                 padding: 24px 20px 60px;
             }
-
-            .sidebar-toggle { display: block; }
 
             .hero h1 { font-size: 1.8em; }
 
@@ -672,7 +858,14 @@
         }
 
         @media (max-width: 600px) {
-            .hero { padding: 24px; }
+            .hero { padding: 22px 20px 20px; }
+            .hero h1 { font-size: 1.7em; }
+            .hero-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-card { padding: 11px 10px 9px; }
+            .stat-num { font-size: 1.35em; }
+            .stat-label { font-size: 0.55em; }
+            .hero-chips { gap: 6px; }
+            .hero-chip { font-size: 0.65em; padding: 3px 9px; }
             .main { padding: 16px 16px 60px; }
             .answer { padding: 18px 20px 16px; }
             .question-header { padding: 16px 20px 12px; }
@@ -685,8 +878,24 @@
     <header class="top-bar">
         <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
         <div class="top-bar-logo">
-            <div class="logo-icon">❄</div>
-            <span>DE Interview Guide</span>
+            <div class="logo-icons">
+                <!-- Cloud icon -->
+                <div class="logo-icon-cloud">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.5 19C4.01 19 2 16.99 2 14.5C2 12.24 3.66 10.36 5.85 10.05C6.21 7.22 8.62 5 11.5 5C13.82 5 15.83 6.33 16.84 8.28C17.12 8.1 17.45 8 17.8 8C19.57 8 21 9.43 21 11.2C21 12.75 19.96 14.04 18.56 14.37C18.37 16.96 16.21 19 13.5 19H6.5Z" fill="rgba(255,255,255,0.9)"/>
+                    </svg>
+                </div>
+                <!-- Snowflake icon -->
+                <div class="logo-icon-snow">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2V22M12 2L9 5M12 2L15 5M12 22L9 19M12 22L15 19M2 12H22M2 12L5 9M2 12L5 15M22 12L19 9M22 12L19 15M5.5 5.5L18.5 18.5M5.5 5.5L8.5 5.5M5.5 5.5L5.5 8.5M18.5 18.5L15.5 18.5M18.5 18.5L18.5 15.5M18.5 5.5L5.5 18.5M18.5 5.5L18.5 8.5M18.5 5.5L15.5 5.5M5.5 18.5L5.5 15.5M5.5 18.5L8.5 18.5" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="logo-text">
+                <span class="logo-title">Data Engineering Prep</span>
+                <span class="logo-sub">Cloud · Snowflake · DBT · SQL</span>
+            </div>
         </div>
         <div class="top-bar-meta">
             <div class="progress-pill">
@@ -707,7 +916,6 @@
     <div class="layout">
         <!-- SIDEBAR -->
         <nav class="sidebar" id="sidebar">
-            <div class="sidebar-heading">50 Questions</div>
             <a href="#q1" class="sidebar-item" data-q="q1"><span class="q-num">01</span> Compute Hours Query</a>
             <a href="#q2" class="sidebar-item" data-q="q2"><span class="q-num">02</span> Snowflake Architecture</a>
             <a href="#q3" class="sidebar-item" data-q="q3"><span class="q-num">03</span> Time-Travel Features</a>
@@ -750,7 +958,7 @@
             <a href="#q40" class="sidebar-item" data-q="q40"><span class="q-num">40</span> Hashing vs Encryption</a>
             <a href="#q41" class="sidebar-item" data-q="q41"><span class="q-num">41</span> S3 Integration</a>
             <a href="#q42" class="sidebar-item" data-q="q42"><span class="q-num">42</span> DBT Models & Tests</a>
-            <a href="#q43" class="sidebar-item" data-q="q43"><span class="q-num">43</span> DBT Materializations</a>
+            <a href="#q43" class="sidebar-item" data-q="q43"><span class="q-num">43</span> DBT Incremental Strategies</a>
             <a href="#q44" class="sidebar-item" data-q="q44"><span class="q-num">44</span> DBT Dependencies</a>
             <a href="#q45" class="sidebar-item" data-q="q45"><span class="q-num">45</span> Jinja in DBT</a>
             <a href="#q46" class="sidebar-item" data-q="q46"><span class="q-num">46</span> Data Governance</a>
@@ -758,33 +966,78 @@
             <a href="#q48" class="sidebar-item" data-q="q48"><span class="q-num">48</span> Modern Data Stack</a>
             <a href="#q49" class="sidebar-item" data-q="q49"><span class="q-num">49</span> Future Trends</a>
             <a href="#q50" class="sidebar-item" data-q="q50"><span class="q-num">50</span> DBT Snapshots</a>
+            <a href="#q51" class="sidebar-item" data-q="q51"><span class="q-num">51</span> Schema Drift</a>
+            <a href="#q52" class="sidebar-item" data-q="q52"><span class="q-num">52</span> Late-Arriving Data</a>
+            <a href="#q53" class="sidebar-item" data-q="q53"><span class="q-num">53</span> System Design: CDC Pipeline</a>
+            <a href="#q54" class="sidebar-item" data-q="q54"><span class="q-num">54</span> System Design: ELT Platform</a>
+            <a href="#q55" class="sidebar-item" data-q="q55"><span class="q-num">55</span> Snowflake Streams &amp; Tasks</a>
+            <a href="#q56" class="sidebar-item" data-q="q56"><span class="q-num">56</span> dbt Macros &amp; Jinja</a>
+            <a href="#q57" class="sidebar-item" data-q="q57"><span class="q-num">57</span> Dimensional Modelling at Scale</a>
+            <a href="#q58" class="sidebar-item" data-q="q58"><span class="q-num">58</span> AWS + Snowflake Integration</a>
+            <a href="#q59" class="sidebar-item" data-q="q59"><span class="q-num">59</span> dbt CI/CD &amp; Slim CI</a>
+            <a href="#q60" class="sidebar-item" data-q="q60"><span class="q-num">60</span> Snowflake Performance Tuning</a>
+            <a href="#q61" class="sidebar-item" data-q="q61"><span class="q-num">61</span> Data Quality Framework Design</a>
+            <a href="#q62" class="sidebar-item" data-q="q62"><span class="q-num">62</span> Architect: Multi-Source Lakehouse</a>
         </nav>
 
         <!-- MAIN -->
         <main class="main" id="main-content">
             <div class="hero">
-                <div class="hero-tag">❄ Interview Prep</div>
-                <h1>Snowflake &<br><span>Data Engineering</span></h1>
-                <p>50 essential questions with comprehensive answers. From architecture to DBT, CDC to data governance.</p>
+                <div class="hero-tag">&#10052; Interview Prep</div>
+                <h1>Snowflake &amp;<br><span>Data Engineering</span></h1>
+
+                <!-- Typewriter -->
+                <div class="hero-typewriter">
+                    <span class="tw-prefix">topic://</span>
+                    <span class="tw-text" id="tw-text"></span>
+                    <span class="tw-cursor"></span>
+                </div>
+
+                <!-- Topic chips -->
+                <div class="hero-chips" id="hero-chips">
+                    <span class="hero-chip chip-blue">&#10052; Snowflake</span>
+                    <span class="hero-chip chip-green">&#9652; DBT</span>
+                    <span class="hero-chip chip-purple">&#9729; Cloud</span>
+                    <span class="hero-chip chip-amber">&#128200; SQL</span>
+                    <span class="hero-chip chip-cyan">&#8652; CDC</span>
+                    <span class="hero-chip chip-pink">&#128274; Data Governance</span>
+                    <span class="hero-chip chip-blue">&#128640; Pipelines</span>
+                    <span class="hero-chip chip-green">&#128202; Analytics</span>
+                    <span class="hero-chip chip-purple">&#9889; Streaming</span>
+                    <span class="hero-chip chip-amber">&#128268; Schemas</span>
+                </div>
+
+                <!-- Animated stat cards -->
                 <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-num">50</div>
+                    <div class="stat-card card-blue">
+                        <div class="stat-icon">&#128196;</div>
+                        <div class="stat-num" id="stat-q">0</div>
                         <div class="stat-label">Questions</div>
                     </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat">
-                        <div class="stat-num">12</div>
+                    <div class="stat-card card-green">
+                        <div class="stat-icon">&#127760;</div>
+                        <div class="stat-num" id="stat-t">0</div>
                         <div class="stat-label">Topics</div>
                     </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat">
-                        <div class="stat-num">∞</div>
+                    <div class="stat-card card-purple">
+                        <div class="stat-icon">&#128187;</div>
+                        <div class="stat-num" id="stat-s">0</div>
                         <div class="stat-label">SQL Examples</div>
                     </div>
                 </div>
-            </div>
 
-        <!-- Questions Start -->
+                <!-- Live progress bar -->
+                <div class="hero-progress">
+                    <div class="hero-progress-header">
+                        <span class="hp-label">Your Progress</span>
+                        <span id="hero-prog-label">0 / 52 viewed</span>
+                    </div>
+                    <div class="hero-progress-track">
+                        <div class="hero-progress-fill" id="hero-prog-fill"></div>
+                    </div>
+                </div>
+            </div>
+                <!-- Questions Start -->
 
         <div class="question" id="q1">
             <div class="question-header">
@@ -796,39 +1049,97 @@
                 <div class="question-toggle">▾</div>
             </div>
             <div class="answer">
-                <p><strong>Calculate total compute hours consumed overall and by day using start/end event markers:</strong></p>
-                <pre>WITH EventSequence AS (
+                <p><strong>Calculate total compute hours consumed using LAG() to capture the <code>start</code> state and timestamp, then LEAD() to look ahead to the next <code>end</code> timestamp — DATEDIFF between them gives run duration in seconds, which is summed and converted to hours.</strong></p>
+
+                <p><strong>Sample Data</strong></p>
+                <pre>-- your_table_name
+-- | Date_timestamp          | progress |
+-- |-------------------------|----------|
+-- | 2024-01-15 08:00:00     | start    |
+-- | 2024-01-15 09:45:00     | end      |
+-- | 2024-01-15 11:00:00     | start    |
+-- | 2024-01-15 12:30:00     | end      |</pre>
+
+                <p><strong>Step 1 — Use LAG to carry forward the previous state and its timestamp</strong></p>
+                <pre>WITH lagged AS (
     SELECT
         Date_timestamp,
         progress,
-        LAG(Date_timestamp) OVER (ORDER BY Date_timestamp) AS Previous_Timestamp,
-        LAG(progress) OVER (ORDER BY Date_timestamp) AS Previous_Progress
+        -- Pull the previous row's state into this row
+        LAG(progress)       OVER (ORDER BY Date_timestamp) AS prev_state,
+        LAG(Date_timestamp) OVER (ORDER BY Date_timestamp) AS prev_timestamp
     FROM your_table_name
-),
-ComputeDurations AS (
+)
+-- At this point every 'end' row also knows its paired 'start' timestamp
+SELECT * FROM lagged WHERE progress = 'end';</pre>
+
+                <p><strong>Step 2 — Use LEAD on the start rows to look ahead to the paired end timestamp</strong></p>
+                <pre>WITH windowed AS (
     SELECT
         Date_timestamp,
-        CASE
-            WHEN progress = 'end' AND Previous_Progress = 'start'
-            THEN DATEDIFF(SECOND, Previous_Timestamp, Date_timestamp)
-            ELSE 0
-        END AS Duration_Seconds
-    FROM EventSequence
-    WHERE progress = 'end' AND Previous_Progress = 'start'
+        progress,
+        LAG(progress)       OVER (ORDER BY Date_timestamp) AS prev_state,
+        LAG(Date_timestamp) OVER (ORDER BY Date_timestamp) AS prev_timestamp,
+        -- Look ahead from this row to the next row's timestamp
+        LEAD(Date_timestamp) OVER (ORDER BY Date_timestamp) AS next_timestamp
+    FROM your_table_name
+)</pre>
+
+                <p><strong>Step 3 — DATEDIFF between start and its LEAD end timestamp, SUM &amp; divide by 3600</strong></p>
+                <pre>WITH windowed AS (
+    SELECT
+        Date_timestamp,
+        progress,
+        LAG(progress)        OVER (ORDER BY Date_timestamp) AS prev_state,
+        LAG(Date_timestamp)  OVER (ORDER BY Date_timestamp) AS prev_timestamp,
+        LEAD(Date_timestamp) OVER (ORDER BY Date_timestamp) AS next_timestamp
+    FROM your_table_name
+),
+run_seconds AS (
+    SELECT
+        Date_timestamp                              AS run_start,
+        next_timestamp                              AS run_end,
+        TO_DATE(Date_timestamp)                     AS run_date,
+        -- DATEDIFF between this start row and the LEAD end timestamp
+        DATEDIFF(SECOND, Date_timestamp, next_timestamp) AS duration_seconds
+    FROM windowed
+    WHERE progress = 'start'       -- anchor on start rows
+      AND next_timestamp IS NOT NULL -- guard against last row
 )
 SELECT
-    SUM(Duration_Seconds) / 3600.0 AS Total_Compute_Hours_Overall,
-    TO_DATE(Date_timestamp) AS Compute_Date,
-    SUM(Duration_Seconds) / 3600.0 AS Daily_Compute_Hours
-FROM ComputeDurations
-GROUP BY TO_DATE(Date_timestamp)
-ORDER BY Compute_Date;</pre>
-                <p><strong>Key Points:</strong></p>
+    run_date,
+    SUM(duration_seconds)          AS total_run_seconds,
+    SUM(duration_seconds) / 3600.0 AS total_run_hours   -- divide by 3600 to get hours
+FROM run_seconds
+GROUP BY run_date
+ORDER BY run_date;</pre>
+
+                <p><strong>Overall total across all days</strong></p>
+                <pre>-- Wrap the above to get a grand total
+WITH windowed AS (
+    SELECT
+        Date_timestamp,
+        progress,
+        LEAD(Date_timestamp) OVER (ORDER BY Date_timestamp) AS next_timestamp
+    FROM your_table_name
+),
+run_seconds AS (
+    SELECT DATEDIFF(SECOND, Date_timestamp, next_timestamp) AS duration_seconds
+    FROM windowed
+    WHERE progress = 'start' AND next_timestamp IS NOT NULL
+)
+SELECT
+    SUM(duration_seconds)          AS total_run_seconds,
+    SUM(duration_seconds) / 3600.0 AS total_compute_hours
+FROM run_seconds;</pre>
+
+                <p><strong>How it works step by step</strong></p>
                 <ul>
-                    <li>Uses LAG() to get previous timestamps and status</li>
-                    <li>Only calculates duration when progress goes from 'start' to 'end'</li>
-                    <li>Converts seconds to hours by dividing by 3600</li>
-                    <li>Sums total and groups by date for daily breakdown</li>
+                    <li><strong>LAG(progress)</strong> — brings the previous row's state alongside each row, so we can confirm the row before an <code>end</code> was a <code>start</code></li>
+                    <li><strong>LEAD(Date_timestamp)</strong> — from a <code>start</code> row, looks one row ahead to fetch the <code>end</code> timestamp — this is the key change from the naive LAG-only approach</li>
+                    <li><strong>DATEDIFF(SECOND, start_ts, end_ts)</strong> — produces the raw run duration in seconds for each start→end pair</li>
+                    <li><strong>SUM(...) / 3600.0</strong> — aggregates all run durations and converts seconds → hours (3600 seconds per hour)</li>
+                    <li>Anchoring the filter on <code>progress = 'start'</code> rows keeps the logic clean — each start row directly carries its own paired end timestamp via LEAD</li>
                 </ul>
                 <a href="#main-content" class="back-to-toc">↑ Back to top</a>
             </div>
@@ -1935,9 +2246,15 @@ INSERT INTO summary SELECT COUNT(*) FROM top_customers;</pre>
         </div>
 
         <div class="question" id="q21">
-            <div class="question-number\">Question 21</div>
-            <div class=\"question-title\">Handling Schema Changes in Downstream Systems</div>
-            <div class=\"answer\">
+            <div class="question-header">
+                <div class="q-badge">21</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 21</div>
+                    <div class="question-title">Handling Schema Changes in Downstream Systems</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
                 <p><strong>Seven strategies to handle source system schema changes gracefully:</strong></p>
                 
                 <p><strong>1. Communication & Governance</strong></p>
@@ -3045,59 +3362,266 @@ ALTER TABLE customers ALTER COLUMN email SET MASKING POLICY email_mask;</pre>
                 <div class="q-badge">42</div>
                 <div class="question-meta">
                     <div class="question-number">Question 42</div>
-                    <div class="question-title">DBT Models, Tests & Seeds</div>
+                    <div class="question-title">DBT Models, Tests, Seeds &amp; Custom Tests — Deep Dive</div>
                 </div>
-                <div class="question-toggle">▾</div>
+                <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Three Core DBT Components:</strong></p>
-                
-                <p><strong>Models - SQL Transformations</strong></p>
-                <pre>-- stg_orders.sql
-SELECT 
-    order_id,
-    customer_id,
-    order_date,
-    amount
-FROM {{ source('raw', 'orders') }}
-WHERE order_date >= '2020-01-01'</pre>
-                <ul>
-                    <li>Each .sql file = one model</li>
-                    <li>Output: view or table (depends on materialization)</li>
-                    <li>Use ref() for dependencies</li>
-                </ul>
-                
-                <p><strong>Tests - Data Quality Validation</strong></p>
-                <pre>-- schema.yml
-tests:
-    - not_null
-    - unique
-    - accepted_values:
-        values: ['pending', 'completed', 'cancelled']
-    - relationships:
-        to: ref('dim_customer')
-        field: customer_id</pre>
-                <ul>
-                    <li>Built-in: not_null, unique, relationships, accepted_values</li>
-                    <li>Custom: Write SQL returning rows that violate rule</li>
-                    <li>Run with: <code>dbt test</code></li>
-                </ul>
-                
-                <p><strong>Seeds - Static Reference Data</strong></p>
-                <pre>-- data/country_codes.csv
-country_code,country_name
-US,United States
-CA,Canada
-UK,United Kingdom
 
--- Load with: dbt seed</pre>
-                <ul>
-                    <li>Small, infrequently-changing lookup tables</li>
-                    <li>Loaded as table in warehouse</li>
-                    <li>Version controlled in Git</li>
-                </ul>
-                
-                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+                <p><strong>Real-World Scenario:</strong> Your data team ingests Stripe payments, Salesforce CRM records and warehouse inventory into Snowflake. You use DBT to transform raw data into trusted analytics tables. One bad deploy introduced NULL order IDs in production — custom tests would have caught it before it reached the BI layer.</p>
+
+                <p><strong>1. Models — SQL Transformations as Code</strong></p>
+                <pre>-- models/staging/stg_orders.sql
+-- Staging layer: thin cleaning only, no business logic
+{{ config(materialized='view') }}
+
+SELECT
+    order_id::INT                         AS order_id,
+    customer_id::INT                      AS customer_id,
+    UPPER(TRIM(status))                   AS status,
+    amount::DECIMAL(10,2)                 AS amount,
+    order_date::DATE                      AS order_date,
+    _loaded_at                            AS ingested_at
+FROM {{ source('stripe', 'raw_orders') }}
+WHERE order_id IS NOT NULL</pre>
+
+                <pre>-- models/marts/fact_daily_revenue.sql
+-- Mart layer: business logic, joined, aggregated
+{{ config(materialized='table') }}
+
+WITH orders AS (
+    SELECT * FROM {{ ref('stg_orders') }}
+    WHERE status = 'COMPLETED'
+),
+customers AS (
+    SELECT * FROM {{ ref('stg_customers') }}
+)
+SELECT
+    o.order_date,
+    c.region,
+    c.customer_segment,
+    COUNT(o.order_id)     AS total_orders,
+    SUM(o.amount)         AS total_revenue,
+    AVG(o.amount)         AS avg_order_value
+FROM orders o
+JOIN customers c USING (customer_id)
+GROUP BY 1, 2, 3</pre>
+
+                <p><strong>2. Built-in Schema Tests</strong></p>
+                <pre># models/staging/schema.yml
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Cleaned Stripe orders from raw layer"
+    columns:
+      - name: order_id
+        description: "Primary key — must be unique and present"
+        tests:
+          - not_null
+          - unique
+
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['COMPLETED', 'PENDING', 'CANCELLED', 'REFUNDED']
+
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+      - name: amount
+        tests:
+          - not_null</pre>
+
+                <p><strong>3. Custom Singular Tests — SQL That Returns Failures</strong></p>
+                <p>A singular test is a plain <code>.sql</code> file in <code>tests/</code>. DBT runs it and <strong>fails if any rows are returned</strong>. Think of it as: "show me the violations."</p>
+
+                <pre>-- tests/assert_order_amount_positive.sql
+-- Fails if any completed order has a zero or negative amount
+SELECT
+    order_id,
+    amount,
+    status
+FROM {{ ref('stg_orders') }}
+WHERE status = 'COMPLETED'
+  AND amount &lt;= 0</pre>
+
+                <pre>-- tests/assert_no_future_orders.sql
+-- Fails if any order has a date beyond today (data quality anomaly)
+SELECT
+    order_id,
+    order_date
+FROM {{ ref('stg_orders') }}
+WHERE order_date &gt; CURRENT_DATE</pre>
+
+                <pre>-- tests/assert_revenue_matches_stripe.sql
+-- Cross-source reconciliation: DBT total vs Stripe dashboard total
+-- Fails if the variance exceeds 0.1%
+WITH dbt_total AS (
+    SELECT SUM(amount) AS total FROM {{ ref('stg_orders') }}
+    WHERE status = 'COMPLETED'
+      AND order_date = CURRENT_DATE - 1
+),
+stripe_control AS (
+    -- Loaded from a separate control/audit table
+    SELECT expected_revenue AS total
+    FROM {{ ref('stripe_daily_control') }}
+    WHERE report_date = CURRENT_DATE - 1
+)
+SELECT
+    d.total                                    AS dbt_total,
+    s.total                                    AS stripe_total,
+    ABS(d.total - s.total) / NULLIF(s.total,0) AS pct_variance
+FROM dbt_total d, stripe_control s
+WHERE ABS(d.total - s.total) / NULLIF(s.total,0) &gt; 0.001</pre>
+
+                <p><strong>4. Custom Generic Tests — Reusable Macros</strong></p>
+                <p>Generic tests live in <code>macros/</code> and can be applied to any column across any model via <code>schema.yml</code>.</p>
+
+                <pre>-- macros/test_not_negative.sql
+-- Reusable test: column must not contain negative values
+{% test not_negative(model, column_name) %}
+
+SELECT
+    {{ column_name }} AS failing_value,
+    COUNT(*) AS row_count
+FROM {{ model }}
+WHERE {{ column_name }} &lt; 0
+GROUP BY 1
+
+{% endtest %}</pre>
+
+                <pre>-- macros/test_within_date_range.sql
+-- Reusable test: date column must fall within a specified range
+{% test within_date_range(model, column_name, min_date, max_date) %}
+
+SELECT {{ column_name }}
+FROM {{ model }}
+WHERE {{ column_name }} &lt; '{{ min_date }}'
+   OR {{ column_name }} &gt; '{{ max_date }}'
+
+{% endtest %}</pre>
+
+                <pre>-- macros/test_row_count_above_threshold.sql
+-- Reusable test: table must have at least N rows (catches empty-load bugs)
+{% test row_count_above_threshold(model, column_name, threshold) %}
+
+WITH row_count AS (
+    SELECT COUNT(*) AS cnt FROM {{ model }}
+)
+SELECT cnt
+FROM row_count
+WHERE cnt &lt; {{ threshold }}
+
+{% endtest %}</pre>
+
+                <p>Apply generic tests in schema.yml:</p>
+                <pre># Apply custom generic tests across models
+models:
+  - name: fact_daily_revenue
+    columns:
+      - name: total_revenue
+        tests:
+          - not_negative          # custom generic macro
+          - not_null
+
+      - name: order_date
+        tests:
+          - within_date_range:    # custom generic macro with params
+              min_date: '2020-01-01'
+              max_date: '{{ run_started_at.strftime("%Y-%m-%d") }}'
+
+  - name: stg_orders
+    tests:
+      - row_count_above_threshold:  # model-level test (no column)
+          column_name: order_id
+          threshold: 1000           # alert if fewer than 1000 rows loaded</pre>
+
+                <p><strong>5. dbt-expectations — Great Expectations Integration</strong></p>
+                <pre># Add statistical / distribution tests via dbt-expectations package
+# packages.yml
+packages:
+  - package: calogica/dbt_expectations
+    version: [">=0.9.0", "&lt;1.0.0"]</pre>
+
+                <pre># schema.yml — rich statistical tests
+models:
+  - name: fact_daily_revenue
+    columns:
+      - name: avg_order_value
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 50000
+          - dbt_expectations.expect_column_mean_to_be_between:
+              min_value: 80
+              max_value: 500
+
+      - name: total_orders
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+    tests:
+      - dbt_expectations.expect_table_row_count_to_be_between:
+          min_value: 100
+          max_value: 1000000</pre>
+
+                <p><strong>6. Seeds — Version-Controlled Reference Data</strong></p>
+                <pre>-- data/region_mapping.csv
+region_code,region_name,timezone,currency
+US-EAST,US East,America/New_York,USD
+US-WEST,US West,America/Los_Angeles,USD
+EU-WEST,Europe West,Europe/London,GBP
+APAC,Asia Pacific,Asia/Singapore,SGD</pre>
+
+                <pre># seeds/properties.yml — add column-level docs and tests to seeds
+seeds:
+  - name: region_mapping
+    description: "Static region reference loaded from Git"
+    columns:
+      - name: region_code
+        tests: [not_null, unique]
+      - name: currency
+        tests:
+          - accepted_values:
+              values: ['USD', 'GBP', 'EUR', 'SGD', 'AUD']</pre>
+
+                <p><strong>7. Running &amp; Triaging Tests</strong></p>
+                <pre># Run all tests
+dbt test
+
+# Run tests for a specific model only
+dbt test --select stg_orders
+
+# Run only schema tests (not singular)
+dbt test --select test_type:singular
+
+# Run and store results for audit
+dbt test --store-failures   # Failed rows saved to schema dbt_test__audit
+
+# Compile a test to see the generated SQL before running
+dbt compile --select test_type:generic</pre>
+
+                <p><strong>Test Severity — Warn vs Error</strong></p>
+                <pre># schema.yml — set severity so non-critical issues warn but don't block
+models:
+  - name: stg_orders
+    columns:
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+              severity: warn          # Warn only — orphaned orders alert, don't fail CI
+          - not_null:
+              severity: error         # Hard fail — pipeline stops</pre>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
         </div>
 
@@ -3106,62 +3630,286 @@ UK,United Kingdom
                 <div class="q-badge">43</div>
                 <div class="question-meta">
                     <div class="question-number">Question 43</div>
-                    <div class="question-title">DBT Materializations 101</div>
+                    <div class="question-title">DBT Incremental Strategies — merge, append, delete+insert &amp; Snapshots</div>
                 </div>
-                <div class="question-toggle">▾</div>
+                <div class="question-toggle">&#9662;</div>
             </div>
             <div class="answer">
-                <p><strong>Four Ways DBT Builds Models:</strong></p>
-                
-                <p><strong>1. View (Default)</strong></p>
-                <pre>{{ config(materialized='view') }}
-SELECT * FROM {{ ref('stg_orders') }}</pre>
-                <ul>
-                    <li><strong>What:</strong> Creates SQL view (logical)</li>
-                    <li><strong>Pros:</strong> Always fresh, fast compile</li>
-                    <li><strong>Cons:</strong> Slow queries (logic runs every time)</li>
-                    <li><strong>Use for:</strong> Simple, rarely-queried models</li>
-                </ul>
-                
-                <p><strong>2. Table</strong></p>
-                <pre>{{ config(materialized='table') }}
-SELECT * FROM {{ ref('int_sales') }}</pre>
-                <ul>
-                    <li><strong>What:</strong> Creates physical table</li>
-                    <li><strong>Pros:</strong> Fast queries (pre-calculated)</li>
-                    <li><strong>Cons:</strong> Slow to build, storage cost</li>
-                    <li><strong>Use for:</strong> Complex, frequently-queried models</li>
-                </ul>
-                
-                <p><strong>3. Incremental</strong></p>
-                <pre>{{ config(
+
+                <p><strong>Real-World Scenario:</strong> Your e-commerce platform processes 2M orders/day into a Snowflake fact table. Running a full-refresh takes 45 minutes and costs $80 in credits. Incremental models reduce that to 3 minutes and $2 — but only if you choose the right strategy for your data pattern.</p>
+
+                <p><strong>Incremental Model Fundamentals</strong></p>
+                <p>On first run, DBT builds the full table. On subsequent runs, it only processes new/changed rows. The <code>is_incremental()</code> macro controls which rows to load:</p>
+
+                <pre>-- models/marts/fact_orders.sql
+{{ config(
     materialized='incremental',
-    unique_key='order_id'
+    unique_key='order_id',
+    incremental_strategy='merge'
 ) }}
-SELECT * FROM {{ ref('stg_orders') }}
+
+SELECT
+    order_id,
+    customer_id,
+    status,
+    amount,
+    updated_at
+FROM {{ source('raw', 'orders') }}
+
 {% if is_incremental() %}
-    WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
+    -- Only process rows updated since our last run
+    WHERE updated_at &gt; (SELECT MAX(updated_at) FROM {{ this }})
 {% endif %}</pre>
+
+                <p><strong>Strategy 1: merge (Default for Snowflake)</strong></p>
+                <p>Performs a SQL <code>MERGE</code> — matched rows are updated, new rows are inserted. Requires a <code>unique_key</code>. Best for tables where existing records can change (orders updating status, inventory changing).</p>
+
+                <pre>-- DBT generates this SQL under the hood
+MERGE INTO analytics.fact_orders AS target
+USING (
+    -- Your model SQL (new/updated rows)
+    SELECT order_id, customer_id, status, amount, updated_at
+    FROM raw.orders
+    WHERE updated_at > '2024-01-15 06:00:00'
+) AS source
+ON target.order_id = source.order_id
+
+WHEN MATCHED THEN UPDATE SET
+    target.status     = source.status,
+    target.amount     = source.amount,
+    target.updated_at = source.updated_at
+
+WHEN NOT MATCHED THEN INSERT
+    (order_id, customer_id, status, amount, updated_at)
+VALUES
+    (source.order_id, source.customer_id,
+     source.status, source.amount, source.updated_at);</pre>
+
+                <pre>-- Config in schema.yml or model config block
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',              -- Required for merge
+    incremental_strategy='merge',
+    merge_update_columns=['status', 'amount', 'updated_at']  -- Only update these cols
+) }}</pre>
+
+                <p><strong>When to use merge:</strong> Order management systems (status changes from pending → shipped → delivered), inventory tables, CRM contact updates, any mutable source where records evolve over time.</p>
+
+                <p><strong>Strategy 2: append</strong></p>
+                <p>Only inserts new rows — never updates existing ones. No <code>unique_key</code> needed. Fastest strategy, but only valid for truly immutable append-only sources.</p>
+
+                <pre>-- models/marts/fact_clickstream.sql
+-- Web click events: immutable once written, only new events arrive
+{{ config(
+    materialized='incremental',
+    incremental_strategy='append'    -- No unique_key needed
+) }}
+
+SELECT
+    event_id,
+    session_id,
+    user_id,
+    page_url,
+    event_type,
+    event_timestamp
+FROM {{ source('segment', 'raw_events') }}
+
+{% if is_incremental() %}
+    WHERE event_timestamp &gt; (SELECT MAX(event_timestamp) FROM {{ this }})
+{% endif %}</pre>
+
+                <p><strong>When to use append:</strong> Clickstream/event logs, IoT sensor readings, audit trails, financial transaction logs, server logs — any source where events are written once and never modified. Attempting append on mutable data creates duplicates.</p>
+
+                <p><strong>Strategy 3: delete+insert (Partition Replacement)</strong></p>
+                <p>Deletes all rows for a given partition (usually a date), then re-inserts the full partition. Avoids the overhead of row-level matching while still correcting late-arriving data. Ideal for date-partitioned fact tables.</p>
+
+                <pre>-- models/marts/fact_daily_sales.sql
+{{ config(
+    materialized='incremental',
+    incremental_strategy='delete+insert',
+    unique_key='sale_date'            -- Partition key to delete+replace
+) }}
+
+SELECT
+    sale_date,
+    product_id,
+    region,
+    SUM(revenue)     AS total_revenue,
+    COUNT(order_id)  AS order_count
+FROM {{ source('raw', 'sales') }}
+
+{% if is_incremental() %}
+    -- Reprocess last 3 days to handle late-arriving data
+    WHERE sale_date &gt;= DATEADD('day', -3, CURRENT_DATE)
+{% endif %}
+
+GROUP BY 1, 2, 3</pre>
+
+                <pre>-- What DBT executes:
+-- Step 1: Delete the affected partition
+DELETE FROM analytics.fact_daily_sales
+WHERE sale_date >= DATEADD('day', -3, CURRENT_DATE);
+
+-- Step 2: Insert fresh data for that partition
+INSERT INTO analytics.fact_daily_sales
+SELECT sale_date, product_id, region,
+       SUM(revenue), COUNT(order_id)
+FROM raw.sales
+WHERE sale_date >= DATEADD('day', -3, CURRENT_DATE)
+GROUP BY 1, 2, 3;</pre>
+
+                <p><strong>When to use delete+insert:</strong> Daily aggregated fact tables, reporting tables partitioned by date, any scenario where you want full partition correctness without a row-level unique key. Handles late-arriving data naturally by re-processing the window.</p>
+
+                <p><strong>Strategy 4: insert_overwrite (BigQuery / Spark)</strong></p>
+                <pre>-- Note: insert_overwrite is for BigQuery/Spark, not Snowflake
+-- Snowflake equivalent is delete+insert
+{{ config(
+    materialized='incremental',
+    incremental_strategy='insert_overwrite',
+    partition_by={
+        "field": "order_date",
+        "data_type": "date",
+        "granularity": "day"
+    }
+) }}</pre>
+
+                <p><strong>Strategy Comparison Matrix</strong></p>
+                <table>
+                    <tr>
+                        <th>Strategy</th>
+                        <th>SQL Operation</th>
+                        <th>Needs unique_key</th>
+                        <th>Handles Updates</th>
+                        <th>Speed</th>
+                        <th>Best For</th>
+                    </tr>
+                    <tr>
+                        <td><code>merge</code></td>
+                        <td>MERGE (upsert)</td>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                        <td>Medium</td>
+                        <td>Mutable records (orders, CRM)</td>
+                    </tr>
+                    <tr>
+                        <td><code>append</code></td>
+                        <td>INSERT only</td>
+                        <td>No</td>
+                        <td>No</td>
+                        <td>Fastest</td>
+                        <td>Immutable events (clicks, logs)</td>
+                    </tr>
+                    <tr>
+                        <td><code>delete+insert</code></td>
+                        <td>DELETE then INSERT</td>
+                        <td>Partition key</td>
+                        <td>Partition-level</td>
+                        <td>Fast</td>
+                        <td>Date-partitioned aggregates</td>
+                    </tr>
+                    <tr>
+                        <td><code>insert_overwrite</code></td>
+                        <td>Overwrite partition</td>
+                        <td>No</td>
+                        <td>Partition-level</td>
+                        <td>Fast</td>
+                        <td>BigQuery / Spark partitions</td>
+                    </tr>
+                </table>
+
+                <p><strong>DBT Snapshots — SCD Type 2 Automation</strong></p>
+                <p>Snapshots track how a record changes over time. DBT automatically maintains <code>dbt_valid_from</code>, <code>dbt_valid_to</code> and <code>dbt_scd_id</code> columns — giving you a full audit trail without writing a single line of SCD logic.</p>
+
+                <pre>-- snapshots/snap_customers.sql
+-- Real-world: track customer tier changes for churn analysis
+{% snapshot snap_customers %}
+
+{{
+    config(
+        target_schema='snapshots',
+        unique_key='customer_id',
+        strategy='timestamp',       -- Use updated_at to detect changes
+        updated_at='updated_at'
+    )
+}}
+
+SELECT
+    customer_id,
+    email,
+    subscription_tier,    -- tracks: FREE -> PRO -> ENTERPRISE changes
+    monthly_spend,
+    account_manager,
+    updated_at
+FROM {{ source('salesforce', 'accounts') }}
+
+{% endsnapshot %}</pre>
+
+                <pre>-- snapshots/snap_product_pricing.sql
+-- Real-world: track price changes for accurate historical revenue calc
+{% snapshot snap_product_pricing %}
+
+{{
+    config(
+        target_schema='snapshots',
+        unique_key='product_id',
+        strategy='check',            -- Detect change in specific columns
+        check_cols=['unit_price', 'discount_pct', 'is_active']
+    )
+}}
+
+SELECT product_id, product_name, unit_price, discount_pct, is_active
+FROM {{ source('erp', 'products') }}
+
+{% endsnapshot %}</pre>
+
+                <pre>-- Querying snapshots for time-travel analysis
+-- Q: What tier was customer 1001 in on Black Friday 2023?
+SELECT
+    customer_id,
+    subscription_tier,
+    dbt_valid_from,
+    dbt_valid_to
+FROM {{ ref('snap_customers') }}
+WHERE customer_id = 1001
+  AND dbt_valid_from &lt;= '2023-11-24'
+  AND (dbt_valid_to &gt;  '2023-11-24' OR dbt_valid_to IS NULL);
+
+-- Q: Which customers upgraded their tier in Q4 2023?
+SELECT
+    customer_id,
+    LAG(subscription_tier) OVER (PARTITION BY customer_id ORDER BY dbt_valid_from) AS previous_tier,
+    subscription_tier                                                                AS new_tier,
+    dbt_valid_from                                                                   AS upgrade_date
+FROM {{ ref('snap_customers') }}
+WHERE subscription_tier != LAG(subscription_tier) OVER (PARTITION BY customer_id ORDER BY dbt_valid_from)
+  AND dbt_valid_from BETWEEN '2023-10-01' AND '2023-12-31';</pre>
+
+                <p><strong>Advanced: Incremental + Snapshot Architecture Pattern</strong></p>
+                <pre>-- Layer 1: Staging (view) — thin cleaning
+--   stg_orders, stg_customers, stg_products
+
+-- Layer 2: Snapshots (SCD2) — history tracking
+--   snap_customers (tier changes)
+--   snap_product_pricing (price changes)
+
+-- Layer 3: Intermediate (incremental/merge) — enrichment
+--   int_orders_enriched: joins orders + current customer tier
+
+-- Layer 4: Marts (table or incremental) — final analytics
+--   fact_orders: incremental merge, unique_key=order_id
+--   fact_daily_revenue: incremental delete+insert, partition=order_date
+--   dim_customers: table, rebuilt nightly from snap_customers current view</pre>
+
+                <p><strong>Incremental Model Pitfalls &amp; How to Avoid Them</strong></p>
                 <ul>
-                    <li><strong>What:</strong> INSERT/MERGE only new/changed rows</li>
-                    <li><strong>Pros:</strong> Very fast after initial run, saves credits</li>
-                    <li><strong>Cons:</strong> Complex, error-prone</li>
-                    <li><strong>Use for:</strong> Large fact tables with daily updates</li>
+                    <li><strong>Schema changes break incremental models</strong> — use <code>on_schema_change='append_new_columns'</code> to auto-handle new source columns</li>
+                    <li><strong>Backfilling silently skips old data</strong> — always use <code>dbt run --full-refresh</code> after schema changes or data corrections</li>
+                    <li><strong>Duplicate rows with append</strong> — if the source is not truly immutable, switch to merge with a unique_key</li>
+                    <li><strong>Incorrect watermark on first run</strong> — test <code>is_incremental()</code> carefully; on first run the table does not exist yet</li>
+                    <li><strong>Clock skew</strong> — subtract a small buffer from the watermark (<code>updated_at &gt; MAX(updated_at) - INTERVAL '5 minutes'</code>) to avoid missing in-flight rows</li>
                 </ul>
-                
-                <p><strong>4. Ephemeral</strong></p>
-                <pre>{{ config(materialized='ephemeral') }}
-SELECT customer_id, SUM(amount) as total
-FROM {{ ref('stg_orders') }}
-GROUP BY customer_id</pre>
-                <ul>
-                    <li><strong>What:</strong> No physical object, inlined as CTE</li>
-                    <li><strong>Pros:</strong> Modular, zero storage</li>
-                    <li><strong>Cons:</strong> Not directly queryable</li>
-                    <li><strong>Use for:</strong> Intermediate cleaning steps</li>
-                </ul>
-                
-                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
             </div>
         </div>
 
@@ -3567,8 +4315,1686 @@ FROM {{ ref('stg_products') }}
                 
                 <p><strong>Querying Snapshots (Temporal):</strong></p>
                 <pre>-- Get current customer state
-SELECT * FROM dim_customer_snapshot 
+SELECT * FROM dim_customer_snapshot
 WHERE dbt_valid_to IS NULL;
+
+-- Get historical state at a point in time
+SELECT * FROM dim_customer_snapshot
+WHERE dbt_valid_from &lt;= '2024-01-15'
+  AND (dbt_valid_to &gt; '2024-01-15' OR dbt_valid_to IS NULL);</pre>
+
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q51">
+            <div class="question-header">
+                <div class="q-badge">51</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 51</div>
+                    <div class="question-title">Schema Drift: Detection, Handling &amp; Real-World Strategies</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Schema drift</strong> occurs when the structure of source data changes unexpectedly — new columns appear, data types change, or columns are removed — breaking downstream pipelines.</p>
+
+                <p><strong>Real-World Scenario:</strong><br>
+                Your e-commerce source system adds a new column <code>loyalty_tier</code> to the <code>orders</code> table overnight. Your Snowflake pipeline that does <code>SELECT *</code> into a fixed schema now fails because the target table does not have that column.</p>
+
+                <p><strong>Types of Schema Drift</strong></p>
+                <ul>
+                    <li><strong>Additive drift</strong> — New columns added (least destructive, easiest to handle)</li>
+                    <li><strong>Destructive drift</strong> — Columns renamed, removed, or reordered</li>
+                    <li><strong>Type drift</strong> — Column data type changes (e.g., <code>INT</code> to <code>VARCHAR</code>)</li>
+                    <li><strong>Semantic drift</strong> — Column meaning changes without name change (hardest to detect)</li>
+                </ul>
+
+                <p><strong>Strategy 1: Use VARIANT for Flexible Ingestion</strong></p>
+                <pre>-- Land raw JSON as-is; schema changes won't break ingestion
+CREATE TABLE raw_orders (
+    ingested_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    source_system VARCHAR,
+    payload       VARIANT   -- Entire row stored as JSON
+);
+
+-- Query specific fields dynamically
+SELECT
+    payload:order_id::INT         AS order_id,
+    payload:customer_id::INT      AS customer_id,
+    payload:loyalty_tier::VARCHAR AS loyalty_tier  -- New field, no DDL needed
+FROM raw_orders;</pre>
+
+                <p><strong>Strategy 2: Detect Drift with Information Schema</strong></p>
+                <pre>-- Compare source vs target columns to surface drift
+WITH source_cols AS (
+    SELECT column_name, data_type
+    FROM information_schema.columns
+    WHERE table_name = 'SOURCE_ORDERS'
+),
+target_cols AS (
+    SELECT column_name, data_type
+    FROM information_schema.columns
+    WHERE table_name = 'TARGET_ORDERS'
+)
+SELECT
+    s.column_name,
+    s.data_type AS source_type,
+    t.data_type AS target_type,
+    CASE
+        WHEN t.column_name IS NULL     THEN 'NEW COLUMN — ADD TO TARGET'
+        WHEN s.data_type != t.data_type THEN 'TYPE MISMATCH'
+        ELSE 'OK'
+    END AS drift_status
+FROM source_cols s
+LEFT JOIN target_cols t ON s.column_name = t.column_name
+WHERE t.column_name IS NULL OR s.data_type != t.data_type;</pre>
+
+                <p><strong>Strategy 3: Auto-Evolve with Snowflake COPY INTO</strong></p>
+                <pre>-- Snowflake natively handles additive drift during COPY
+COPY INTO orders
+FROM @my_stage/orders/
+FILE_FORMAT = (TYPE = 'PARQUET')
+MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
+ON_ERROR = 'CONTINUE';
+
+-- Enable column evolution (Snowflake feature)
+ALTER TABLE orders SET ENABLE_SCHEMA_EVOLUTION = TRUE;</pre>
+
+                <p><strong>Strategy 4: DBT Schema Contracts</strong></p>
+                <pre># schema.yml — define expected schema contracts
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests: [not_null, unique]
+      - name: amount
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['pending', 'shipped', 'delivered', 'cancelled']</pre>
+
+                <p><strong>Strategy 5: Schema Registry for Kafka Pipelines</strong></p>
+                <ul>
+                    <li>Use <strong>Confluent Schema Registry</strong> with AVRO/Protobuf to enforce contracts at the producer level</li>
+                    <li>Configure <code>BACKWARD</code> compatibility — consumers can read old and new schemas</li>
+                    <li>Breaking changes are rejected before they ever reach your pipeline</li>
+                </ul>
+
+                <p><strong>Handling Matrix</strong></p>
+                <table>
+                    <tr>
+                        <th>Drift Type</th>
+                        <th>Recommended Approach</th>
+                        <th>Risk</th>
+                    </tr>
+                    <tr>
+                        <td>New column added</td>
+                        <td>Auto-evolve or VARIANT landing zone</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td>Column removed</td>
+                        <td>Alert + graceful NULL fallback</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td>Type change</td>
+                        <td>Fail fast + alert on-call engineer</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>Column rename</td>
+                        <td>Schema registry + versioned contracts</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>Semantic drift</td>
+                        <td>Data observability tools (Monte Carlo, Bigeye)</td>
+                        <td>Very High</td>
+                    </tr>
+                </table>
+
+                <p><strong>Best Practices:</strong></p>
+                <ul>
+                    <li>Always land raw data in a <strong>schema-flexible zone</strong> (VARIANT / Parquet) before transforming</li>
+                    <li>Use a <strong>two-layer architecture</strong>: raw (flexible) then curated (strict schema)</li>
+                    <li>Instrument <strong>data observability</strong> alerts on column count, null rates, and type changes</li>
+                    <li>Treat schema contracts as code — version them in Git alongside your dbt models</li>
+                </ul>
+
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q52">
+            <div class="question-header">
+                <div class="q-badge">52</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 52</div>
+                    <div class="question-title">Late-Arriving Data: Patterns, Detection &amp; Correction Strategies</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Late-arriving data</strong> occurs when records arrive in your pipeline after the time window they logically belong to has already been processed — causing incorrect aggregations, incomplete reports, and stale dashboards.</p>
+
+                <p><strong>Real-World Scenario:</strong><br>
+                A mobile app records user click events locally and syncs when the device reconnects. Events from <code>2024-01-10</code> arrive in your pipeline on <code>2024-01-15</code>. Your daily revenue report for Jan 10 was already published — and it is now wrong.</p>
+
+                <p><strong>Root Causes</strong></p>
+                <ul>
+                    <li>Offline mobile/IoT devices syncing after reconnection</li>
+                    <li>Third-party API delays (payment gateways, logistics providers)</li>
+                    <li>Network partitions or upstream pipeline failures</li>
+                    <li>Timezone mismatches causing apparent late arrival</li>
+                    <li>Manual data corrections or backfills from source systems</li>
+                </ul>
+
+                <p><strong>Strategy 1: Separate Event Time vs Processing Time</strong></p>
+                <pre>-- Always store BOTH timestamps
+CREATE TABLE user_events (
+    event_id        VARCHAR,
+    user_id         INT,
+    event_type      VARCHAR,
+    event_time      TIMESTAMP,  -- When the event actually happened (source)
+    ingested_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- When we received it
+);
+
+-- Identify late arrivals (arrived more than 1 day after event)
+SELECT
+    event_id,
+    event_time,
+    ingested_at,
+    DATEDIFF('hour', event_time, ingested_at) AS hours_late
+FROM user_events
+WHERE DATEDIFF('day', event_time, ingested_at) &gt; 1
+ORDER BY hours_late DESC;</pre>
+
+                <p><strong>Strategy 2: Watermarking in Streaming Pipelines</strong></p>
+                <pre>-- Accept events up to 3 days late; skip older ones
+INSERT INTO fact_events
+SELECT
+    event_id,
+    user_id,
+    event_time,
+    ingested_at,
+    'LATE_ARRIVAL' AS load_type
+FROM staging_events s
+WHERE
+    event_time &gt;= CURRENT_DATE - 3         -- Late acceptance window
+    AND NOT EXISTS (
+        SELECT 1 FROM fact_events f
+        WHERE f.event_id = s.event_id       -- Deduplicate
+    );</pre>
+
+                <p><strong>Strategy 3: Reprocess Affected Partitions (Idempotent Backfill)</strong></p>
+                <pre>-- Step 1: Find which dates need reprocessing
+SELECT
+    event_time::DATE AS affected_date,
+    COUNT(*)         AS late_records
+FROM staging_events
+WHERE ingested_at::DATE = CURRENT_DATE
+  AND event_time::DATE  &lt; CURRENT_DATE - 1
+GROUP BY 1;
+
+-- Step 2: Remove stale aggregates for those dates
+DELETE FROM daily_event_summary
+WHERE summary_date IN (
+    SELECT DISTINCT event_time::DATE
+    FROM staging_events
+    WHERE ingested_at::DATE = CURRENT_DATE
+      AND event_time::DATE &lt; CURRENT_DATE - 1
+);
+
+-- Step 3: Recompute cleanly (safe to re-run)
+INSERT INTO daily_event_summary
+SELECT
+    event_time::DATE        AS summary_date,
+    event_type,
+    COUNT(*)                AS event_count,
+    COUNT(DISTINCT user_id) AS unique_users
+FROM fact_events
+GROUP BY 1, 2;</pre>
+
+                <p><strong>Strategy 4: DBT Incremental with Lookback Window</strong></p>
+                <pre>-- models/fact_events.sql
+{{ config(
+    materialized='incremental',
+    unique_key='event_id',
+    on_schema_change='append_new_columns'
+) }}
+
+SELECT event_id, user_id, event_type, event_time, ingested_at
+FROM {{ source('raw', 'events') }}
+
+{% if is_incremental() %}
+    -- Look back 3 days on every run to catch late arrivals
+    WHERE event_time &gt;= DATEADD('day', -3, CURRENT_DATE)
+{% endif %}</pre>
+
+                <p><strong>Strategy 5: Audit-Trail Fact Table (Never Delete, Only Append)</strong></p>
+                <pre>-- Keep all versions with a change reason
+CREATE TABLE fact_orders_audit (
+    order_id       INT,
+    order_date     DATE,
+    amount         DECIMAL(10,2),
+    record_version INT,
+    is_current     BOOLEAN,
+    change_reason  VARCHAR   -- 'INITIAL_LOAD', 'LATE_ARRIVAL', 'CORRECTION'
+);
+
+-- Always query the current version
+SELECT * FROM fact_orders_audit WHERE is_current = TRUE;
+
+-- Audit trail: what changed for a given order
+SELECT order_id, record_version, amount, change_reason
+FROM fact_orders_audit
+WHERE order_id = 12345
+ORDER BY record_version;</pre>
+
+                <p><strong>Handling Matrix by Latency</strong></p>
+                <table>
+                    <tr>
+                        <th>Latency</th>
+                        <th>Pattern</th>
+                        <th>Snowflake Tool</th>
+                    </tr>
+                    <tr>
+                        <td>&lt; 1 hour</td>
+                        <td>Streaming watermark window</td>
+                        <td>Snowpipe + deduplication</td>
+                    </tr>
+                    <tr>
+                        <td>1–24 hours</td>
+                        <td>Rolling incremental with lookback</td>
+                        <td>DBT incremental (-3 day window)</td>
+                    </tr>
+                    <tr>
+                        <td>1–7 days</td>
+                        <td>Partition reprocessing</td>
+                        <td>DELETE + re-INSERT on affected dates</td>
+                    </tr>
+                    <tr>
+                        <td>7+ days</td>
+                        <td>Full historical backfill</td>
+                        <td>DBT full-refresh on affected models</td>
+                    </tr>
+                </table>
+
+                <p><strong>Prevention &amp; Monitoring:</strong></p>
+                <ul>
+                    <li>Alert when <code>MAX(ingested_at) - MAX(event_time) &gt; threshold</code> — signals upstream delays</li>
+                    <li>Track <strong>ingestion lag</strong> as a first-class data quality metric in your observability stack</li>
+                    <li>Design all aggregation pipelines to be <strong>idempotent</strong> — safe to re-run for any date range</li>
+                    <li>Use Snowflake <strong>Time Travel</strong> to restore pre-correction snapshots if a backfill goes wrong</li>
+                    <li>Document your SLA — e.g. "Reports may reflect data up to 3 days late" — to set stakeholder expectations</li>
+                </ul>
+
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════════════
+             ARCHITECT & SYSTEM DESIGN  (Q53 – Q62)
+             ═══════════════════════════════════════════════ -->
+
+        <div class="question" id="q53">
+            <div class="question-header">
+                <div class="q-badge">53</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 53 — System Design</div>
+                    <div class="question-title">Design a Real-Time CDC Pipeline: Oracle / SQL Server → Snowflake via Qlik Replicate</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> Your company supports 100+ business users across multiple teams. The source is a 500-table Oracle ERP with millions of rows mutating daily. Business needs sub-30-minute data freshness in Snowflake for operational dashboards. Design the full pipeline.</p>
+
+                <p><strong>Architecture Overview</strong></p>
+                <pre>Oracle ERP / SQL Server / PostgreSQL
+        |
+        |  (Log-based CDC — reads redo/transaction logs, zero load on source)
+        v
+ Qlik Replicate (CDC Engine)
+        |
+        |  APPLY mode: continuous micro-batch MERGE into landing tables
+        |  Full-load + ongoing replication, DDL change capture
+        v
+ Snowflake Landing Schema  (raw.&lt;table&gt;)
+        |
+        |  Snowflake Streams (track INSERT/UPDATE/DELETE offsets)
+        v
+ Snowflake Tasks  (scheduled every 5 min)
+        |
+        |  MERGE into staging schema — deduplicate, apply deletes
+        v
+ dbt Cloud  (hourly incremental runs)
+        |
+        |  stg_ → int_ → mart_ transformation layers
+        v
+ Snowflake Mart Schema — BI / Analytics consumers</pre>
+
+                <p><strong>Qlik Replicate Configuration</strong></p>
+                <pre>-- Qlik Replicate task settings (conceptual)
+TASK MODE       : Full Load + CDC
+APPLY MODE      : Transactional (row-level, ordered commits)
+STAGING         : Direct Apply to Snowflake landing tables
+ERROR HANDLING  : Suspend table on DML error, continue others
+DDL HANDLING    : Auto-create / alter target columns on source DDL
+
+-- Metadata columns Qlik adds to every landing row
+header__change_seq     VARCHAR   -- Unique monotonic CDC offset
+header__change_oper    CHAR(1)   -- I=Insert, U=Update, D=Delete, B=Before-image
+header__timestamp      TIMESTAMP -- Source commit timestamp
+header__stream_position VARCHAR   -- Log position for resume</pre>
+
+                <p><strong>Snowflake Landing → Staging via Streams + Tasks</strong></p>
+                <pre>-- Step 1: Stream on the landing table (tracks all Qlik-applied changes)
+CREATE OR REPLACE STREAM raw.orders_stream
+ON TABLE raw.orders
+SHOW_INITIAL_ROWS = FALSE;   -- Only delta since last consumption
+
+-- Step 2: Task to merge stream into clean staging table (runs every 5 min)
+CREATE OR REPLACE TASK etl.merge_orders_task
+    WAREHOUSE = 'TRANSFORM_WH'
+    SCHEDULE  = '5 MINUTE'
+    WHEN system$stream_has_data('raw.orders_stream')
+AS
+MERGE INTO staging.orders AS tgt
+USING (
+    SELECT *,
+           ROW_NUMBER() OVER (
+               PARTITION BY order_id
+               ORDER BY header__change_seq DESC
+           ) AS rn
+    FROM raw.orders_stream
+    WHERE header__change_oper != 'B'    -- Exclude before-images
+) AS src
+ON tgt.order_id = src.order_id AND src.rn = 1
+
+WHEN MATCHED AND src.header__change_oper = 'D'
+    THEN DELETE
+
+WHEN MATCHED AND src.header__change_oper IN ('I','U')
+    THEN UPDATE SET
+        tgt.customer_id  = src.customer_id,
+        tgt.status       = src.status,
+        tgt.amount       = src.amount,
+        tgt.updated_at   = src.header__timestamp
+
+WHEN NOT MATCHED AND src.header__change_oper != 'D'
+    THEN INSERT (order_id, customer_id, status, amount, updated_at)
+         VALUES (src.order_id, src.customer_id, src.status,
+                 src.amount, src.header__timestamp);
+
+ALTER TASK etl.merge_orders_task RESUME;</pre>
+
+                <p><strong>dbt Incremental Layer on Top</strong></p>
+                <pre>-- models/staging/stg_orders.sql  (view — thin clean)
+{{ config(materialized='view') }}
+SELECT
+    order_id, customer_id, UPPER(status) AS status,
+    amount::DECIMAL(12,2) AS amount, updated_at
+FROM {{ source('staging', 'orders') }}
+WHERE order_id IS NOT NULL
+
+-- models/marts/fact_orders.sql  (incremental merge)
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    incremental_strategy='merge',
+    on_schema_change='append_new_columns'
+) }}
+SELECT * FROM {{ ref('stg_orders') }}
+{% if is_incremental() %}
+    WHERE updated_at &gt; (SELECT MAX(updated_at) FROM {{ this }})
+{% endif %}</pre>
+
+                <p><strong>Failure Handling &amp; Recovery Design</strong></p>
+                <ul>
+                    <li><strong>Qlik Replicate checkpoint</strong> — stores log position; on restart it resumes from last committed offset, no data loss</li>
+                    <li><strong>Snowflake Stream offset</strong> — streams are transactional; if the Task fails mid-run, the stream offset is NOT advanced, so the next run re-processes the same delta safely</li>
+                    <li><strong>Duplicate protection</strong> — <code>ROW_NUMBER() OVER (PARTITION BY pk ORDER BY change_seq DESC)</code> ensures only the latest version of a key is applied even if Qlik delivers multiple events for one row</li>
+                    <li><strong>Schema drift</strong> — Qlik auto-ALTERs target; dbt uses <code>on_schema_change='append_new_columns'</code> to absorb new columns without breaking runs</li>
+                    <li><strong>Monitoring</strong> — alert on <code>SYSTEM$STREAM_HAS_DATA</code> being stale for &gt;15 min; alert on Task failure via Snowflake email notifications</li>
+                </ul>
+
+                <p><strong>Latency Breakdown</strong></p>
+                <table>
+                    <tr><th>Hop</th><th>Typical Latency</th><th>Tuning Lever</th></tr>
+                    <tr><td>Oracle log → Qlik Apply</td><td>1–5 sec</td><td>Commit frequency, batch size</td></tr>
+                    <tr><td>Qlik → Snowflake landing</td><td>5–30 sec</td><td>Apply frequency, warehouse size</td></tr>
+                    <tr><td>Stream + Task merge</td><td>5 min (scheduled)</td><td>Reduce schedule interval</td></tr>
+                    <tr><td>dbt incremental run</td><td>hourly</td><td>Increase run frequency in dbt Cloud</td></tr>
+                    <tr><td><strong>End-to-end</strong></td><td><strong>&lt; 15 min</strong></td><td>Well within 30-min SLA</td></tr>
+                </table>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q54">
+            <div class="question-header">
+                <div class="q-badge">54</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 54 — System Design</div>
+                    <div class="question-title">Design a Scalable ELT Platform: 5M+ Records/Day on Snowflake + dbt Cloud</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> You inherit a single monolithic SQL transformation running nightly on a 2XL warehouse, taking 4 hours, failing regularly, and blocking BI reports until morning. Design a production-grade ELT platform that is resilient, observable, and cost-efficient.</p>
+
+                <p><strong>Full Platform Architecture</strong></p>
+                <pre>┌─────────────────────────────────────────────────────────────┐
+│                     SOURCE SYSTEMS                          │
+│  Oracle ERP │ Salesforce CRM │ Stripe │ PostgreSQL App DB   │
+└──────┬──────────────┬─────────────┬────────────┬────────────┘
+       │              │             │            │
+   Qlik Replicate  Fivetran      Airbyte     Custom Python
+   (CDC / near-RT) (SaaS APIs)   (OSS)       (S3 drops)
+       │              │             │            │
+       └──────────────┴─────────────┴────────────┘
+                              │
+                    ┌─────────▼──────────┐
+                    │   Snowflake RAW     │  ← Schema per source
+                    │  (landing zone)     │    No transforms here
+                    └─────────┬──────────┘
+                              │   Streams + Tasks (micro-batch)
+                    ┌─────────▼──────────┐
+                    │  Snowflake STAGING  │  ← dbt stg_ models (views)
+                    │                    │    Rename, cast, dedupe
+                    └─────────┬──────────┘
+                              │   dbt incremental models
+                    ┌─────────▼──────────┐
+                    │ Snowflake INTERMEDIATE│ ← dbt int_ models
+                    │                    │    Joins, enrichment
+                    └─────────┬──────────┘
+                              │   dbt table / incremental
+                    ┌─────────▼──────────┐
+                    │  Snowflake MARTS    │  ← fact_ dim_ models
+                    │                    │    BI-ready, governed
+                    └─────────┬──────────┘
+                              │
+               ┌──────────────┼──────────────┐
+           Tableau          Looker        Power BI
+                    (Secure Views / roles)</pre>
+
+                <p><strong>Warehouse Strategy — Right-Sizing per Workload</strong></p>
+                <pre>-- Never use one warehouse for everything
+-- Isolate workloads to prevent contention and enable independent scaling
+
+-- Ingestion warehouse (Qlik / Snowpipe writes)
+CREATE WAREHOUSE INGEST_WH
+    WAREHOUSE_SIZE = 'SMALL'
+    AUTO_SUSPEND   = 60
+    AUTO_RESUME    = TRUE;
+
+-- dbt transformation warehouse (scales up for heavy models)
+CREATE WAREHOUSE TRANSFORM_WH
+    WAREHOUSE_SIZE = 'MEDIUM'
+    AUTO_SUSPEND   = 120
+    AUTO_RESUME    = TRUE
+    MAX_CLUSTER_COUNT = 3          -- Multi-cluster for parallel dbt runs
+    SCALING_POLICY    = 'ECONOMY'; -- Scale conservatively
+
+-- BI / analyst query warehouse (fast, responsive)
+CREATE WAREHOUSE ANALYTICS_WH
+    WAREHOUSE_SIZE = 'LARGE'
+    AUTO_SUSPEND   = 300
+    AUTO_RESUME    = TRUE;
+
+-- Admin / monitoring (tiny, always on)
+CREATE WAREHOUSE ADMIN_WH
+    WAREHOUSE_SIZE = 'X-SMALL'
+    AUTO_SUSPEND   = 60;</pre>
+
+                <p><strong>dbt Project Structure</strong></p>
+                <pre>dbt_project/
+├── models/
+│   ├── staging/          # stg_* — view, one-to-one with source tables
+│   │   ├── salesforce/
+│   │   ├── stripe/
+│   │   └── oracle_erp/
+│   ├── intermediate/     # int_* — joins, enrichment (ephemeral or view)
+│   └── marts/
+│       ├── finance/      # fact_revenue, fact_invoices
+│       ├── sales/        # fact_orders, dim_customers
+│       └── operations/   # fact_inventory, fact_shipments
+├── macros/               # generate_surrogate_key, test_not_negative, etc.
+├── snapshots/            # SCD Type 2 for slowly changing dims
+├── seeds/                # region_codes, currency_map, etc.
+├── tests/                # Singular tests — reconciliation, cross-source checks
+├── analyses/             # Ad-hoc exploratory SQL (not deployed)
+└── dbt_project.yml</pre>
+
+                <p><strong>dbt Cloud CI/CD Jobs</strong></p>
+                <pre># Production job (dbt Cloud scheduler)
+Job: "Production — Full Run"
+  Schedule: Every hour
+  Commands:
+    - dbt source freshness          # Fail fast if sources are stale
+    - dbt run --select tag:hourly   # Only hourly models
+    - dbt test --select tag:hourly  # Test immediately after run
+  Notifications: Slack on failure
+
+# CI job (triggered on every PR to main)
+Job: "Slim CI — PR Validation"
+  Trigger: Pull Request opened / updated
+  Commands:
+    - dbt run  --select state:modified+ --defer --state ./prod-artifacts
+    - dbt test --select state:modified+ --defer --state ./prod-artifacts
+  # Only runs models changed in the PR + their downstream dependents
+  # --defer uses production compiled state so unchanged upstream refs resolve</pre>
+
+                <p><strong>Observability Stack</strong></p>
+                <pre>-- 1. Source freshness checks in sources.yml
+sources:
+  - name: oracle_erp
+    freshness:
+      warn_after:  {count: 1,  period: hour}
+      error_after: {count: 3,  period: hour}
+    loaded_at_field: _loaded_at
+
+-- 2. Row count anomaly detection via custom test
+-- tests/assert_fact_orders_row_count_not_dropped.sql
+WITH today AS (
+    SELECT COUNT(*) AS cnt FROM {{ ref('fact_orders') }}
+    WHERE order_date = CURRENT_DATE
+),
+yesterday AS (
+    SELECT COUNT(*) AS cnt FROM {{ ref('fact_orders') }}
+    WHERE order_date = CURRENT_DATE - 1
+)
+SELECT today.cnt AS today_count, yesterday.cnt AS yesterday_count
+FROM today, yesterday
+WHERE today.cnt &lt; yesterday.cnt * 0.7    -- Alert if &gt;30% drop vs yesterday
+
+-- 3. Snowflake Query History monitoring
+SELECT query_text, total_elapsed_time/1000 AS seconds,
+       credits_used_cloud_services
+FROM snowflake.account_usage.query_history
+WHERE start_time &gt;= CURRENT_DATE
+  AND total_elapsed_time &gt; 300000   -- Queries over 5 min
+ORDER BY total_elapsed_time DESC;</pre>
+
+                <p><strong>Cost Governance</strong></p>
+                <ul>
+                    <li>Tag every warehouse with <code>cost_center</code> resource monitor — alert at 80% of monthly credit budget</li>
+                    <li>Use <strong>Zero Copy Clone</strong> for dev/staging environments — no storage duplication cost</li>
+                    <li>Model materialization decisions: views for staging (zero compute on build), incremental for large facts (avoid full rebuild), ephemeral for simple CTEs</li>
+                    <li>Run <code>dbt run --select tag:daily</code> nightly for heavy models; tag lighter models <code>tag:hourly</code></li>
+                </ul>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q55">
+            <div class="question-header">
+                <div class="q-badge">55</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 55 — Advanced Snowflake</div>
+                    <div class="question-title">Snowflake Streams &amp; Tasks: Event-Driven Pipeline Automation</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> Rather than scheduling dbt runs on a fixed clock, you want Snowflake to automatically trigger transformations the moment new data arrives from Qlik Replicate. Zero polling, zero wasted credits on empty runs.</p>
+
+                <p><strong>Streams — Change Data Capture Inside Snowflake</strong></p>
+                <pre>-- A Stream is a change-tracking cursor on a table
+-- It records every INSERT, UPDATE, DELETE since the stream was last consumed
+
+CREATE OR REPLACE STREAM raw.customer_stream
+    ON TABLE raw.customers
+    SHOW_INITIAL_ROWS = FALSE;   -- FALSE = only new changes going forward
+
+-- Stream metadata columns automatically added:
+-- METADATA$ACTION      : INSERT | DELETE  (UPDATE = DELETE + INSERT pair)
+-- METADATA$ISUPDATE    : TRUE for the INSERT half of an UPDATE
+-- METADATA$ROW_ID      : Internal unique row identifier
+
+-- Consume the stream — reconstruct latest state of each customer
+SELECT
+    customer_id,
+    email,
+    tier,
+    METADATA$ACTION,
+    METADATA$ISUPDATE
+FROM raw.customer_stream
+WHERE METADATA$ACTION = 'INSERT'    -- After dedup, INSERTs = final state
+ORDER BY METADATA$ROW_ID;</pre>
+
+                <pre>-- IMPORTANT: A Stream offset advances ONLY when consumed inside a DML
+-- transaction that commits successfully. If the Task fails, offset is preserved.
+-- This gives you exactly-once-like semantics.
+
+-- Check if a stream has unconsumed data (use in Task WHEN clause)
+SELECT SYSTEM$STREAM_HAS_DATA('raw.customer_stream');</pre>
+
+                <p><strong>Tasks — Scheduled or Event-Driven Orchestration</strong></p>
+                <pre>-- Root Task: fires every 2 minutes ONLY when stream has data
+CREATE OR REPLACE TASK etl.process_customers_root
+    WAREHOUSE = 'TRANSFORM_WH'
+    SCHEDULE  = '2 MINUTE'
+    WHEN SYSTEM$STREAM_HAS_DATA('raw.customer_stream')
+AS
+MERGE INTO staging.customers AS tgt
+USING (
+    SELECT customer_id, email, tier,
+           ROW_NUMBER() OVER (PARTITION BY customer_id
+                              ORDER BY METADATA$ROW_ID DESC) AS rn
+    FROM raw.customer_stream
+    WHERE METADATA$ACTION = 'INSERT'
+) AS src ON tgt.customer_id = src.customer_id AND src.rn = 1
+WHEN MATCHED     THEN UPDATE SET tgt.email = src.email, tgt.tier = src.tier
+WHEN NOT MATCHED THEN INSERT (customer_id, email, tier)
+                      VALUES (src.customer_id, src.email, src.tier);
+
+-- Child Task: fires AFTER root task completes (DAG chaining)
+CREATE OR REPLACE TASK etl.refresh_customer_dim_task
+    WAREHOUSE = 'TRANSFORM_WH'
+    AFTER etl.process_customers_root
+AS
+-- Refresh the dimension table by calling a stored procedure or dbt
+CALL etl.sp_refresh_dim_customers();
+
+-- Activate the DAG (tasks are SUSPENDED by default)
+ALTER TASK etl.refresh_customer_dim_task RESUME;
+ALTER TASK etl.process_customers_root    RESUME;</pre>
+
+                <p><strong>Task DAG — Multi-Step Pipeline</strong></p>
+                <pre>-- Build a full task tree: ingest → stage → mart
+--
+--  process_customers_root (every 2 min, stream-gated)
+--          └── stage_customers_task
+--                  └── refresh_dim_customers_task
+--                          └── refresh_fact_orders_task
+--
+-- Monitor the DAG
+SELECT *
+FROM TABLE(information_schema.task_history(
+    scheduled_time_range_start => DATEADD('hour', -1, CURRENT_TIMESTAMP),
+    task_name => 'PROCESS_CUSTOMERS_ROOT'
+))
+ORDER BY scheduled_time DESC;</pre>
+
+                <p><strong>Stream Types Comparison</strong></p>
+                <table>
+                    <tr><th>Stream Type</th><th>Works On</th><th>Tracks Deletes</th><th>Best For</th></tr>
+                    <tr><td>Standard</td><td>Tables</td><td>Yes</td><td>CDC pipelines, mutable tables</td></tr>
+                    <tr><td>Append-Only</td><td>Tables</td><td>No</td><td>Event logs, immutable inserts</td></tr>
+                    <tr><td>Insert-Only</td><td>External / Directory Tables</td><td>No</td><td>S3 file ingestion triggers</td></tr>
+                </table>
+
+                <p><strong>Gotchas &amp; Best Practices</strong></p>
+                <ul>
+                    <li><strong>Stale stream</strong> — streams have a staleness limit equal to the table's <code>DATA_RETENTION_TIME</code>. If a stream is not consumed within that window, it becomes invalid. Set retention &gt;= 14 days on critical source tables.</li>
+                    <li><strong>Multiple consumers</strong> — if two Tasks consume the same stream, they race. Create separate streams for separate consumers.</li>
+                    <li><strong>Zero-credit idle Tasks</strong> — a Task with a <code>WHEN SYSTEM$STREAM_HAS_DATA()</code> guard does NOT start a warehouse if the condition is false. Crucial for cost efficiency.</li>
+                    <li><strong>Serverless Tasks</strong> — use <code>USER_TASK_MANAGED_INITIAL_WAREHOUSE_SIZE</code> instead of a named warehouse for Tasks that run &lt;60 seconds; Snowflake auto-sizes and charges per-second.</li>
+                </ul>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q56">
+            <div class="question-header">
+                <div class="q-badge">56</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 56 — Advanced dbt</div>
+                    <div class="question-title">dbt Macros, Jinja &amp; Exposures — Reusable Patterns at Scale</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> Your dbt project has grown to 200+ models. Developers are copy-pasting the same surrogate key logic, date spine generation, and column renaming patterns across dozens of files. Macros eliminate the duplication and make the whole project consistent.</p>
+
+                <p><strong>Macro 1 — Reusable Surrogate Key (used across all dimension tables)</strong></p>
+                <pre>-- macros/generate_surrogate_key.sql
+{% macro generate_surrogate_key(field_list) %}
+    MD5(
+        CONCAT_WS('||',
+            {% for field in field_list %}
+                COALESCE(CAST({{ field }} AS VARCHAR), '~~NULL~~')
+                {% if not loop.last %}, {% endif %}
+            {% endfor %}
+        )
+    )
+{% endmacro %}
+
+-- Usage in any dimension model
+SELECT
+    {{ generate_surrogate_key(['customer_id', 'source_system']) }} AS customer_sk,
+    customer_id,
+    email,
+    tier
+FROM {{ ref('stg_customers') }}</pre>
+
+                <p><strong>Macro 2 — Dynamic Column Renaming (staging standardisation)</strong></p>
+                <pre>-- macros/rename_columns.sql
+-- Accepts a dict of {old_name: new_name} and generates SELECT list
+{% macro rename_columns(relation, column_map) %}
+    SELECT
+        {% for old_col, new_col in column_map.items() %}
+            {{ old_col }} AS {{ new_col }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    FROM {{ relation }}
+{% endmacro %}
+
+-- Usage
+{{ rename_columns(
+    source('oracle_erp', 'CUST_MAST'),
+    {
+        'CUST_ID':    'customer_id',
+        'CUST_EMAIL': 'email',
+        'CUST_TIER':  'subscription_tier',
+        'UPD_DT':     'updated_at'
+    }
+) }}</pre>
+
+                <p><strong>Macro 3 — Generate Date Spine (for gap-filling time series)</strong></p>
+                <pre>-- macros/date_spine.sql
+{% macro date_spine(start_date, end_date) %}
+WITH RECURSIVE date_series AS (
+    SELECT {{ start_date }}::DATE AS d
+    UNION ALL
+    SELECT DATEADD('day', 1, d)
+    FROM date_series
+    WHERE d &lt; {{ end_date }}::DATE
+)
+SELECT d AS date_day FROM date_series
+{% endmacro %}
+
+-- Usage: fill gaps in daily sales (days with zero orders still appear)
+SELECT
+    ds.date_day,
+    COALESCE(s.total_revenue, 0) AS total_revenue
+FROM ( {{ date_spine("'2023-01-01'", "CURRENT_DATE") }} ) ds
+LEFT JOIN {{ ref('fact_daily_sales') }} s ON s.sale_date = ds.date_day</pre>
+
+                <p><strong>Macro 4 — Union All Sources (multi-region same schema)</strong></p>
+                <pre>-- macros/union_relations.sql
+{% macro union_relations(relations) %}
+    {% for relation in relations %}
+        SELECT *, '{{ relation.identifier }}' AS source_table
+        FROM {{ relation }}
+        {% if not loop.last %} UNION ALL {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+-- Combine orders from US, EU, APAC schemas into one model
+{{ union_relations([
+    source('us_store',   'orders'),
+    source('eu_store',   'orders'),
+    source('apac_store', 'orders')
+]) }}</pre>
+
+                <p><strong>Jinja Control Flow — Environment-Aware Models</strong></p>
+                <pre>-- Behave differently in dev vs prod using var() and target
+{{ config(
+    materialized = 'table' if target.name == 'prod' else 'view',
+    post_hook    = "GRANT SELECT ON {{ this }} TO ROLE ANALYST_ROLE"
+                   if target.name == 'prod' else ""
+) }}
+
+-- Limit rows in dev to speed up iteration
+SELECT * FROM {{ ref('stg_orders') }}
+{% if target.name != 'prod' %}
+    LIMIT 10000
+{% endif %}</pre>
+
+                <p><strong>Exposures — Document BI Consumption of dbt Models</strong></p>
+                <pre># models/exposures.yml
+# Exposures document WHERE dbt models are consumed (BI, APIs, etc.)
+# Enables lineage: source → dbt model → Tableau dashboard
+
+exposures:
+  - name: executive_revenue_dashboard
+    type: dashboard
+    maturity: high          # high | medium | low
+    url: https://tableau.company.com/views/ExecutiveRevenue
+    description: "C-suite daily revenue KPIs sourced from dbt marts"
+    owner:
+      name: Analytics Engineering Team
+      email: data-engineering@company.com
+    depends_on:
+      - ref('fact_daily_revenue')
+      - ref('dim_customers')
+      - ref('dim_products')
+
+  - name: stripe_reconciliation_report
+    type: analysis
+    maturity: medium
+    description: "Finance team daily Stripe vs warehouse reconciliation"
+    owner:
+      name: Finance Team
+    depends_on:
+      - ref('fact_orders')
+      - ref('stg_stripe_charges')</pre>
+
+                <p><strong>Why Exposures Matter at Architect Level:</strong></p>
+                <ul>
+                    <li>Run <code>dbt ls --select +exposure:executive_revenue_dashboard</code> to see every model that feeds a dashboard — instant blast radius analysis before a refactor</li>
+                    <li>Exposures appear in the dbt DAG UI — stakeholders can trace data from Tableau all the way back to the Oracle source table</li>
+                    <li>Used in Slim CI: only re-test models that feed changed exposures</li>
+                </ul>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q57">
+            <div class="question-header">
+                <div class="q-badge">57</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 57 — Data Modelling</div>
+                    <div class="question-title">Dimensional Modelling at Scale: Star Schema, Surrogate Keys, Conformed Dimensions &amp; Bus Matrix</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> You are building the analytics data model for a B2B SaaS company with three subject areas — Sales, Finance, and Operations. BI teams in each area need to slice and dice independently, but the CEO needs a single cross-functional dashboard. You must design a model that works for both.</p>
+
+                <p><strong>Star Schema Design — fact_orders</strong></p>
+                <pre>-- FACT TABLE: fact_orders (grain = one row per order line item)
+CREATE TABLE marts.fact_orders (
+    -- Surrogate keys (join to dims)
+    order_sk        VARCHAR NOT NULL,   -- MD5 of order_id + source
+    customer_sk     VARCHAR NOT NULL,
+    product_sk      VARCHAR NOT NULL,
+    date_sk         INT     NOT NULL,   -- YYYYMMDD integer for fast joins
+
+    -- Degenerate dimensions (no dim table needed)
+    order_id        INT     NOT NULL,
+    order_line_no   INT     NOT NULL,
+
+    -- Measures (always additive unless noted)
+    quantity        INT,
+    unit_price      DECIMAL(10,2),
+    gross_revenue   DECIMAL(12,2),    -- additive
+    discount_amount DECIMAL(10,2),    -- additive
+    net_revenue     DECIMAL(12,2),    -- additive (gross - discount)
+    cogs            DECIMAL(12,2),    -- additive
+    gross_margin    DECIMAL(12,2),    -- additive (net_revenue - cogs)
+
+    -- Audit
+    _dbt_inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+CLUSTER BY (date_sk);                  -- Snowflake: prune by date on BI queries</pre>
+
+                <pre>-- DIMENSION: dim_customers  (SCD Type 2 via dbt snapshot)
+CREATE TABLE marts.dim_customers (
+    customer_sk      VARCHAR PRIMARY KEY,  -- surrogate key
+    customer_id      INT     NOT NULL,     -- natural key (from source)
+    customer_name    VARCHAR,
+    email            VARCHAR,
+    region           VARCHAR,
+    segment          VARCHAR,   -- SMB | MID_MARKET | ENTERPRISE
+    account_manager  VARCHAR,
+    -- SCD2 columns
+    valid_from       DATE    NOT NULL,
+    valid_to         DATE,                -- NULL = current record
+    is_current       BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- Always join on both SK AND is_current=TRUE for current state
+-- Join on SK alone for historical point-in-time analysis</pre>
+
+                <p><strong>Conformed Dimensions — Shared Across Subject Areas</strong></p>
+                <pre>-- A conformed dimension is defined ONCE and reused across all fact tables
+-- dim_customers is conformed: used by fact_orders, fact_invoices, fact_support_tickets
+
+-- Bus Matrix: shows which dims each fact uses (architect planning tool)
+--
+--              | dim_customers | dim_products | dim_date | dim_region | dim_sales_rep
+-- -------------|---------------|--------------|----------|------------|---------------
+-- fact_orders  |      ✓        |      ✓       |    ✓     |     ✓      |      ✓
+-- fact_invoices|      ✓        |              |    ✓     |     ✓      |
+-- fact_support |      ✓        |              |    ✓     |            |
+-- fact_inventory|              |      ✓       |    ✓     |     ✓      |
+--
+-- If dim_customers changes schema, ALL fact joins are affected → high blast radius
+-- This is why conformed dims must be tightly governed and version-controlled in dbt</pre>
+
+                <p><strong>Surrogate Key Generation in dbt</strong></p>
+                <pre>-- models/marts/dim_customers.sql
+-- Generate a stable, source-agnostic surrogate key
+SELECT
+    {{ generate_surrogate_key(['customer_id', 'source_system']) }} AS customer_sk,
+    customer_id,
+    source_system,
+    customer_name,
+    email,
+    region,
+    segment,
+    valid_from,
+    valid_to,
+    is_current
+FROM {{ ref('snap_customers') }}  -- dbt snapshot provides SCD2 history</pre>
+
+                <p><strong>Date Dimension — Critical for BI Performance</strong></p>
+                <pre>-- seeds/dim_date.csv approach OR generate with macro
+-- dim_date has one row per calendar day with every attribute BI needs
+-- Never compute DATEPART() in BI queries — pre-compute in dim_date
+
+SELECT
+    TO_NUMBER(TO_CHAR(d, 'YYYYMMDD'))           AS date_sk,  -- INT join key
+    d                                            AS full_date,
+    EXTRACT(YEAR FROM d)                         AS year,
+    EXTRACT(QUARTER FROM d)                      AS quarter,
+    EXTRACT(MONTH FROM d)                        AS month,
+    MONTHNAME(d)                                 AS month_name,
+    EXTRACT(WEEK FROM d)                         AS week_of_year,
+    DAYOFWEEK(d)                                 AS day_of_week,
+    DAYNAME(d)                                   AS day_name,
+    IFF(DAYOFWEEK(d) IN (1,7), FALSE, TRUE)      AS is_weekday,
+    IFF(d = LAST_DAY(d), TRUE, FALSE)            AS is_month_end,
+    -- Fiscal year (example: FY starts April 1)
+    IFF(MONTH(d) &gt;= 4, YEAR(d), YEAR(d)-1)      AS fiscal_year,
+    IFF(MONTH(d) &gt;= 4,
+        CEIL((MONTH(d)-3)/3.0),
+        CEIL((MONTH(d)+9)/3.0))                  AS fiscal_quarter
+FROM ( {{ date_spine("'2018-01-01'", "DATEADD('year',3,CURRENT_DATE)") }} )</pre>
+
+                <p><strong>Common Modelling Anti-Patterns to Avoid</strong></p>
+                <table>
+                    <tr><th>Anti-Pattern</th><th>Problem</th><th>Fix</th></tr>
+                    <tr><td>Natural keys as FK in facts</td><td>Breaks historical joins when source key recycled</td><td>Always use surrogate keys</td></tr>
+                    <tr><td>Snowflake schema (over-normalised)</td><td>Too many joins, slow BI queries</td><td>Denormalise into conformed dims</td></tr>
+                    <tr><td>Semi-additive measures as additive</td><td>Wrong SUM on account balances</td><td>Document grain; use AVG or last-period for semi-additive</td></tr>
+                    <tr><td>No SCD on dimensions</td><td>Customer region changes corrupt historical revenue by region</td><td>SCD2 via dbt snapshot</td></tr>
+                    <tr><td>One giant fact table</td><td>Mixed grain — impossible to aggregate correctly</td><td>One fact per grain; separate fact tables for header vs line</td></tr>
+                </table>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q58">
+            <div class="question-header">
+                <div class="q-badge">58</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 58 — Cloud Architecture</div>
+                    <div class="question-title">AWS + Snowflake Integration: S3 Stages, IAM, Snowpipe &amp; Event-Driven Ingestion</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> A third-party logistics partner drops daily shipment files (Parquet) into an S3 bucket. You need these files auto-ingested into Snowflake within minutes of arrival — without polling, without a scheduler, and with full security via IAM roles (no hardcoded credentials).</p>
+
+                <p><strong>Step 1: IAM Role-Based Trust (no credentials in Snowflake)</strong></p>
+                <pre>-- Step 1a: Create storage integration (Snowflake side)
+CREATE OR REPLACE STORAGE INTEGRATION s3_logistics_int
+    TYPE                      = EXTERNAL_STAGE
+    STORAGE_PROVIDER          = 'S3'
+    ENABLED                   = TRUE
+    STORAGE_AWS_ROLE_ARN      = 'arn:aws:iam::123456789:role/snowflake-s3-role'
+    STORAGE_ALLOWED_LOCATIONS = ('s3://logistics-drops/shipments/');
+
+-- Retrieve the Snowflake-generated IAM principal to add to AWS trust policy
+DESC INTEGRATION s3_logistics_int;
+-- Copy: STORAGE_AWS_IAM_USER_ARN and STORAGE_AWS_EXTERNAL_ID</pre>
+
+                <pre># Step 1b: AWS IAM Trust Policy (add Snowflake as trusted principal)
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": {
+      "AWS": "arn:aws:iam::SNOWFLAKE_ACCOUNT:root"
+    },
+    "Action": "sts:AssumeRole",
+    "Condition": {
+      "StringEquals": {
+        "sts:ExternalId": "SNOWFLAKE_EXTERNAL_ID_FROM_DESC"
+      }
+    }
+  }]
+}
+
+# IAM Role Permission Policy (attached to the role)
+{
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": ["s3:GetObject","s3:GetObjectVersion","s3:ListBucket"],
+    "Resource": [
+      "arn:aws:s3:::logistics-drops",
+      "arn:aws:s3:::logistics-drops/shipments/*"
+    ]
+  }]
+}</pre>
+
+                <p><strong>Step 2: External Stage + File Format</strong></p>
+                <pre>-- Create the external stage pointing to S3 via integration (no keys!)
+CREATE OR REPLACE STAGE raw.logistics_stage
+    URL                = 's3://logistics-drops/shipments/'
+    STORAGE_INTEGRATION = s3_logistics_int
+    FILE_FORMAT = (
+        TYPE                   = 'PARQUET'
+        SNAPPY_COMPRESSION     = TRUE
+        NULL_IF                = ('NULL', 'null', '')
+        MATCH_BY_COLUMN_NAME   = CASE_INSENSITIVE
+    );
+
+-- Inspect files in the stage
+LIST @raw.logistics_stage;
+
+-- Query Parquet directly without loading (schema-on-read)
+SELECT $1:shipment_id::INT, $1:carrier::VARCHAR, $1:delivered_at::TIMESTAMP
+FROM @raw.logistics_stage (FILE_FORMAT =&gt; 'PARQUET_FMT')
+LIMIT 100;</pre>
+
+                <p><strong>Step 3: Snowpipe — Auto-Ingest on S3 PUT Event</strong></p>
+                <pre>-- Create the target landing table
+CREATE TABLE raw.shipments_landing (
+    shipment_id   INT,
+    order_id      INT,
+    carrier       VARCHAR,
+    status        VARCHAR,
+    delivered_at  TIMESTAMP,
+    _file_name    VARCHAR DEFAULT METADATA$FILENAME,
+    _loaded_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create Snowpipe with AUTO_INGEST
+CREATE OR REPLACE PIPE raw.shipments_pipe
+    AUTO_INGEST = TRUE    -- S3 SQS event triggers this pipe
+AS
+COPY INTO raw.shipments_landing
+FROM @raw.logistics_stage
+FILE_FORMAT = (TYPE = 'PARQUET' MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE)
+ON_ERROR = 'CONTINUE'
+PURGE = FALSE;            -- Keep files in S3 for audit / replay
+
+-- Get the SQS ARN to configure S3 Event Notification
+SHOW PIPES LIKE 'shipments_pipe';
+-- Copy: notification_channel → configure as S3 bucket notification</pre>
+
+                <pre># S3 Event Notification (AWS Console or Terraform)
+resource "aws_s3_bucket_notification" "snowpipe_trigger" {
+  bucket = "logistics-drops"
+  queue {
+    queue_arn     = "&lt;notification_channel from SHOW PIPES&gt;"
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "shipments/"
+    filter_suffix = ".parquet"
+  }
+}</pre>
+
+                <p><strong>Step 4: Monitor &amp; Validate the Pipeline</strong></p>
+                <pre>-- Check Snowpipe ingestion history
+SELECT system$pipe_status('raw.shipments_pipe');
+
+SELECT *
+FROM TABLE(information_schema.copy_history(
+    TABLE_NAME   =&gt; 'SHIPMENTS_LANDING',
+    START_TIME   =&gt; DATEADD('hour', -6, CURRENT_TIMESTAMP)
+))
+ORDER BY last_load_time DESC;
+
+-- Validate row counts after each file
+SELECT _file_name, COUNT(*) AS rows_loaded, MAX(_loaded_at) AS loaded_at
+FROM raw.shipments_landing
+GROUP BY 1
+ORDER BY 3 DESC;</pre>
+
+                <p><strong>End-to-End Latency: &lt; 3 minutes from S3 PUT to queryable in Snowflake</strong></p>
+                <ul>
+                    <li>S3 PUT → SQS notification: ~1 sec</li>
+                    <li>SQS → Snowpipe trigger: ~10–30 sec (Snowpipe polls SQS every 30s)</li>
+                    <li>COPY INTO execution: 30–90 sec depending on file size and warehouse</li>
+                    <li>Stream + Task fires downstream transformation within next schedule window</li>
+                </ul>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q59">
+            <div class="question-header">
+                <div class="q-badge">59</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 59 — DevOps / dbt</div>
+                    <div class="question-title">dbt CI/CD with Slim CI, State Comparison &amp; Git-Based Deployment</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> Your dbt project has 300 models. Every PR currently runs the full project in CI — taking 45 minutes and costing $15 in credits per PR. With Slim CI, you only run models that changed in the PR and their downstream dependents. CI drops to 5 minutes and $2.</p>
+
+                <p><strong>How Slim CI Works</strong></p>
+                <pre>-- dbt generates a manifest.json after every production run
+-- manifest.json = compiled graph of all models, their SQL hashes, dependencies
+--
+-- On a PR branch, dbt compares:
+--   branch manifest  (current PR state)
+--   vs
+--   production manifest  (last successful prod run — "deferred state")
+--
+-- state:modified+  selects ONLY:
+--   - Models whose SQL/config changed in this PR
+--   - ALL downstream models of those changed models (+)</pre>
+
+                <p><strong>dbt Cloud CI Job Setup</strong></p>
+                <pre># dbt Cloud CI Job configuration
+Job Name: "Slim CI — PR Check"
+Trigger: Pull Request (dbt Cloud native integration with GitHub/GitLab)
+Environment: CI  (separate Snowflake schema: dbt_ci_&lt;PR_number&gt;)
+Deferral: Production environment  (uses prod manifest.json)
+
+Commands:
+  - dbt build       --select state:modified+       --defer       --state ./prod-artifacts       --target ci
+  # dbt build = dbt run + dbt test in one command
+
+# What --defer does:
+# For any model NOT in state:modified+, dbt resolves {{ ref('dim_customers') }}
+# to the PRODUCTION table instead of trying to build it in CI schema
+# Result: CI only builds changed models; unchanged upstream deps resolve from prod</pre>
+
+                <p><strong>GitHub Actions Pipeline (self-hosted dbt Core)</strong></p>
+                <pre># .github/workflows/dbt_ci.yml
+name: dbt Slim CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ['models/**', 'macros/**', 'tests/**', 'dbt_project.yml']
+
+jobs:
+  slim_ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dbt
+        run: pip install dbt-snowflake==1.8.0
+
+      - name: Download prod manifest
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
+        run: aws s3 cp s3://dbt-artifacts/prod/manifest.json ./prod-artifacts/manifest.json
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt Slim CI build
+        env:
+          SNOWFLAKE_ACCOUNT:   ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:      ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE:      CI_ROLE
+          DBT_TARGET_SCHEMA:   ci_pr_${{ github.event.number }}
+        run: |
+          dbt build             --select state:modified+             --defer             --state ./prod-artifacts             --target ci             --profiles-dir .
+
+      - name: Upload updated manifest as artifact
+        if: github.ref == 'refs/heads/main'
+        run: aws s3 cp ./target/manifest.json s3://dbt-artifacts/prod/manifest.json</pre>
+
+                <p><strong>Production Deployment Job</strong></p>
+                <pre># dbt Cloud Production Job
+Job Name: "Production — Hourly"
+Schedule: Every hour (or triggered by Airflow / Orchestrator)
+Environment: Production
+Commands:
+  - dbt source freshness --select source:oracle_erp source:stripe
+  - dbt run  --select tag:hourly --target prod
+  - dbt test --select tag:hourly --store-failures
+  - dbt run  --select tag:daily  --target prod  # if midnight run
+  - dbt docs generate                           # refresh lineage docs
+
+# Post-run: upload manifest.json to S3 for next CI run
+# Failure notification: Slack #data-alerts channel via webhook</pre>
+
+                <p><strong>Branch Strategy</strong></p>
+                <pre># Git branching for dbt:
+# main    → production (auto-deploy on merge)
+# dev     → development environment (team integration testing)
+# feat/*  → feature branches (CI runs on PR to main)
+#
+# Environments map to Snowflake schemas:
+# main branch  → ANALYTICS schema  (prod)
+# dev branch   → ANALYTICS_DEV schema
+# CI PR run    → ANALYTICS_CI_123 schema  (auto-dropped after PR closes)
+#
+# profiles.yml uses env vars so same code runs in all environments:
+snowflake_profile:
+  target: "{{ env_var('DBT_TARGET', 'dev') }}"
+  outputs:
+    prod:
+      type: snowflake
+      schema: "{{ env_var('DBT_SCHEMA', 'analytics') }}"
+      role:   "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORM_ROLE') }}"</pre>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q60">
+            <div class="question-header">
+                <div class="q-badge">60</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 60 — Snowflake Performance</div>
+                    <div class="question-title">Snowflake Performance Tuning: Clustering, Query Pruning, Caching &amp; Profiling</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> A Tableau dashboard querying <code>fact_orders</code> (800M rows) takes 45 seconds. The SLA is under 5 seconds. You have a $5,000/month Snowflake bill and need to cut it by 30% without impacting query performance.</p>
+
+                <p><strong>Step 1: Profile the Slow Query</strong></p>
+                <pre>-- Find expensive queries in the last 7 days
+SELECT
+    query_id,
+    query_text,
+    total_elapsed_time / 1000                                 AS elapsed_sec,
+    bytes_scanned / POWER(1024, 3)                            AS gb_scanned,
+    partitions_scanned,
+    partitions_total,
+    ROUND(partitions_scanned / partitions_total * 100, 1)     AS pct_partitions_scanned,
+    credits_used_cloud_services
+FROM snowflake.account_usage.query_history
+WHERE start_time &gt;= CURRENT_DATE - 7
+  AND execution_status = 'SUCCESS'
+ORDER BY total_elapsed_time DESC
+LIMIT 20;
+
+-- If pct_partitions_scanned is near 100%: clustering will help
+-- If bytes_scanned is high but rows_produced is low: pruning is failing</pre>
+
+                <p><strong>Step 2: Clustering Keys — Micro-Partition Pruning</strong></p>
+                <pre>-- Snowflake automatically clusters data on ingest into micro-partitions (~100MB each)
+-- But if queries always filter by ORDER_DATE and your data arrived randomly,
+-- Snowflake scans ALL partitions instead of just the relevant date range.
+
+-- Check current clustering quality
+SELECT SYSTEM$CLUSTERING_INFORMATION('MARTS.FACT_ORDERS', '(order_date)');
+-- Returns average_overlaps: high number = poor clustering = many partitions scanned
+
+-- Add a clustering key on the most common BI filter column
+ALTER TABLE marts.fact_orders
+    CLUSTER BY (order_date);   -- Automatic Background Clustering (ABC) kicks in
+
+-- For compound filters: cluster on the most selective column first
+ALTER TABLE marts.fact_orders
+    CLUSTER BY (order_date, region);
+
+-- Monitor clustering progress (may take hours for large tables)
+SELECT SYSTEM$CLUSTERING_INFORMATION('MARTS.FACT_ORDERS', '(ORDER_DATE, REGION)');</pre>
+
+                <p><strong>Step 3: Understand Snowflake's 3-Layer Cache</strong></p>
+                <pre>-- Layer 1: Metadata Cache (FREE — no warehouse needed)
+-- Stores table metadata, row counts, min/max per partition
+-- Enables partition pruning WITHOUT scanning data
+-- Always-on; no configuration needed
+
+-- Layer 2: Result Cache (FREE — no warehouse needed)
+-- Stores exact query results for 24 hours
+-- If same query runs again with same data, returns instantly
+-- Invalidated when underlying table changes
+SELECT COUNT(*) FROM fact_orders WHERE order_date = '2024-01-15';
+-- First run: 12 seconds. Second run: 4 milliseconds (result cache hit)
+
+-- Layer 3: Local Disk Cache (per warehouse, virtual warehouse memory + SSD)
+-- Caches raw micro-partition data on warehouse nodes
+-- Subsequent queries scanning SAME data are much faster
+-- Destroyed when warehouse suspends — key reason to NOT auto-suspend too aggressively
+-- For frequently-queried marts: set AUTO_SUSPEND = 600 (10 min) not 60 sec
+
+-- Check cache usage in query profile
+SELECT query_id,
+       bytes_scanned,
+       bytes_written_to_result,
+       percentage_scanned_from_cache  -- &gt; 80% = excellent cache hit rate
+FROM snowflake.account_usage.query_history
+WHERE query_id = '&lt;your_query_id&gt;';</pre>
+
+                <p><strong>Step 4: Search Optimization Service (for selective point lookups)</strong></p>
+                <pre>-- For queries like: WHERE customer_id = 12345 (selective, non-clustering-key columns)
+-- Clustering won't help here; Search Optimization will
+
+ALTER TABLE marts.fact_orders
+    ADD SEARCH OPTIMIZATION ON EQUALITY(customer_id, order_id);
+
+-- Check cost/benefit before enabling (SOS has storage overhead)
+SELECT SYSTEM$ESTIMATE_SEARCH_OPTIMIZATION_COSTS('MARTS.FACT_ORDERS',
+                                                  'EQUALITY(customer_id)');
+-- Returns estimated_query_credits_saved and search_access_cost</pre>
+
+                <p><strong>Step 5: Warehouse Right-Sizing</strong></p>
+                <pre>-- Find the optimal warehouse size by running the same query at different sizes
+-- Cost doubles per size tier, but runtime often halves → sweet spot exists
+
+-- Rule of thumb:
+-- X-SMALL / SMALL  : simple queries, &lt;10M rows
+-- MEDIUM           : standard dbt transforms, 10M–500M rows
+-- LARGE            : complex joins, window functions on 500M+ rows
+-- X-LARGE+         : data loads, heavy aggregations, initial full-refresh
+
+-- For concurrent BI users — use Multi-Cluster warehouses
+ALTER WAREHOUSE ANALYTICS_WH SET
+    MAX_CLUSTER_COUNT = 4          -- Scale out horizontally for concurrency
+    MIN_CLUSTER_COUNT = 1
+    SCALING_POLICY    = 'STANDARD'; -- Aggressive scale-out for BI latency</pre>
+
+                <p><strong>Step 6: Query Rewrite Patterns</strong></p>
+                <pre>-- BAD: Function on indexed column destroys pruning
+SELECT * FROM fact_orders WHERE YEAR(order_date) = 2024;
+
+-- GOOD: Range filter preserves micro-partition pruning
+SELECT * FROM fact_orders
+WHERE order_date BETWEEN '2024-01-01' AND '2024-12-31';
+
+-- BAD: SELECT * from a 200-column wide table in a BI tool
+SELECT * FROM fact_orders WHERE order_date = '2024-01-15';
+
+-- GOOD: Only fetch columns the BI tool needs (columnar storage wins here)
+SELECT order_id, customer_id, net_revenue FROM fact_orders
+WHERE order_date = '2024-01-15';
+
+-- BAD: DISTINCT on massive table (often a modelling symptom)
+SELECT DISTINCT customer_id FROM fact_orders;
+
+-- GOOD: Push deduplication upstream in dbt staging layer</pre>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q61">
+            <div class="question-header">
+                <div class="q-badge">61</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 61 — Architecture</div>
+                    <div class="question-title">Data Quality Framework Design: dbt Tests, Freshness, Great Expectations &amp; Observability</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> After a silent data quality failure corrupted the monthly revenue report — which went undetected for 3 days — you are asked to design a comprehensive data quality framework that catches issues at every layer before they reach BI consumers.</p>
+
+                <p><strong>Quality Framework Architecture — 4 Layers of Defence</strong></p>
+                <pre>Layer 1: Source Freshness Checks
+    ↓  (fail fast if upstream is stale)
+Layer 2: Schema Contract Tests (dbt built-in + custom generic)
+    ↓  (fail if data shape changes)
+Layer 3: Business Rule Validation (singular SQL tests + dbt-expectations)
+    ↓  (fail if data violates domain logic)
+Layer 4: Observability &amp; Anomaly Detection (Monte Carlo / Bigeye / custom SQL)
+    ↓  (alert on statistical drift — row counts, null rates, distribution shifts)</pre>
+
+                <p><strong>Layer 1: Source Freshness Monitoring</strong></p>
+                <pre># sources.yml — enforce data arrival SLAs
+sources:
+  - name: oracle_erp
+    database: RAW
+    schema: ORACLE_LANDING
+    freshness:
+      warn_after:  { count: 1,  period: hour }
+      error_after: { count: 4,  period: hour }
+    loaded_at_field: header__timestamp
+
+    tables:
+      - name: orders
+        freshness:
+          warn_after:  { count: 30, period: minute }  # orders are critical
+          error_after: { count: 90, period: minute }
+      - name: inventory
+        freshness:
+          warn_after:  { count: 4,  period: hour }
+
+# Run freshness check before any transformation
+# dbt source freshness  → returns WARN or ERROR before wasting compute</pre>
+
+                <p><strong>Layer 2: Schema &amp; Integrity Tests</strong></p>
+                <pre># Critical tests that must NEVER fail (severity: error → blocks pipeline)
+models:
+  - name: fact_orders
+    tests:
+      - dbt_utils.equal_rowcount:           # Rowcount matches staging
+          compare_model: ref('stg_orders')
+      - dbt_utils.recency:                  # Table has rows from last 2 hours
+          datepart: hour
+          field: order_date
+          interval: 2
+    columns:
+      - name: order_sk
+        tests: [not_null, unique]
+      - name: net_revenue
+        tests:
+          - not_null
+          - not_negative             # Custom macro
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1000000     # Max plausible order value
+      - name: customer_sk
+        tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_sk
+              severity: warn         # Orphans warn but don't block</pre>
+
+                <p><strong>Layer 3: Business Rule Singular Tests</strong></p>
+                <pre>-- tests/assert_revenue_reconciliation.sql
+-- Revenue in Snowflake must match Stripe control total within 0.01%
+-- This runs daily as part of the production dbt job
+WITH snowflake_total AS (
+    SELECT SUM(net_revenue) AS total
+    FROM {{ ref('fact_orders') }}
+    WHERE order_date = CURRENT_DATE - 1
+      AND payment_gateway = 'STRIPE'
+),
+stripe_control AS (
+    SELECT expected_revenue AS total
+    FROM {{ ref('stripe_daily_reconciliation') }}
+    WHERE report_date = CURRENT_DATE - 1
+)
+SELECT
+    s.total   AS snowflake_revenue,
+    c.total   AS stripe_control_total,
+    ABS(s.total - c.total) / NULLIF(c.total, 0) * 100 AS variance_pct
+FROM snowflake_total s, stripe_control c
+WHERE ABS(s.total - c.total) / NULLIF(c.total, 0) &gt; 0.0001   -- Fail if &gt;0.01% off</pre>
+
+                <pre>-- tests/assert_no_duplicate_orders.sql
+-- Catch if Qlik double-delivers an event (CDC dedup failure)
+SELECT order_id, COUNT(*) AS cnt
+FROM {{ ref('fact_orders') }}
+WHERE order_date &gt;= CURRENT_DATE - 3
+GROUP BY order_id
+HAVING cnt &gt; 1</pre>
+
+                <p><strong>Layer 4: Statistical Anomaly Detection (custom SQL)</strong></p>
+                <pre>-- Store daily metrics and alert on Z-score anomalies
+-- models/monitoring/mon_daily_row_counts.sql
+{{ config(materialized='incremental', unique_key='model_name||check_date') }}
+
+SELECT
+    '{{ this.name }}'                        AS model_name,
+    CURRENT_DATE                             AS check_date,
+    COUNT(*)                                 AS row_count,
+    SUM(net_revenue)                         AS total_revenue,
+    COUNT(DISTINCT customer_sk)              AS unique_customers
+FROM {{ ref('fact_orders') }}
+WHERE order_date = CURRENT_DATE - 1</pre>
+
+                <pre>-- Anomaly alert: flag if today's row count deviates &gt;3 sigma from 30-day avg
+WITH stats AS (
+    SELECT
+        AVG(row_count)    AS mean_rows,
+        STDDEV(row_count) AS stddev_rows
+    FROM mon_daily_row_counts
+    WHERE check_date BETWEEN CURRENT_DATE - 31 AND CURRENT_DATE - 1
+)
+SELECT
+    t.check_date,
+    t.row_count,
+    s.mean_rows,
+    (t.row_count - s.mean_rows) / NULLIF(s.stddev_rows, 0) AS z_score
+FROM mon_daily_row_counts t, stats s
+WHERE t.check_date = CURRENT_DATE - 1
+  AND ABS((t.row_count - s.mean_rows) / NULLIF(s.stddev_rows, 0)) &gt; 3;</pre>
+
+                <p><strong>Test Execution Strategy</strong></p>
+                <table>
+                    <tr><th>When</th><th>What Runs</th><th>Failure Action</th></tr>
+                    <tr><td>Every PR (CI)</td><td>Tests on modified+ models only</td><td>Block merge</td></tr>
+                    <tr><td>Every hourly run</td><td>Source freshness + tag:hourly tests</td><td>Slack alert, pause pipeline</td></tr>
+                    <tr><td>Daily 06:00</td><td>Full test suite + reconciliation tests</td><td>PagerDuty, incident ticket</td></tr>
+                    <tr><td>Weekly</td><td>Statistical anomaly queries (Z-score)</td><td>Email data team lead</td></tr>
+                </table>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q62">
+            <div class="question-header">
+                <div class="q-badge">62</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 62 — Senior Architect</div>
+                    <div class="question-title">Design a Multi-Source Lakehouse: Redshift-to-Snowflake Migration + Modern Stack</div>
+                </div>
+                <div class="question-toggle">&#9662;</div>
+            </div>
+            <div class="answer">
+                <p><strong>Real-World Scenario:</strong> Your client is migrating from a Redshift-based monolith (3TB, 800 tables, 50 reports) to a modern Snowflake + dbt + S3 Lakehouse. As the lead data engineer, you must design the migration, preserve data history, and ensure zero BI downtime.</p>
+
+                <p><strong>Migration Architecture</strong></p>
+                <pre>PHASE 1 — ASSESSMENT (Week 1–2)
+  - Inventory all 800 Redshift tables: size, row count, query frequency
+  - Classify: Hot (queried daily), Warm (weekly), Cold (archival only)
+  - Identify: Redshift-specific SQL (LISTAGG, DECODE, distribution keys)
+  - Map: which tables feed which reports (use Redshift STL_QUERY logs)
+
+PHASE 2 — FOUNDATION (Week 2–4)
+  - Provision Snowflake: account, databases, warehouses, roles, RBAC
+  - Set up S3 as the neutral landing zone (both Redshift and Snowflake read it)
+  - Deploy dbt Cloud + connect to Snowflake CI/CD
+  - Establish: RAW → STAGING → MARTS layer structure
+
+PHASE 3 — PARALLEL RUN (Week 4–8)
+  - Run BOTH Redshift and Snowflake in parallel
+  - Validate: row counts, SUM of key metrics, NULL rates match daily
+  - BI tools connected to BOTH; analysts validate dashboard numbers
+  - Fix discrepancies in dbt models before cutover
+
+PHASE 4 — CUTOVER (Week 8–10)
+  - Freeze Redshift writes (maintenance window, e.g. Friday 10 PM)
+  - Final delta load: CDC all changes since last full load
+  - Switch BI tool data source connections to Snowflake
+  - Monitor for 48 hours; rollback plan = flip BI connections back to Redshift
+
+PHASE 5 — DECOMMISSION (Week 12+)
+  - Redshift cluster to read-only for 30 days (safety net)
+  - Migrate cold/archival data to S3 Parquet (Snowflake external tables)
+  - Terminate Redshift cluster</pre>
+
+                <p><strong>Data Migration: Redshift → S3 → Snowflake</strong></p>
+                <pre>-- Step 1: Unload hot tables from Redshift to S3 in Parquet
+UNLOAD ('SELECT * FROM sales.fact_orders')
+TO 's3://migration-bucket/fact_orders/'
+IAM_ROLE 'arn:aws:iam::123456789:role/redshift-s3-role'
+FORMAT AS PARQUET
+PARTITION BY (order_date)
+MAXFILESIZE 256 MB;
+
+-- Step 2: Load from S3 into Snowflake (external stage → COPY INTO)
+CREATE STAGE migration.redshift_stage
+    URL = 's3://migration-bucket/'
+    STORAGE_INTEGRATION = s3_migration_int;
+
+COPY INTO raw.fact_orders_migration
+FROM @migration.redshift_stage/fact_orders/
+FILE_FORMAT = (TYPE = 'PARQUET' MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE)
+PATTERN = '.*\.parquet'
+ON_ERROR = 'CONTINUE';
+
+-- Step 3: Validate row counts match
+SELECT
+    'REDSHIFT' AS source, COUNT(*) AS rows FROM redshift_control_table
+UNION ALL
+SELECT
+    'SNOWFLAKE' AS source, COUNT(*) AS rows FROM raw.fact_orders_migration;</pre>
+
+                <p><strong>SQL Compatibility: Redshift → Snowflake Translation Guide</strong></p>
+                <table>
+                    <tr><th>Redshift SQL</th><th>Snowflake Equivalent</th><th>Notes</th></tr>
+                    <tr><td><code>LISTAGG(col, ',')</code></td><td><code>LISTAGG(col, ',')</code></td><td>Same syntax ✓</td></tr>
+                    <tr><td><code>DECODE(col, v1, r1, v2, r2)</code></td><td><code>IFF / CASE WHEN</code></td><td>DECODE not in Snowflake</td></tr>
+                    <tr><td><code>GETDATE()</code></td><td><code>CURRENT_TIMESTAMP</code></td><td>Rename</td></tr>
+                    <tr><td><code>DATEDIFF('day', a, b)</code></td><td><code>DATEDIFF('day', a, b)</code></td><td>Same ✓</td></tr>
+                    <tr><td><code>DATEPART(month, d)</code></td><td><code>DATE_PART('month', d)</code></td><td>String argument</td></tr>
+                    <tr><td><code>NVL(a, b)</code></td><td><code>COALESCE(a, b) / IFF(a IS NULL, b, a)</code></td><td>Use COALESCE</td></tr>
+                    <tr><td>DISTKEY / SORTKEY</td><td>CLUSTER BY</td><td>Different mechanism</td></tr>
+                    <tr><td>VARCHAR(MAX)</td><td>VARCHAR (up to 16MB)</td><td>Remove MAX</td></tr>
+                </table>
+
+                <p><strong>Modern Lakehouse Stack Post-Migration</strong></p>
+                <pre>┌─────────────────────────────────────────────────────────────────┐
+│                       INGESTION LAYER                           │
+│  Qlik Replicate (CDC)  │  Fivetran (SaaS)  │  Snowpipe (Files) │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+                    ┌───────────▼──────────┐
+                    │    S3 Data Lake       │  Raw Parquet / JSON
+                    │  (source of truth,    │  Partitioned by date
+                    │   infinite retention) │  Lifecycle: 7yr Glacier
+                    └───────────┬──────────┘
+                                │  COPY INTO / External Tables
+                    ┌───────────▼──────────┐
+                    │  Snowflake (Compute)  │  Zero-copy over S3 data
+                    │  RAW → STG → MARTS   │  via Iceberg / Ext Tables
+                    └───────────┬──────────┘
+                                │  dbt Cloud (Transform)
+                    ┌───────────▼──────────┐
+                    │    Semantic Layer     │  dbt metrics / Looker LookML
+                    └───────────┬──────────┘
+                                │
+                ┌───────────────┼──────────────────┐
+              Tableau        Power BI           Self-Service
+           (Operational)   (Executive)        (Mode / Hex)</pre>
+
+                <p><strong>RBAC Design (Role-Based Access Control)</strong></p>
+                <pre>-- Principle of least privilege — no direct user-to-table grants
+-- All access via roles; roles assigned to users
+
+CREATE ROLE ANALYST_ROLE;           -- SELECT on marts only
+CREATE ROLE ENGINEER_ROLE;          -- SELECT + INSERT on staging + marts
+CREATE ROLE TRANSFORM_ROLE;         -- Used by dbt service account
+CREATE ROLE INGEST_ROLE;            -- Used by Qlik / Fivetran service accounts
+CREATE ROLE ADMIN_ROLE;             -- Full DDL + GRANT
+
+-- dbt service account permissions
+GRANT ROLE TRANSFORM_ROLE TO USER dbt_service_account;
+GRANT USAGE ON WAREHOUSE TRANSFORM_WH TO ROLE TRANSFORM_ROLE;
+GRANT USAGE, CREATE SCHEMA ON DATABASE ANALYTICS TO ROLE TRANSFORM_ROLE;
+GRANT SELECT ON ALL TABLES IN SCHEMA RAW TO ROLE TRANSFORM_ROLE;
+GRANT CREATE TABLE, INSERT, UPDATE, DELETE
+    ON FUTURE TABLES IN SCHEMA ANALYTICS.STAGING TO ROLE TRANSFORM_ROLE;
+
+-- Analysts get Secure Views over marts (never raw data)
+GRANT SELECT ON ALL VIEWS IN SCHEMA ANALYTICS.MARTS TO ROLE ANALYST_ROLE;
+-- Column-level masking for PII
+CREATE MASKING POLICY email_mask AS (val VARCHAR) RETURNS VARCHAR ->
+    CASE WHEN CURRENT_ROLE() IN ('ADMIN_ROLE','ENGINEER_ROLE') THEN val
+         ELSE '***@***.***'
+    END;
+ALTER TABLE marts.dim_customers
+    MODIFY COLUMN email SET MASKING POLICY email_mask;</pre>
+
+                <a href="#main-content" class="back-to-toc">&#8593; Back to top</a>
+            </div>
+        </div>
 
         </main>
     </div>
@@ -3594,10 +6020,16 @@ WHERE dbt_valid_to IS NULL;
                             a.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
                         }
                     });
-                    // update progress
-                    const pct = Math.round((seen.size / 50) * 100);
+                    // update top-bar progress (dynamic total from sidebar)
+                    const totalQ = document.querySelectorAll('.sidebar-item[data-q]').length;
+                    const pct = Math.round((seen.size / totalQ) * 100);
                     document.getElementById('progress-fill').style.width = pct + '%';
-                    document.getElementById('progress-label').textContent = seen.size + ' / 50 viewed';
+                    document.getElementById('progress-label').textContent = seen.size + ' / ' + totalQ + ' viewed';
+                    // update hero progress bar
+                    const heroFill = document.getElementById('hero-prog-fill');
+                    const heroLabel = document.getElementById('hero-prog-label');
+                    if (heroFill)  heroFill.style.width = pct + '%';
+                    if (heroLabel) heroLabel.textContent = seen.size + ' / ' + totalQ + ' viewed';
                 }
             });
         }, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
@@ -3612,11 +6044,24 @@ WHERE dbt_valid_to IS NULL;
 
         // ── SIDEBAR TOGGLE (MOBILE) ──
         function toggleSidebar() {
-            const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('open');
-            ov.classList.toggle('visible');
+            const isMobile = window.innerWidth <= 900;
+            if (isMobile) {
+                const sb = document.getElementById('sidebar');
+                const ov = document.getElementById('overlay');
+                sb.classList.toggle('open');
+                ov.classList.toggle('visible');
+            } else {
+                document.body.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed'));
+            }
         }
+
+        // Restore sidebar state on load
+        (function() {
+            if (window.innerWidth > 900 && localStorage.getItem('sidebar-collapsed') === 'true') {
+                document.body.classList.add('sidebar-collapsed');
+            }
+        })();
 
         // ── QUESTION COLLAPSE ──
         document.querySelectorAll('.question-header').forEach(header => {
@@ -3643,6 +6088,82 @@ WHERE dbt_valid_to IS NULL;
                 if (lbl) lbl.textContent = 'LIGHT';
                 if (knob) knob.textContent = '☀️';
             }
+        })();
+
+        // ── HERO ANIMATIONS ──
+        (function() {
+            // 1. Typewriter effect
+            const phrases = [
+                'Snowflake Architecture',
+                'DBT Incremental Models',
+                'CDC & Streaming',
+                'Schema Drift Handling',
+                'Late-Arriving Data',
+                'Data Governance',
+                'Custom DBT Tests',
+                'SQL Window Functions',
+                'Cloud Data Pipelines',
+                'SCD Type 2 Patterns',
+            ];
+            const el = document.getElementById('tw-text');
+            let pi = 0, ci = 0, deleting = false;
+            function typeStep() {
+                if (!el) return;
+                const phrase = phrases[pi];
+                if (!deleting) {
+                    el.textContent = phrase.slice(0, ++ci);
+                    if (ci === phrase.length) { deleting = true; setTimeout(typeStep, 1800); return; }
+                    setTimeout(typeStep, 55);
+                } else {
+                    el.textContent = phrase.slice(0, --ci);
+                    if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(typeStep, 300); return; }
+                    setTimeout(typeStep, 28);
+                }
+            }
+            setTimeout(typeStep, 600);
+
+            // 2. Staggered chip reveal
+            const chips = document.querySelectorAll('.hero-chip');
+            chips.forEach((c, i) => setTimeout(() => c.classList.add('visible'), 200 + i * 80));
+
+            // 3. Count-up animation for stat cards
+            function countUp(el, target, duration, suffix) {
+                if (!el) return;
+                const start = performance.now();
+                function frame(now) {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    el.textContent = Math.round(ease * target) + (suffix || '');
+                    if (progress < 1) requestAnimationFrame(frame);
+                }
+                requestAnimationFrame(frame);
+            }
+
+            // Count SQL examples from pre tags
+            const sqlCount = document.querySelectorAll('pre').length;
+
+            setTimeout(() => {
+                // Derive question count from sidebar items (always up to date)
+                const totalQuestions = document.querySelectorAll('.sidebar-item[data-q]').length;
+                // Derive topic count from unique first-word of sidebar item text
+                const topicSet = new Set();
+                document.querySelectorAll('.sidebar-item[data-q]').forEach(a => {
+                    const badge = parseInt(a.querySelector('.q-num')?.textContent || '0');
+                    if (badge <= 15)       topicSet.add('snowflake-core');
+                    else if (badge <= 25)  topicSet.add('pipelines');
+                    else if (badge <= 35)  topicSet.add('sql-advanced');
+                    else if (badge <= 45)  topicSet.add('dbt');
+                    else if (badge <= 52)  topicSet.add('data-quality');
+                    else if (badge <= 55)  topicSet.add('streams-tasks');
+                    else if (badge <= 59)  topicSet.add('dbt-advanced');
+                    else                   topicSet.add('architecture');
+                });
+                const totalTopics = topicSet.size;
+
+                countUp(document.getElementById('stat-q'), totalQuestions, 1000);
+                countUp(document.getElementById('stat-t'), totalTopics, 800);
+                countUp(document.getElementById('stat-s'), sqlCount, 1200, '+');
+            }, 400);
         })();
     </script>
 </body>
