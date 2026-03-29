@@ -252,6 +252,125 @@
             gap: 20px;
         }
 
+        /* ── SEARCH BOX ── */
+        .search-box {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 0.85em;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+            background: var(--surface3);
+        }
+
+        .search-input::placeholder {
+            color: var(--text3);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            margin-top: -1px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .search-results.visible {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border2);
+            cursor: pointer;
+            transition: background 0.15s ease;
+            font-size: 0.85em;
+        }
+
+        .search-result-item:hover {
+            background: var(--surface3);
+        }
+
+        .search-result-item.no-results {
+            padding: 12px;
+            text-align: center;
+            color: var(--text3);
+            cursor: default;
+        }
+
+        .search-result-item .result-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-weight: 600;
+            margin-right: 8px;
+            font-size: 0.75em;
+        }
+
+        .search-result-item .result-title {
+            color: var(--text);
+        }
+
+        /* ── DIFFICULTY FILTER ── */
+        .difficulty-filter {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 6px;
+            color: var(--text3);
+            font-family: var(--mono);
+            font-size: 0.75em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-btn:hover {
+            background: var(--surface3);
+            border-color: var(--border);
+            color: var(--text2);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
         .progress-pill {
             display: flex;
             align-items: center;
@@ -333,7 +452,9 @@
             z-index: 50;
             scrollbar-width: thin;
             scrollbar-color: var(--border2) transparent;
-            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), 
+                        width 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+                        padding 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .sidebar::-webkit-scrollbar { width: 4px; }
@@ -497,7 +618,7 @@
             font-size: 0.7em;
             font-family: var(--mono);
             font-weight: 500;
-            border: 1px solid;
+            border: 1px solid rgba(255,255,255,0.1);
             letter-spacing: 0.03em;
             opacity: 0;
             transform: translateY(6px);
@@ -698,6 +819,48 @@
 
         .question-meta {
             flex: 1;
+        }
+
+        /* ── DIFFICULTY BADGE ── */
+        .difficulty-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            font-family: var(--mono);
+        }
+
+        .difficulty-badge.easy {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .difficulty-badge.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .difficulty-badge.hard {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .question-number {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .question-title {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1.05em;
         }
 
 
@@ -978,9 +1141,21 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
+            /* Prevent body scroll when sidebar is open */
+            body.sidebar-overlay-visible {
+                overflow: hidden;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
                 z-index: 200;
+                width: 70vw;
+                max-width: var(--sidebar-w);
+                position: fixed;
+                top: calc(var(--header-h) + var(--attr-bar-h));
+                left: 0;
+                bottom: 0;
+                height: calc(100vh - var(--header-h) - var(--attr-bar-h));
             }
 
             .sidebar.open {
@@ -991,6 +1166,8 @@
                 margin-left: 0 !important;
                 max-width: 100% !important;
                 padding: 24px 20px 60px;
+                width: 100%;
+                position: relative;
             }
 
             .hero h1 { font-size: 1.8em; }
@@ -998,12 +1175,18 @@
             .sidebar-overlay {
                 display: none;
                 position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.5);
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.4);
                 z-index: 150;
+                backdrop-filter: blur(2px);
             }
 
-            .sidebar-overlay.visible { display: block; }
+            .sidebar-overlay.visible {
+                display: block;
+            }
         }
 
         @media (max-width: 600px) {
@@ -1027,8 +1210,8 @@
             -moz-user-select: none;
             user-select: none;
         }
-        /* Allow inline code selection (convenience) */
-        code { -webkit-user-select: text; user-select: text; }
+        /* Disable all text selection (content protection) */
+        code { -webkit-user-select: none; user-select: none; }
 
         /* Subtle watermark on each code block */
         .pre-watermark {
@@ -1113,8 +1296,12 @@
         <a href="https://surya7131.github.io/data_engineering_tips/" target="_blank">
             Open Live Version &rarr;
         </a>
-        <p style="font-size:0.75em; margin-top:16px; color:#64748b;">
-            &copy; Vemula Suryateja &nbsp;&middot;&nbsp; vsurya@duck.com
+        <p style="font-size:0.9em; margin-top:16px; color:#e3e3e3; line-height:1.6;">
+            <strong>Questions? Contact me:</strong><br>
+            &#9993; <span id="email-display"></span>
+        </p>
+        <p style="font-size:0.75em; margin-top:12px; color:#64748b;">
+            &copy; Vemula Suryateja
         </p>
     </div>
 
@@ -1125,7 +1312,7 @@
         </span>
         <div class="attr-bar-divider"></div>
         <span class="attr-bar-text">
-            &#9993; <a href="mailto:vsurya@duck.com">vsurya@duck.com</a>
+            &#9993; <a href="mailto:vsurya@duck.com" style="color: var(--green); text-decoration: none;">vsurya@duck.com</a>
         </span>
     </div>
 
@@ -1153,6 +1340,16 @@
             </div>
         </div>
         <div class="top-bar-meta">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search questions..." class="search-input">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <div class="difficulty-filter">
+                <button class="filter-btn active" data-filter="all" onclick="filterByDifficulty('all')">All</button>
+                <button class="filter-btn" data-filter="easy" onclick="filterByDifficulty('easy')">[Junior]</button>
+                <button class="filter-btn" data-filter="medium" onclick="filterByDifficulty('medium')">[Mid]</button>
+                <button class="filter-btn" data-filter="hard" onclick="filterByDifficulty('hard')">[Senior+]</button>
+            </div>
             <div class="progress-pill">
                 <span id="progress-label">0 / 0 viewed</span>
                 <div class="progress-bar-mini">
@@ -1241,6 +1438,18 @@
             <a href="#q68" class="sidebar-item" data-q="q68"><span class="q-num">68</span> Streaming with Kafka + Snowflake</a>
             <a href="#q69" class="sidebar-item" data-q="q69"><span class="q-num">69</span> Cost Optimisation at Scale</a>
             <a href="#q70" class="sidebar-item" data-q="q70"><span class="q-num">70</span> Analytics Engineering: Metrics Layer</a>
+            <a href="#q71" class="sidebar-item" data-q="q71"><span class="q-num">71</span> Snowflake Cache Types</a>
+            <a href="#q72" class="sidebar-item" data-q="q72"><span class="q-num">72</span> SQL JOINs with Duplicates</a>
+            <a href="#q73" class="sidebar-item" data-q="q73"><span class="q-num">73</span> Min / Max / Avg Salaries</a>
+            <a href="#q74" class="sidebar-item" data-q="q74"><span class="q-num">74</span> dbt is_incremental() Deep Dive</a>
+            <a href="#q75" class="sidebar-item" data-q="q75"><span class="q-num">75</span> Streak / Consecutive Wins</a>
+            <a href="#q76" class="sidebar-item" data-q="q76"><span class="q-num">76</span> LIKE, ILIKE, RLIKE, REGEXP</a>
+            <a href="#q77" class="sidebar-item" data-q="q77"><span class="q-num">77</span> Flatten Multi-Nested Arrays</a>
+            <a href="#q78" class="sidebar-item" data-q="q78"><span class="q-num">78</span> Cost Savings on Projects</a>
+            <a href="#q79" class="sidebar-item" data-q="q79"><span class="q-num">79</span> Redaction vs Masking vs DDM vs Row Masking</a>
+            <a href="#q80" class="sidebar-item" data-q="q80"><span class="q-num">80</span> MongoDB Fundamentals</a>
+            <a href="#q81" class="sidebar-item" data-q="q81"><span class="q-num">81</span> JSON Flattening in Snowflake</a>
+            <a href="#q82" class="sidebar-item" data-q="q82"><span class="q-num">82</span> API Concepts &amp; Data Acquisition</a>
         </nav>
 
         <!-- MAIN -->
@@ -2014,7 +2223,7 @@ default_args = {
     'retries':          2,
     'retry_delay':      timedelta(minutes=5),
     'email_on_failure': True,
-    'email':            ['data-alerts@company.com'],
+    'email':            ['vsurya@duck.com'],
 }
 
 with DAG(
@@ -6035,7 +6244,7 @@ exposures:
     description: "C-suite daily revenue KPIs sourced from dbt marts"
     owner:
       name: Analytics Engineering Team
-      email: data-engineering@company.com
+      email: vsurya@duck.com
     depends_on:
       - ref('fact_daily_revenue')
       - ref('dim_customers')
@@ -7319,10 +7528,10 @@ mf query   --metrics monthly_recurring_revenue   --group-by metric_time__month,r
 
 id: orders-contract
 version: "2.1.0"
-owner: backend-team@company.com
+owner: vsurya@duck.com
 consumers:
-  - data-engineering@company.com
-  - analytics-team@company.com
+  - vsurya@duck.com
+  - vsurya@duck.com
 
 schema:
   fields:
@@ -7971,13 +8180,1962 @@ Business decisions (the whole point)</pre>
             </div>
         </div>
 
+
+        <!-- ═══════════════════════════════════════
+             NEW QUESTIONS Q71 – Q82
+             ═══════════════════════════════════════ -->
+
+        <div class="question" id="q71">
+            <div class="question-header">
+                <div class="q-badge">71</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 71 — Snowflake</div>
+                    <div class="question-title">Snowflake Cache Types: Result, Metadata &amp; Warehouse (Local Disk) Cache — How Each Works</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>Snowflake has <strong>three distinct caching layers</strong>. Understanding which one fires — and when — is critical both for performance tuning and for explaining query behaviour to stakeholders.</p>
+
+                <p><strong>Cache 1 — Result Cache (Global, FREE)</strong></p>
+                <p>The result cache stores the <em>exact output</em> of every query for <strong>24 hours</strong>. If you run the same SQL again and the underlying data has not changed, Snowflake returns the cached result <em>instantly</em> — without spinning up a warehouse or consuming a single credit. This is the most powerful cache because it costs absolutely nothing to hit.</p>
+
+                <pre>-- First run: hits the warehouse, takes 8 seconds
+SELECT region, SUM(net_revenue) FROM fact_orders
+WHERE order_date = '2024-03-01' GROUP BY 1;
+
+-- Second run (within 24 hours, table unchanged): returns in &lt; 100ms
+-- Query profile shows "Results Reused" = 100%
+SELECT region, SUM(net_revenue) FROM fact_orders
+WHERE order_date = '2024-03-01' GROUP BY 1;</pre>
+
+                <p><strong>What invalidates the result cache?</strong></p>
+                <ul>
+                    <li>Any DML on the underlying table (INSERT, UPDATE, DELETE, MERGE, COPY INTO)</li>
+                    <li>The query SQL changes (even adding a space changes the hash)</li>
+                    <li>Session parameters that affect results change (e.g. timezone, date format)</li>
+                    <li>The 24-hour TTL expires</li>
+                    <li>Functions like <code>CURRENT_TIMESTAMP()</code>, <code>RANDOM()</code>, <code>UUID_STRING()</code> disable result caching entirely for that query</li>
+                </ul>
+
+                <p><strong>Cache 2 — Metadata Cache (Global, FREE — no warehouse needed)</strong></p>
+                <p>The Cloud Services layer maintains a persistent metadata store containing row counts, min/max values per column per micro-partition, null counts, and distinct value counts. Simple metadata-only queries resolve entirely here — <em>zero compute cost</em>.</p>
+
+                <pre>-- These queries answer from metadata cache ONLY — no warehouse needed
+SELECT COUNT(*) FROM fact_orders;              -- row count from metadata
+SELECT MIN(order_date), MAX(order_date)        -- min/max from partition stats
+FROM fact_orders;
+
+-- Check in Query Profile: "Cloud Services" time = 100%, no warehouse time
+-- Credit attribution: metadata queries appear in cloud_services credits (usually &lt;10%)</pre>
+
+                <p><strong>How metadata enables micro-partition pruning:</strong> Before a query even touches the warehouse, the query optimizer reads partition metadata to determine which micro-partitions <em>cannot</em> contain rows matching your WHERE clause — and skips them entirely. A query filtering <code>WHERE order_date = '2024-03-01'</code> on a 500-partition table may only read 3 partitions if the data is well-clustered.</p>
+
+                <p><strong>Cache 3 — Warehouse (Local Disk) Cache — per warehouse, consumed credits</strong></p>
+                <p>When a warehouse executes a query, it reads micro-partitions from S3 and <em>caches them on the warehouse's local SSD</em>. Subsequent queries that scan the <em>same micro-partitions</em> will read from local disk instead of S3 — significantly faster (SSD vs object storage network round-trip).</p>
+
+                <pre>-- Query A: cold warehouse, scans 10 micro-partitions from S3 → 12 sec
+SELECT * FROM fact_orders WHERE region = 'US-EAST' AND order_date = '2024-03-01';
+
+-- Query B (same warehouse, same partitions, running 30 seconds later):
+-- The 10 micro-partitions are now on local SSD → 2.5 sec
+SELECT * FROM fact_orders WHERE region = 'US-EAST' AND order_date = '2024-02-29';
+
+-- Check: in Query Profile, "Bytes Scanned from Cache" will be high</pre>
+
+                <p><strong>Critical: Warehouse cache is destroyed when the warehouse SUSPENDS.</strong> If your warehouse auto-suspends between runs, the next run starts cold again. This is why:</p>
+                <ul>
+                    <li>BI warehouses serving interactive dashboards should have longer auto-suspend (e.g., 5–10 min) to keep the cache warm between user clicks</li>
+                    <li>ETL warehouses that run once per hour can suspend aggressively (60 sec) — they start cold anyway</li>
+                </ul>
+
+                <p><strong>Cache Summary Table</strong></p>
+                <table>
+                    <tr><th>Cache</th><th>Scope</th><th>Cost</th><th>Survives Suspend</th><th>Invalidated By</th></tr>
+                    <tr><td>Result Cache</td><td>Global (all sessions)</td><td>FREE</td><td>Yes (24h TTL)</td><td>Table DML, SQL change, TTL expire</td></tr>
+                    <tr><td>Metadata Cache</td><td>Global (Cloud Services)</td><td>FREE</td><td>Yes (persistent)</td><td>Table DML (updates partition stats)</td></tr>
+                    <tr><td>Warehouse (Disk) Cache</td><td>Per warehouse cluster</td><td>Credits consumed</td><td>No — lost on suspend</td><td>Warehouse suspend/resize</td></tr>
+                </table>
+
+                <p><strong>Practical tuning tips:</strong></p>
+                <ul>
+                    <li><strong>Maximise result cache hits</strong> — standardise BI queries (same SQL = cache hit). Avoid <code>CURRENT_TIMESTAMP()</code> in SELECT; use <code>CURRENT_DATE</code> and filter in WHERE instead</li>
+                    <li><strong>Keep BI warehouse warm</strong> — set <code>AUTO_SUSPEND = 300</code> (5 min) so the SSD cache survives between dashboard page loads</li>
+                    <li><strong>Use clustering keys</strong> to maximise metadata pruning — fewer partitions read = less S3 I/O = warehouse cache more effective for what is read</li>
+                    <li><strong>Multi-cluster warehouses</strong> do NOT share disk cache across clusters — each cluster has its own local cache</li>
+                </ul>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q72">
+            <div class="question-header">
+                <div class="q-badge">72</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 72 — SQL</div>
+                    <div class="question-title">TableA, TableB with 1 Column (Values: 1, 1, 0, NULL) — Find Results Across Different JOINs</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p><strong>Problem:</strong> Two tables each with a single column. TableA has values: 1, 1, 0, NULL. TableB has values: 1, 1, 0, NULL. Find the output for different JOIN types.</p>
+
+                <p><strong>Sample Tables Setup</strong></p>
+                <pre>-- TableA (1 column)
+-- val
+-- ---
+-- 1
+-- 1
+-- 0
+-- NULL
+
+-- TableB (1 column)
+-- val
+-- ---
+-- 1
+-- 1
+-- 0
+-- NULL
+
+CREATE TABLE tableA (val INT);
+INSERT INTO tableA VALUES (1), (1), (0), (NULL);
+
+CREATE TABLE tableB (val INT);
+INSERT INTO tableB VALUES (1), (1), (0), (NULL);</pre>
+
+                <p><strong>INNER JOIN ON tableA.val = tableB.val</strong></p>
+                <pre>SELECT A.val, B.val
+FROM tableA A
+INNER JOIN tableB B ON A.val = B.val;
+
+-- Result:
+-- val (A) | val (B)
+-- ---------|--------
+-- 1       | 1      ← A(1) × B(1,1) = 2 rows (cartesian on duplicates)
+-- 1       | 1
+-- 1       | 1
+-- 1       | 1
+-- 0       | 0      ← A(0) × B(0) = 1 row
+
+-- KEY: NULL vs NULL = UNKNOWN (not TRUE) → no matches for NULL rows
+-- Total: 5 rows</pre>
+
+                <p><strong>LEFT JOIN ON tableA.val = tableB.val</strong></p>
+                <pre>SELECT A.val, B.val
+FROM tableA A
+LEFT JOIN tableB B ON A.val = B.val;
+
+-- Result:
+-- val (A) | val (B)
+-- ---------|--------
+-- 1       | 1      (A not NULL, matches B)
+-- 1       | 1      (A not NULL, matches B)
+-- 1       | 1      (A not NULL, matches B)
+-- 1       | 1      (A not NULL, matches B)
+-- 0       | 0      (A not NULL, matches B)
+-- NULL    | NULL   (A is NULL, no match in ON clause → filled with NULL)
+
+-- KEY: All rows from Left table are preserved
+-- Total: 6 rows</pre>
+
+                <p><strong>RIGHT JOIN ON tableA.val = tableB.val</strong></p>
+                <pre>SELECT A.val, B.val
+FROM tableA A
+RIGHT JOIN tableB B ON A.val = B.val;
+
+-- Result:
+-- val (A) | val (B)
+-- ---------|--------
+-- 1       | 1      (matched)
+-- 1       | 1      (matched)
+-- 1       | 1      (matched)
+-- 1       | 1      (matched)
+-- 0       | 0      (matched)
+-- NULL    | NULL   (B is NULL, no match from A → filled with NULL)
+
+-- KEY: All rows from Right table are preserved
+-- Total: 6 rows</pre>
+
+                <p><strong>FULL OUTER JOIN ON tableA.val = tableB.val</strong></p>
+                <pre>SELECT A.val, B.val
+FROM tableA A
+FULL OUTER JOIN tableB B ON A.val = B.val;
+
+-- Result:
+-- val (A) | val (B)
+-- ---------|--------
+-- 1       | 1      (matched)
+-- 1       | 1      (matched)
+-- 1       | 1      (matched)
+-- 1       | 1      (matched)
+-- 0       | 0      (matched)
+-- NULL    | NULL   (A's NULL unmatched)
+-- NULL    | NULL   (B's NULL unmatched)
+
+-- KEY: Union of LEFT + RIGHT semantics
+-- Total: 7 rows</pre>
+
+                <p><strong>Key Takeaways</strong></p>
+                <ul>
+                    <li><strong>NULL joining rule:</strong> NULL = NULL is UNKNOWN in SQL, so NULL rows never match in ON clauses</li>
+                    <li><strong>Cartesian product:</strong> Duplicate values create multiple match combinations</li>
+                    <li><strong>INNER JOIN:</strong> Only matching rows (NULLs excluded)</li>
+                    <li><strong>LEFT JOIN:</strong> All left rows + matched right rows + NULL-filled for unmatched</li>
+                    <li><strong>RIGHT JOIN:</strong> All right rows + matched left rows + NULL-filled for unmatched</li>
+                    <li><strong>FULL OUTER:</strong> All rows from both tables, NULL-filled where no match</li>
+                </ul>
+
+                <p><strong>CROSS JOIN — cartesian product (all combinations)</strong></p>
+                <pre>SELECT a.id, a.val AS a_val, b.val AS b_val
+FROM a CROSS JOIN b;
+-- Returns 4 × 3 = 12 rows (every row in A combined with every row in B)
+-- Use case: generating all combinations (e.g., all dates × all products)</pre>
+
+                <p><strong>Quick Reference Card</strong></p>
+                <table>
+                    <tr><th>JOIN Type</th><th>Rows Included</th><th>NULL key matched?</th><th>Duplicate key effect</th></tr>
+                    <tr><td>INNER</td><td>Matching rows only</td><td>No</td><td>Cartesian on matching side</td></tr>
+                    <tr><td>LEFT</td><td>All from left + matches from right</td><td>Left NULLs preserved (NULL fill right)</td><td>Cartesian on matching side</td></tr>
+                    <tr><td>RIGHT</td><td>All from right + matches from left</td><td>Right NULLs preserved (NULL fill left)</td><td>Cartesian on matching side</td></tr>
+                    <tr><td>FULL OUTER</td><td>All from both sides</td><td>All NULLs preserved, unmatched</td><td>Cartesian on matching side</td></tr>
+                    <tr><td>CROSS</td><td>All combinations</td><td>Yes (no ON clause)</td><td>M × N rows always</td></tr>
+                </table>
+
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q73">
+            <div class="question-header">
+                <div class="q-badge">73</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 73 — SQL</div>
+                    <div class="question-title">Min, Max &amp; Avg Salaries with user_id — Aggregation Patterns and Edge Cases</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>Salary aggregation questions are deceptively tricky — the common pitfall is knowing which user has the max/min salary, especially when multiple users tie. Let's cover all common patterns.</p>
+
+                <p><strong>Sample Data</strong></p>
+                <pre>CREATE TABLE salaries (
+    user_id   INT,
+    dept      VARCHAR,
+    salary    DECIMAL(10,2),
+    hire_date DATE
+);
+
+INSERT INTO salaries VALUES
+(1, 'Engineering', 95000, '2021-01-10'),
+(2, 'Engineering', 120000,'2019-06-15'),
+(3, 'Marketing',   72000, '2022-03-01'),
+(4, 'Marketing',   95000, '2020-07-20'),
+(5, 'HR',          58000, '2023-02-14'),
+(6, 'HR',          58000, '2021-11-30'),  -- tie with user 5
+(7, 'Engineering', 120000,'2020-01-05');  -- tie with user 2</pre>
+
+                <p><strong>Pattern 1 — Simple Global Aggregates</strong></p>
+                <pre>-- Min, Max, and Avg salary across all employees
+SELECT
+    MIN(salary) AS min_salary,
+    MAX(salary) AS max_salary,
+    ROUND(AVG(salary), 2) AS avg_salary,
+    COUNT(*)    AS employee_count
+FROM salaries;
+
+-- Result:
+-- min_salary | max_salary | avg_salary | employee_count
+-- 58000      | 120000     | 88285.71   | 7</pre>
+
+                <p><strong>Pattern 2 — Find the user_id with max salary (handles ties)</strong></p>
+                <pre>-- WRONG approach: this doesn't give you the user_id
+SELECT MAX(salary) AS max_salary FROM salaries;
+
+-- CORRECT: use a subquery or QUALIFY to get user(s) with max salary
+-- If there are ties, BOTH user_ids are returned (correct behaviour)
+SELECT user_id, dept, salary
+FROM salaries
+WHERE salary = (SELECT MAX(salary) FROM salaries);
+-- Returns: user_id=2 AND user_id=7 (both earn 120000)
+
+-- Alternative using QUALIFY + RANK (handles ties naturally)
+SELECT user_id, dept, salary
+FROM salaries
+QUALIFY RANK() OVER (ORDER BY salary DESC) = 1;
+-- Same result: both tied users returned
+
+-- Alternative using DENSE_RANK (same for global max)
+SELECT user_id, dept, salary
+FROM salaries
+QUALIFY DENSE_RANK() OVER (ORDER BY salary DESC) = 1;</pre>
+
+                <p><strong>Pattern 3 — Min, Max, Avg per department WITH user_id of min/max earner</strong></p>
+                <pre>-- This is the hard version: include user_id for min and max salary in each dept
+-- Challenge: standard GROUP BY can't include user_id (not in aggregate)
+
+WITH dept_stats AS (
+    SELECT
+        dept,
+        MIN(salary) AS min_salary,
+        MAX(salary) AS max_salary,
+        ROUND(AVG(salary), 2) AS avg_salary
+    FROM salaries
+    GROUP BY dept
+),
+min_earners AS (
+    -- Get user_id(s) with min salary per dept
+    SELECT s.dept, s.user_id AS min_user_id, s.salary AS min_salary
+    FROM salaries s
+    WHERE (s.dept, s.salary) IN (
+        SELECT dept, MIN(salary) FROM salaries GROUP BY dept
+    )
+),
+max_earners AS (
+    -- Get user_id(s) with max salary per dept
+    SELECT s.dept, s.user_id AS max_user_id, s.salary AS max_salary
+    FROM salaries s
+    WHERE (s.dept, s.salary) IN (
+        SELECT dept, MAX(salary) FROM salaries GROUP BY dept
+    )
+)
+SELECT
+    ds.dept,
+    ds.min_salary,
+    mi.min_user_id,
+    ds.max_salary,
+    ma.max_user_id,
+    ds.avg_salary
+FROM dept_stats ds
+JOIN min_earners mi ON ds.dept = mi.dept
+JOIN max_earners ma ON ds.dept = ma.dept
+ORDER BY ds.dept;
+
+-- Result (ties shown as separate rows):
+-- dept         | min_salary | min_user_id | max_salary | max_user_id | avg_salary
+-- Engineering  | 95000      | 1           | 120000     | 2           | 111666.67
+-- Engineering  | 95000      | 1           | 120000     | 7           | 111666.67  ← tie
+-- HR           | 58000      | 5           | 58000      | 5           | 58000
+-- HR           | 58000      | 6           | 58000      | 6           | 58000      ← tie
+-- Marketing    | 72000      | 3           | 95000      | 4           | 83500</pre>
+
+                <p><strong>Pattern 4 — Cleaner version using window functions + QUALIFY</strong></p>
+                <pre>-- Rank employees within each dept by salary (for min use ASC, for max use DESC)
+-- Then filter using QUALIFY for clean, readable SQL
+
+-- Top earner per department (handles ties)
+SELECT user_id, dept, salary
+FROM salaries
+QUALIFY DENSE_RANK() OVER (PARTITION BY dept ORDER BY salary DESC) = 1;
+-- Returns ALL tied top earners per dept
+
+-- Lowest earner per department
+SELECT user_id, dept, salary
+FROM salaries
+QUALIFY DENSE_RANK() OVER (PARTITION BY dept ORDER BY salary ASC) = 1;
+
+-- Combined: attach min/max user_ids alongside dept averages
+SELECT
+    user_id,
+    dept,
+    salary,
+    AVG(salary) OVER (PARTITION BY dept)  AS dept_avg,
+    MIN(salary) OVER (PARTITION BY dept)  AS dept_min,
+    MAX(salary) OVER (PARTITION BY dept)  AS dept_max,
+    RANK() OVER (PARTITION BY dept ORDER BY salary DESC) AS salary_rank_in_dept
+FROM salaries
+ORDER BY dept, salary_rank_in_dept;</pre>
+
+                <p><strong>Pattern 5 — Employees earning above department average</strong></p>
+                <pre>SELECT user_id, dept, salary,
+       ROUND(AVG(salary) OVER (PARTITION BY dept), 2) AS dept_avg
+FROM salaries
+QUALIFY salary > AVG(salary) OVER (PARTITION BY dept);
+
+-- Result:
+-- user_id | dept        | salary | dept_avg
+-- 2       | Engineering | 120000 | 111666.67
+-- 7       | Engineering | 120000 | 111666.67
+-- 4       | Marketing   | 95000  | 83500.00</pre>
+
+                <p><strong>Common pitfalls in salary aggregation:</strong></p>
+                <ul>
+                    <li><strong>NULL salaries</strong> — <code>AVG(salary)</code> ignores NULLs; <code>MIN</code>/<code>MAX</code> also ignore NULLs. Use <code>COALESCE(salary, 0)</code> if you want NULLs treated as zero</li>
+                    <li><strong>Ties in min/max</strong> — always ask: "if two employees have the same max salary, return one or both?" DENSE_RANK returns all tied rows; ROW_NUMBER returns exactly one (arbitrary choice)</li>
+                    <li><strong>GROUP BY error</strong> — you cannot SELECT user_id in a GROUP BY query unless user_id is in the GROUP BY or aggregate. Use window functions or subqueries instead</li>
+                </ul>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q74">
+            <div class="question-header">
+                <div class="q-badge">74</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 74 — dbt</div>
+                    <div class="question-title">dbt is_incremental() Deep Dive: ref() Inside vs Outside, Failure Scenarios &amp; Troubleshooting</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p><code>is_incremental()</code> is a Jinja macro that evaluates to <code>TRUE</code> only when the model is running in incremental mode AND the target table already exists. Understanding exactly when it fires — and when it does not — prevents the most common incremental model bugs.</p>
+
+                <p><strong>Core Behaviour — When is_incremental() is TRUE vs FALSE</strong></p>
+                <pre>-- is_incremental() = TRUE when ALL of these are true:
+-- 1. The model's materialization is 'incremental'
+-- 2. The target table already exists in the warehouse
+-- 3. The run is NOT a full-refresh (dbt run --full-refresh = FALSE)
+
+-- is_incremental() = FALSE when:
+-- 1. First-ever run (table doesn't exist yet) → dbt does a full build
+-- 2. dbt run --full-refresh is passed → forces complete rebuild
+-- 3. materialized != 'incremental'</pre>
+
+                <p><strong>ref() OUTSIDE is_incremental() — always executes</strong></p>
+                <pre>-- models/marts/fact_orders.sql
+{{ config(materialized='incremental', unique_key='order_id') }}
+
+-- This part runs on EVERY execution (full build AND incremental):
+WITH orders AS (
+    SELECT * FROM {{ ref('stg_orders') }}  -- ← ref() OUTSIDE the block
+),
+customers AS (
+    SELECT * FROM {{ ref('stg_customers') }}  -- ← also OUTSIDE
+)
+SELECT
+    o.order_id,
+    o.customer_id,
+    c.region,
+    o.amount,
+    o.updated_at
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+
+{% if is_incremental() %}
+    -- This WHERE clause is ONLY added during incremental runs
+    WHERE o.updated_at > (SELECT MAX(updated_at) FROM {{ this }})
+{% endif %}
+
+-- On FIRST RUN (is_incremental() = FALSE):
+-- Compiles to: SELECT ... FROM stg_orders JOIN stg_customers
+-- (no WHERE clause → loads everything)
+
+-- On SUBSEQUENT RUNS (is_incremental() = TRUE):
+-- Compiles to: SELECT ... FROM stg_orders JOIN stg_customers
+--              WHERE o.updated_at > (SELECT MAX(updated_at) FROM fact_orders)
+-- (only loads new/updated rows)</pre>
+
+                <p><strong>ref() INSIDE is_incremental() — only executes on incremental runs</strong></p>
+                <pre>-- A ref() placed inside an {% if is_incremental() %} block
+-- creates a dependency that is ONLY active during incremental runs
+-- This is an unusual but valid pattern for lookback/enrichment logic
+
+{{ config(materialized='incremental', unique_key='order_id') }}
+
+SELECT
+    o.order_id,
+    o.amount,
+    o.updated_at
+FROM {{ ref('stg_orders') }} o  -- ← OUTSIDE: always a dependency
+
+{% if is_incremental() %}
+    -- ref() INSIDE: only joined during incremental runs
+    -- On first run this entire block is skipped
+    JOIN {{ ref('dim_customers') }} c ON o.customer_id = c.customer_id
+    WHERE o.updated_at > (SELECT MAX(updated_at) FROM {{ this }})
+{% endif %}
+
+-- RISK: On first run, dim_customers join is skipped → you may get different
+-- column counts or logic between first run and incremental runs.
+-- BEST PRACTICE: Keep all refs OUTSIDE the is_incremental block.
+-- Use the block ONLY for WHERE / LIMIT filtering.</pre>
+
+                <p><strong>The {{ this }} macro — references the model's own target table</strong></p>
+                <pre>-- {{ this }} resolves to the fully-qualified table name of THIS model
+-- In dev:  ANALYTICS_DEV.MARTS.FACT_ORDERS
+-- In prod: ANALYTICS.MARTS.FACT_ORDERS
+
+-- Common pattern: watermark via MAX of existing table
+{% if is_incremental() %}
+    WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
+{% endif %}
+
+-- Safety: handle the case where the watermark column has all NULLs
+{% if is_incremental() %}
+    WHERE updated_at > (
+        SELECT COALESCE(MAX(updated_at), '1900-01-01'::TIMESTAMP)
+        FROM {{ this }}
+    )
+{% endif %}</pre>
+
+                <p><strong>When does a dbt incremental job FAIL? — Common causes</strong></p>
+                <pre>-- FAILURE 1: Schema mismatch — new column in source not in target table
+-- Symptom: "Column 'loyalty_tier' does not exist in target table"
+-- Cause: stg_orders got a new column; fact_orders still has old schema
+-- Fix: Add on_schema_change config
+
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    on_schema_change='append_new_columns'  -- auto-add new columns to target
+    -- Options: 'ignore' | 'fail' | 'append_new_columns' | 'sync_all_columns'
+) }}
+
+-- FAILURE 2: Watermark subquery returns NULL on first incremental run
+-- Symptom: WHERE clause evaluates to "WHERE updated_at > NULL" → zero rows loaded
+-- Cause: First run succeeded but loaded 0 rows (empty source); on 2nd run
+--        MAX(updated_at) is NULL → WHERE filters everything out
+-- Fix: Use COALESCE as shown above
+
+-- FAILURE 3: unique_key has duplicates in the incoming batch
+-- Symptom: MERGE key column uniqueness violation
+-- Cause: Source table has duplicate PKs; dbt's generated MERGE fails
+-- Fix: Deduplicate in the model before the MERGE executes:
+
+SELECT *,
+    ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY updated_at DESC) AS rn
+FROM {{ ref('stg_orders') }}
+QUALIFY rn = 1  -- keep only the latest version of each order_id
+
+-- FAILURE 4: {{ this }} doesn't exist (table was manually dropped)
+-- Symptom: "Object 'ANALYTICS.MARTS.FACT_ORDERS' does not exist"
+-- Fix: Run with --full-refresh to rebuild the table from scratch:
+-- dbt run --select fact_orders --full-refresh
+
+-- FAILURE 5: Upstream model changed materialization type
+-- Symptom: ref() resolves to a view instead of a table; performance degrades
+-- or the view itself fails due to changed upstream schema
+-- Fix: Run dbt run --select +fact_orders to rebuild from root</pre>
+
+                <p><strong>Scenario: Initial run succeeds, all subsequent runs fail</strong></p>
+                <pre>-- This is the "succeeds once, breaks forever" pattern — very common in practice
+
+-- Example: fact_daily_revenue with delete+insert strategy
+{{ config(
+    materialized='incremental',
+    incremental_strategy='delete+insert',
+    unique_key='sale_date'
+) }}
+
+SELECT
+    sale_date,
+    SUM(revenue) AS total_revenue
+FROM {{ ref('stg_orders') }}
+
+{% if is_incremental() %}
+    WHERE sale_date >= DATEADD('day', -3, CURRENT_DATE)
+{% endif %}
+
+GROUP BY sale_date
+
+-- PROBLEM: On first run (no WHERE), loads all history. Works great.
+-- On incremental runs: WHERE filters to last 3 days.
+-- But stg_orders was truncated/rebuilt and ONLY has last 7 days of data.
+-- SYMPTOM: Runs succeed but older dates silently disappear from the mart.
+-- This is a data correctness failure, not a SQL error.
+
+-- REAL FAILURE PATTERN:
+-- First run: 10M rows, takes 45 min, succeeds
+-- Second run: 50K rows (incremental), takes 2 min, succeeds
+-- Third run: ERROR — stg_orders added a NOT NULL column "region"
+--   but fact_orders was built without it
+-- Fix: on_schema_change='append_new_columns' + dbt run --full-refresh</pre>
+
+                <p><strong>Troubleshooting checklist for incremental model failures</strong></p>
+                <ul>
+                    <li><strong>Check compiled SQL</strong> — run <code>dbt compile --select &lt;model&gt;</code> and inspect <code>target/compiled/</code> to see what SQL was actually generated</li>
+                    <li><strong>Check is_incremental() evaluation</strong> — if the table doesn't exist, <code>is_incremental()</code> is FALSE; run <code>dbt run --full-refresh</code> to reset</li>
+                    <li><strong>Check watermark logic</strong> — run the MAX subquery manually in Snowflake to verify it returns the expected timestamp</li>
+                    <li><strong>Check schema drift</strong> — compare <code>SHOW COLUMNS IN TABLE &lt;target&gt;</code> vs the model's SELECT list</li>
+                    <li><strong>Add clock skew buffer</strong> — use <code>updated_at &gt; DATEADD('minute', -5, MAX(updated_at))</code> to avoid missing in-flight rows</li>
+                    <li><strong>Use --store-failures</strong> — <code>dbt test --store-failures</code> saves failing rows to an audit schema for inspection</li>
+                </ul>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q75">
+            <div class="question-header">
+                <div class="q-badge">75</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 75 — SQL / Analytics</div>
+                    <div class="question-title">Maximum Winning Streak — player_id, event_id, winning_score, event_date (Multiple Events per Day)</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p><strong>What is a Winning Streak?</strong></p>
+                <p>A <strong>winning streak</strong> means <strong>consecutive DAYS where the player won at least ONE match</strong>, regardless of losses on the same day. Key points:</p>
+                <ul>
+                    <li><strong>Streak is day-based, not match-based:</strong> What matters is whether the player won AT LEAST ONE match on a day, not the total number of wins</li>
+                    <li><strong>Mixed results on same day:</strong> Win + Lose on same day = STREAK CONTINUES. The presence of at least one win counts</li>
+                    <li><strong>Complete loss day:</strong> If a day has ONLY losses or no matches, the streak BREAKS immediately</li>
+                    <li><strong>Consecutive days rule:</strong> Day1 has a win → Streak = 1. Day2 has a win → Streak = 2. Day3 has zero wins → Streak = 0 (reset). Day4 has a win → Streak = 1 (fresh count)</li>
+                    <li><strong>Key insight:</strong> Streak measures consecutive winning DAYS, not consecutive winning matches. One loss per day doesn't break the streak if there's at least one win</li>
+                </ul>
+
+                <p><strong>Example Timeline:</strong></p>
+                <pre>Day 1: Win, Lose, Win      → Streak = 1  (at least one win on Day 1; losses don't break it)
+Day 2: Lose                → Streak = 0  (no wins on Day 2; streak broken)
+Day 3: Win                 → Streak = 1  (fresh count; at least one win on Day 3)
+Day 4: Win, Lose, Lose     → Streak = 2  (at least one win on Day 4; continues from Day 3)
+Day 5: Lose, Lose          → Streak = 0  (no wins on Day 5; streak broken)
+Day 6: Win                 → Streak = 1  (fresh count begins)
+
+Maximum winning streak across all timeline = 2 (Day 3 through Day 4)</pre>
+
+                <p><strong>Streak problems are about consecutive "winning DAYS" — not consecutive individual wins. The key technique is the <strong>"gaps and islands"</strong> pattern, but applied at the DAY level: identify which days have at least one win, then find consecutive sequences of such days.</strong></p>
+
+                <p><strong>Sample Data</strong></p>
+                <pre>CREATE TABLE events (
+    player_id     INT,
+    event_id      INT,     -- global unique event sequence number
+    winning_score INT,     -- 1 = player won this event, 0 = lost, NULL = did not participate
+    event_date    DATE
+);
+
+INSERT INTO events VALUES
+-- Player 1: Day1 (W+L) → Day2 (L only) → Day3+ (W → W+L+L)
+(1, 1,  1, '2024-01-01'),  -- Day 1: Win
+(1, 2,  0, '2024-01-01'),  -- Day 1: Lose (but Day 1 has at least 1 win → streak continues)
+(1, 3,  0, '2024-01-02'),  -- Day 2: Lose only (no wins → streak breaks)
+(1, 4,  1, '2024-01-03'),  -- Day 3: Win (fresh streak starts = 1)
+(1, 5,  1, '2024-01-04'),  -- Day 4: Win (streak continues = 2)
+(1, 6,  0, '2024-01-04'),  -- Day 4: Lose (but Day 4 has at least 1 win → streak still continues = 2)
+(1, 7,  0, '2024-01-04'),  -- Day 4: Lose (still at least 1 win on Day 4)
+-- Player 2: L → W → W+L → W+L+L
+(2, 8,  0, '2024-01-01'),  -- Day 1: Lose only (no wins → no streak)
+(2, 9,  1, '2024-01-02'),  -- Day 2: Win (fresh streak starts = 1)
+(2, 10, 1, '2024-01-03'),  -- Day 3: Win (streak continues = 2)
+(2, 11, 0, '2024-01-03'),  -- Day 3: Lose (but Day 3 has at least 1 win → streak still continues = 2)
+(2, 12, 1, '2024-01-04'),  -- Day 4: Win (streak continues = 3)
+(2, 13, 0, '2024-01-04'),  -- Day 4: Lose (but Day 4 has at least 1 win)
+(2, 14, 0, '2024-01-04');  -- Day 4: Lose (still at least 1 win on Day 4 → streak = 3)</pre>
+
+                <p><strong>Step 1 — Identify days with at least one win per player</strong></p>
+                <pre>-- Group by player and date; if SUM(winning_score) > 0, that day has wins
+WITH winning_days AS (
+    SELECT
+        player_id,
+        event_date,
+        SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) AS wins_on_day
+    FROM events
+    GROUP BY player_id, event_date
+    HAVING SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) > 0
+)
+SELECT * FROM winning_days ORDER BY player_id, event_date;</pre>
+
+                <p><strong>Step 2 — Gaps and islands on DAYS (not individual matches)</strong></p>
+                <pre>-- For consecutive winning days, the difference (day_row_num - day_offset) stays constant
+-- When a day with NO wins breaks the streak, the row number changes
+
+WITH winning_days AS (
+    SELECT
+        player_id,
+        event_date,
+        SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) AS wins_on_day
+    FROM events
+    GROUP BY player_id, event_date
+    HAVING SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) > 0
+),
+ordered_days AS (
+    SELECT
+        player_id,
+        event_date,
+        ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY event_date) AS day_seq,
+        ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY event_date) 
+        - (SELECT COUNT(DISTINCT event_date) FROM events e2 
+           WHERE e2.player_id = winning_days.player_id 
+           AND e2.event_date < winning_days.event_date 
+           AND (SELECT SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) 
+                FROM events e3 WHERE e3.player_id = e2.player_id AND e3.event_date = e2.event_date) > 0) AS streak_group
+    FROM winning_days
+)
+SELECT player_id, event_date, day_seq, streak_group FROM ordered_days ORDER BY player_id, event_date;
+
+                <p><strong>Step 3 — Count consecutive winning days and find maximum streak</strong></p>
+                <pre>WITH winning_days AS (
+    SELECT
+        player_id,
+        event_date,
+        SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) AS wins_on_day
+    FROM events
+    GROUP BY player_id, event_date
+    HAVING SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) > 0
+),
+-- Tag each winning day with a "day gap" marker
+-- If the previous day (for this player) was also a winning day, gap = 0; otherwise gap = 1
+day_gaps AS (
+    SELECT
+        player_id,
+        event_date,
+        wins_on_day,
+        CASE 
+            WHEN LAG(event_date) OVER (PARTITION BY player_id ORDER BY event_date)
+                 = DATEADD(day, -1, event_date)
+            THEN 0  -- consecutive day (previous day was yesterday)
+            ELSE 1  -- new streak (gap or first day)
+        END AS streak_start
+    FROM winning_days
+),
+-- Assign streak ID by summing up all streak starts
+streak_ids AS (
+    SELECT
+        player_id,
+        event_date,
+        SUM(streak_start) OVER (PARTITION BY player_id ORDER BY event_date ROWS UNBOUNDED PRECEDING) AS streak_id
+    FROM day_gaps
+),
+-- Count the number of consecutive winning days per streak
+streak_lengths AS (
+    SELECT
+        player_id,
+        streak_id,
+        COUNT(*) AS streak_length
+    FROM streak_ids
+    GROUP BY player_id, streak_id
+)
+SELECT
+    player_id,
+    MAX(streak_length) AS max_winning_streak
+FROM streak_lengths
+GROUP BY player_id
+ORDER BY player_id;
+
+-- Result:
+-- player_id | max_winning_streak
+-- 1         | 2                   ← Day 3 (Jan 3) + Day 4 (Jan 4)
+-- 2         | 3                   ← Day 2 (Jan 2) + Day 3 (Jan 3) + Day 4 (Jan 4)
+
+                <p><strong>Alternative — Simpler approach: Check if each day has at least one win</strong></p>
+                <pre>-- Simplified: group by date, check SUM(wins), then detect consecutive date gaps
+
+WITH daily_wins AS (
+    SELECT
+        player_id,
+        event_date,
+        SUM(CASE WHEN winning_score = 1 THEN 1 ELSE 0 END) AS total_wins
+    FROM events
+    GROUP BY player_id, event_date
+),
+winning_days_only AS (
+    SELECT
+        player_id,
+        event_date,
+        total_wins,
+        ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY event_date) AS day_seq
+    FROM daily_wins
+    WHERE total_wins > 0  -- only days with at least 1 win
+),
+-- Detect day gaps: if consecutive days are not 1 apart, a gap occurred
+streak_markers AS (
+    SELECT
+        player_id,
+        event_date,
+        day_seq,
+        DATEDIFF(day, LAG(event_date) OVER (PARTITION BY player_id ORDER BY event_date), event_date) AS day_gap
+    FROM winning_days_only
+),
+-- Assign streak IDs based on gaps
+streak_ids AS (
+    SELECT
+        player_id,
+        event_date,
+        SUM(CASE WHEN day_gap > 1 OR day_gap IS NULL THEN 1 ELSE 0 END) 
+            OVER (PARTITION BY player_id ORDER BY event_date ROWS UNBOUNDED PRECEDING) AS streak_id
+    FROM streak_markers
+),
+streak_counts AS (
+    SELECT
+        player_id,
+        streak_id,
+        COUNT(*) AS winning_days_in_streak
+    FROM streak_ids
+    GROUP BY player_id, streak_id
+)
+SELECT
+    player_id,
+    MAX(winning_days_in_streak) AS max_winning_streak
+FROM streak_counts
+GROUP BY player_id;
+
+-- Result: Same as above
+-- player_id | max_winning_streak
+-- 1         | 2                   ← Day 3 + Day 4
+-- 2         | 3                   ← Day 2 + Day 3 + Day 4</pre>
+
+                <p><strong>Key concepts to explain in interviews:</strong></p>
+                <ul>
+                    <li><strong>Day-level vs match-level:</strong> This problem counts consecutive DAYS with wins, not consecutive individual wins. One loss mixed with wins on the same day does NOT break the streak</li>
+                    <li><strong>Gaps and islands on dates:</strong> Use ROW_NUMBER() to assign day sequences, then detect gaps. A gap > 1 day marks the start of a new streak</li>
+                    <li><strong>DATEDIFF for date gaps:</strong> DATEDIFF(day, previous_date, current_date) tells you if days are consecutive. If > 1, there's a gap</li>
+                    <li><strong>NULL handling:</strong> A day with no events at all is not counted. Only days with at least one event are relevant. A day with all losses has zero wins — it breaks the streak</li>
+                    <li><strong>Business definition:</strong> Always clarify with the interviewer: does "streak" mean consecutive individual wins, or consecutive days with at least one win? This fundamentally changes the solution</li>
+                </ul>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q76">
+            <div class="question-header">
+                <div class="q-badge">76</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 76 — SQL / Snowflake</div>
+                    <div class="question-title">LIKE, ILIKE, RLIKE, REGEXP_LIKE — Pattern Matching in Snowflake</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>Snowflake supports four levels of pattern matching: simple wildcards (LIKE/ILIKE), POSIX regex (RLIKE), and full REGEXP functions. Knowing when to use each — and their performance implications — is essential for data cleaning and filtering tasks.</p>
+
+                <p><strong>LIKE — case-sensitive wildcard matching</strong></p>
+                <pre>-- Wildcards: % = any sequence of characters, _ = exactly one character
+
+-- Emails ending in @gmail.com
+SELECT email FROM users WHERE email LIKE '%@gmail.com';
+
+-- Names starting with 'Sur'
+SELECT name FROM employees WHERE name LIKE 'Sur%';
+
+-- Exactly 5-character product codes
+SELECT code FROM products WHERE code LIKE '_____';   -- 5 underscores
+
+-- Contains 'cloud' anywhere in the string
+SELECT description FROM docs WHERE description LIKE '%cloud%';
+
+-- LIKE is case-sensitive in Snowflake by default!
+SELECT * FROM users WHERE name LIKE 'surya%';   -- will NOT match 'Surya'</pre>
+
+                <p><strong>ILIKE — case-INsensitive wildcard matching (Snowflake extension)</strong></p>
+                <pre>-- Same as LIKE but ignores case — very useful for user-entered data
+
+-- Match 'Surya', 'surya', 'SURYA' all at once
+SELECT * FROM users WHERE name ILIKE 'surya%';
+
+-- Find any cloud-related tag regardless of capitalisation
+SELECT tag FROM labels WHERE tag ILIKE '%cloud%';
+
+-- Standard SQL alternative (works everywhere):
+SELECT * FROM users WHERE LOWER(name) LIKE 'surya%';
+-- ILIKE is cleaner and often faster (no LOWER() function overhead)</pre>
+
+                <p><strong>RLIKE — regular expression matching (alias: REGEXP, REGEXP_LIKE)</strong></p>
+                <pre>-- RLIKE uses POSIX extended regex syntax
+-- Returns TRUE/FALSE — use in WHERE clause
+
+-- Valid email format check
+SELECT email
+FROM users
+WHERE email RLIKE '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+
+-- Phone numbers in formats: 555-1234, (555) 123-4567, +1-555-123-4567
+SELECT phone FROM contacts
+WHERE phone RLIKE '^(\\+1-)?\\(?[0-9]{3}\\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}$';
+
+-- Strings containing only digits
+SELECT value FROM raw_data WHERE value RLIKE '^[0-9]+$';
+
+-- Match Indian PAN card format: ABCDE1234F (5 letters, 4 digits, 1 letter)
+SELECT pan FROM kyc_data WHERE pan RLIKE '^[A-Z]{5}[0-9]{4}[A-Z]$';
+
+-- RLIKE is case-sensitive by default in Snowflake
+-- For case-insensitive regex, use (?i) flag or REGEXP_LIKE with 'i' parameter:
+SELECT name FROM employees WHERE name RLIKE '(?i)^surya';</pre>
+
+                <p><strong>REGEXP_LIKE, REGEXP_SUBSTR, REGEXP_REPLACE, REGEXP_COUNT — full family</strong></p>
+                <pre>-- REGEXP_LIKE: explicit function form of RLIKE
+SELECT REGEXP_LIKE('Surya@gmail.com', '^[a-zA-Z]+@[a-zA-Z]+\\.com$') AS is_valid_email;
+-- Returns: TRUE
+
+-- REGEXP_LIKE with case-insensitive flag 'i'
+SELECT * FROM users WHERE REGEXP_LIKE(email, '^surya.*\\.com$', 'i');
+
+-- REGEXP_SUBSTR: extract the FIRST match from a string
+-- Extract domain name from email
+SELECT
+    email,
+    REGEXP_SUBSTR(email, '@(.+)', 1, 1, 'e', 1) AS domain
+    -- params: (string, pattern, position, occurrence, flag, group)
+FROM users;
+-- 'suryateja@gmail.com' → 'gmail.com'
+
+-- Extract all digits from a mixed string
+SELECT REGEXP_SUBSTR('Order #12345 placed', '[0-9]+') AS order_number;
+-- Returns: '12345'
+
+-- REGEXP_REPLACE: replace matches with substitution
+-- Mask credit card number (keep last 4 digits)
+SELECT REGEXP_REPLACE('4111-1111-1111-1234', '[0-9]{4}-[0-9]{4}-[0-9]{4}-', '****-****-****-')
+    AS masked_card;
+-- Returns: '****-****-****-1234'
+
+-- Remove all non-alphanumeric characters
+SELECT REGEXP_REPLACE(phone_raw, '[^a-zA-Z0-9]', '') AS phone_clean
+FROM contacts;
+
+-- REGEXP_COUNT: count occurrences of a pattern
+SELECT REGEXP_COUNT('the cat sat on the mat', 'at') AS count_at;
+-- Returns: 3  (c-at, s-at, m-at)</pre>
+
+                <p><strong>Comparison Table</strong></p>
+                <table>
+                    <tr><th>Function</th><th>Case Sensitive?</th><th>Pattern Type</th><th>Returns</th><th>Best For</th></tr>
+                    <tr><td>LIKE</td><td>Yes</td><td>Wildcards (%, _)</td><td>TRUE/FALSE</td><td>Simple prefix/suffix/contains</td></tr>
+                    <tr><td>ILIKE</td><td>No</td><td>Wildcards (%, _)</td><td>TRUE/FALSE</td><td>Case-insensitive simple matching</td></tr>
+                    <tr><td>RLIKE / REGEXP</td><td>Yes (use (?i) for not)</td><td>Full POSIX regex</td><td>TRUE/FALSE</td><td>Complex validation, WHERE clause</td></tr>
+                    <tr><td>REGEXP_LIKE</td><td>Configurable ('i' flag)</td><td>Full POSIX regex</td><td>TRUE/FALSE</td><td>Explicit regex WHERE filtering</td></tr>
+                    <tr><td>REGEXP_SUBSTR</td><td>Configurable</td><td>Full POSIX regex</td><td>Matched substring</td><td>Extraction (email domain, order IDs)</td></tr>
+                    <tr><td>REGEXP_REPLACE</td><td>Configurable</td><td>Full POSIX regex</td><td>Modified string</td><td>Masking, cleaning, normalisation</td></tr>
+                    <tr><td>REGEXP_COUNT</td><td>Configurable</td><td>Full POSIX regex</td><td>Integer count</td><td>Counting pattern occurrences</td></tr>
+                </table>
+
+                <p><strong>Performance notes:</strong></p>
+                <ul>
+                    <li>LIKE with a leading wildcard (<code>'%value'</code>) cannot use partition metadata for pruning — it must scan all rows. Prefer trailing wildcards (<code>'value%'</code>) where possible</li>
+                    <li>ILIKE is generally faster than <code>LOWER(col) LIKE 'val%'</code> because it avoids the function transformation</li>
+                    <li>RLIKE/REGEXP functions are significantly more expensive than LIKE — use only when simple wildcards are insufficient</li>
+                    <li>For high-volume filtering on regex patterns, consider pre-extracting the relevant part into a separate column and indexing/clustering on it instead</li>
+                </ul>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q77">
+            <div class="question-header">
+                <div class="q-badge">77</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 77 — Snowflake / JSON</div>
+                    <div class="question-title">Flatten Multi-Nested Arrays in Snowflake — Chained LATERAL FLATTEN</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>Real-world JSON payloads rarely have simple arrays — they have arrays of objects that themselves contain arrays. Chaining multiple <code>LATERAL FLATTEN</code> calls handles arbitrary nesting depth, one level at a time.</p>
+
+                <p><strong>Sample JSON Structure — deeply nested</strong></p>
+                <pre>-- A single order payload with nested line items and nested discount codes per item:
+{
+  "order_id": "ORD-001",
+  "customer_id": 1001,
+  "items": [
+    {
+      "sku": "SHOE-RED",
+      "quantity": 2,
+      "price": 49.99,
+      "discounts": [
+        {"code": "SAVE10", "amount": 5.00},
+        {"code": "LOYALTY", "amount": 2.50}
+      ]
+    },
+    {
+      "sku": "BAG-BLUE",
+      "quantity": 1,
+      "price": 89.00,
+      "discounts": [
+        {"code": "WELCOME", "amount": 10.00}
+      ]
+    }
+  ]
+}</pre>
+
+                <p><strong>Level 1 — Flatten the items array</strong></p>
+                <pre>-- First LATERAL FLATTEN unpacks the outer 'items' array
+-- Each item becomes its own row, with the parent order_id preserved
+
+SELECT
+    o.value:order_id::VARCHAR          AS order_id,
+    o.value:customer_id::INT           AS customer_id,
+    item.value:sku::VARCHAR            AS sku,
+    item.value:quantity::INT           AS quantity,
+    item.value:price::DECIMAL(10,2)    AS unit_price,
+    item.index                         AS item_position,    -- 0-based position in array
+    item.value                         AS item_raw          -- full item object (for next level)
+FROM raw.orders_landing,
+LATERAL FLATTEN(input => value:items) AS item;
+
+-- Result: 2 rows for ORD-001 (one per item)
+-- order_id | sku      | quantity | unit_price | item_position
+-- ORD-001  | SHOE-RED | 2        | 49.99      | 0
+-- ORD-001  | BAG-BLUE | 1        | 89.00      | 1</pre>
+
+                <p><strong>Level 2 — Chain a second FLATTEN to unpack discounts within each item</strong></p>
+                <pre>-- Each LATERAL FLATTEN can reference the output of the previous one
+-- item.value is passed as input to the second FLATTEN
+
+SELECT
+    o.value:order_id::VARCHAR          AS order_id,
+    o.value:customer_id::INT           AS customer_id,
+    item.value:sku::VARCHAR            AS sku,
+    item.value:quantity::INT           AS quantity,
+    item.value:price::DECIMAL(10,2)    AS unit_price,
+    item.index                         AS item_position,
+    disc.value:code::VARCHAR           AS discount_code,
+    disc.value:amount::DECIMAL(10,2)   AS discount_amount,
+    disc.index                         AS discount_position
+FROM raw.orders_landing,
+LATERAL FLATTEN(input => value:items)             AS item,   -- Level 1
+LATERAL FLATTEN(input => item.value:discounts)    AS disc;   -- Level 2 (chained)
+
+-- Result: 3 rows for ORD-001 (one per discount across all items)
+-- order_id | sku      | unit_price | discount_code | discount_amount
+-- ORD-001  | SHOE-RED | 49.99      | SAVE10        | 5.00
+-- ORD-001  | SHOE-RED | 49.99      | LOYALTY       | 2.50
+-- ORD-001  | BAG-BLUE | 89.00      | WELCOME       | 10.00</pre>
+
+                <p><strong>Handling optional/missing nested arrays — OUTER FLATTEN</strong></p>
+                <pre>-- Problem: if an item has NO discounts, the chained FLATTEN produces zero rows
+-- for that item → the item disappears from results entirely
+
+-- Solution: use OUTER => TRUE on the inner FLATTEN
+-- OUTER = TRUE means "if the array is empty or null, still produce one row with NULL values"
+
+SELECT
+    o.value:order_id::VARCHAR          AS order_id,
+    item.value:sku::VARCHAR            AS sku,
+    item.value:price::DECIMAL(10,2)    AS unit_price,
+    disc.value:code::VARCHAR           AS discount_code,   -- NULL if no discounts
+    disc.value:amount::DECIMAL(10,2)   AS discount_amount  -- NULL if no discounts
+FROM raw.orders_landing,
+LATERAL FLATTEN(input => value:items)                           AS item,
+LATERAL FLATTEN(input => item.value:discounts, OUTER => TRUE)   AS disc;
+-- Items with no discounts appear with NULL discount_code/amount (not dropped)</pre>
+
+                <p><strong>Level 3 — Three levels of nesting (e.g., order → items → attributes → values)</strong></p>
+                <pre>-- If each discount itself has an array of "applicable_dates":
+SELECT
+    o.value:order_id::VARCHAR           AS order_id,
+    item.value:sku::VARCHAR             AS sku,
+    disc.value:code::VARCHAR            AS discount_code,
+    apply_date.value::DATE              AS applicable_date
+FROM raw.orders_landing,
+LATERAL FLATTEN(input => value:items)                            AS item,
+LATERAL FLATTEN(input => item.value:discounts, OUTER => TRUE)    AS disc,
+LATERAL FLATTEN(input => disc.value:applicable_dates, OUTER => TRUE) AS apply_date;
+-- Three chained FLATTENs — each level adds one more join via LATERAL</pre>
+
+                <p><strong>FLATTEN in a dbt model</strong></p>
+                <pre>-- models/staging/stg_order_discounts.sql
+-- Unpack orders → items → discounts into a clean relational table
+
+{{ config(materialized='view') }}
+
+SELECT
+    src.value:order_id::VARCHAR         AS order_id,
+    src.value:customer_id::INT          AS customer_id,
+    item.value:sku::VARCHAR             AS sku,
+    item.value:quantity::INT            AS quantity,
+    item.value:price::DECIMAL(10,2)     AS unit_price,
+    disc.value:code::VARCHAR            AS discount_code,
+    disc.value:amount::DECIMAL(10,2)    AS discount_amount,
+    src._loaded_at                      AS ingested_at
+FROM {{ source('raw', 'orders_landing') }} src,
+LATERAL FLATTEN(input => src.value:items)              item,
+LATERAL FLATTEN(input => item.value:discounts, OUTER => TRUE) disc</pre>
+
+                <p><strong>Key FLATTEN parameters:</strong></p>
+                <table>
+                    <tr><th>Parameter</th><th>Default</th><th>Description</th></tr>
+                    <tr><td><code>input</code></td><td>required</td><td>The VARIANT / ARRAY / OBJECT to flatten</td></tr>
+                    <tr><td><code>OUTER</code></td><td>FALSE</td><td>TRUE = produce a row with NULLs when input is empty/null (like LEFT JOIN)</td></tr>
+                    <tr><td><code>RECURSIVE</code></td><td>FALSE</td><td>TRUE = flatten all levels recursively (use with caution on deeply nested data)</td></tr>
+                    <tr><td><code>MODE</code></td><td>BOTH</td><td>ARRAY / OBJECT / BOTH — what types to expand</td></tr>
+                    <tr><td><code>f.value</code></td><td>—</td><td>The element value at this position</td></tr>
+                    <tr><td><code>f.index</code></td><td>—</td><td>0-based position in the array (NULL for objects)</td></tr>
+                    <tr><td><code>f.key</code></td><td>—</td><td>Key name (for object flattening)</td></tr>
+                    <tr><td><code>f.path</code></td><td>—</td><td>Full dot-notation path to this element</td></tr>
+                </table>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q78">
+            <div class="question-header">
+                <div class="q-badge">78</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 78 — FinOps / Architecture</div>
+                    <div class="question-title">Cost Savings on Data Engineering Projects — Strategies, Frameworks &amp; Real Examples</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>Cost optimisation is a core skill for senior data engineers — interviewers want specific, quantified examples. Here is a framework for identifying, measuring, and implementing savings across compute, storage, ingestion, and pipeline design.</p>
+
+                <p><strong>1. Compute Cost Savings — Warehouse Right-Sizing &amp; Auto-Suspend</strong></p>
+                <pre>-- Identify warehouses that are over-provisioned (low activity %)
+SELECT
+    warehouse_name,
+    SUM(credits_used)                                         AS total_credits,
+    ROUND(SUM(credits_used) * 3.0, 2)                        AS est_cost_usd,
+    ROUND(AVG(CASE WHEN credits_used > 0 THEN 100 ELSE 0 END), 1) AS pct_active
+FROM snowflake.account_usage.warehouse_metering_history
+WHERE start_time >= CURRENT_DATE - 30
+GROUP BY 1 ORDER BY 3 DESC;
+
+-- Action: downsize warehouses with &lt;20% active time
+ALTER WAREHOUSE ANALYTICS_WH SET WAREHOUSE_SIZE = 'MEDIUM';  -- was LARGE
+-- Immediate 50% compute cost reduction on this warehouse
+
+-- Action: aggressively set auto-suspend
+ALTER WAREHOUSE DEV_WH SET AUTO_SUSPEND = 60;    -- 1 min for dev
+ALTER WAREHOUSE ETL_WH SET AUTO_SUSPEND = 120;   -- 2 min for batch ETL
+-- Typical savings: 20-40% on idle warehouse costs</pre>
+
+                <p><strong>2. Storage Cost Savings — Transient Tables &amp; Retention Tuning</strong></p>
+                <pre>-- Staging tables don't need Time Travel or Fail-Safe
+-- Transient tables have no Fail-Safe and 0-1 day Time Travel → ~50% lower storage cost
+
+-- In dbt: set staging layer to transient
+{{ config(materialized='table', transient=true) }}  -- staging models
+
+-- For permanent tables: reduce retention on large, low-risk tables
+ALTER TABLE raw.clickstream_events SET DATA_RETENTION_TIME = 1;   -- was 14
+ALTER TABLE raw.server_logs SET DATA_RETENTION_TIME = 1;
+
+-- Find Time Travel storage waste (high time_travel_bytes)
+SELECT table_name,
+       ROUND(time_travel_bytes / POWER(1024,3), 2) AS time_travel_gb,
+       ROUND(failsafe_bytes    / POWER(1024,3), 2) AS failsafe_gb
+FROM snowflake.account_usage.table_storage_metrics
+ORDER BY (time_travel_bytes + failsafe_bytes) DESC LIMIT 20;
+-- Typical savings: 10-30% on storage for large event/log tables</pre>
+
+                <p><strong>3. Query Efficiency — Eliminate Full Table Scans</strong></p>
+                <pre>-- Find queries scanning >80% of a large table's partitions (no pruning)
+SELECT
+    LEFT(query_text, 100) AS query_preview,
+    ROUND(partitions_scanned * 100.0 / NULLIF(partitions_total, 0), 1) AS pct_scanned,
+    total_elapsed_time / 1000 AS elapsed_sec,
+    warehouse_name
+FROM snowflake.account_usage.query_history
+WHERE start_time >= CURRENT_DATE - 7
+  AND partitions_total > 100
+  AND partitions_scanned / NULLIF(partitions_total, 0) > 0.8
+ORDER BY total_elapsed_time DESC;
+
+-- Fix: add clustering key so BI queries prune by date
+ALTER TABLE marts.fact_orders CLUSTER BY (order_date);
+-- Typical savings: 40-70% query time reduction → cheaper compute needed</pre>
+
+                <p><strong>4. Pipeline Architecture — Incremental vs Full Refresh</strong></p>
+                <pre>-- Scenario: dbt model doing full rebuild of 500M row table nightly
+-- Takes 45 min on X-LARGE warehouse ($80/run × 30 days = $2,400/month)
+
+-- Fix: convert to incremental model
+{{ config(
+    materialized='incremental',
+    unique_key='order_id',
+    incremental_strategy='merge'
+) }}
+SELECT * FROM {{ ref('stg_orders') }}
+{% if is_incremental() %}
+    WHERE updated_at > (SELECT MAX(updated_at) FROM {{ this }})
+{% endif %}
+
+-- Result: 3 min on MEDIUM warehouse ($2/run × 30 days = $60/month)
+-- Savings: $2,340/month on ONE model alone</pre>
+
+                <p><strong>5. Smart Scheduling — Only Run When Data Exists</strong></p>
+                <pre>-- Use Snowflake Streams to gate Tasks (zero credits if no new data)
+CREATE TASK etl.process_orders_task
+    WAREHOUSE = TRANSFORM_WH
+    SCHEDULE  = '5 MINUTE'
+    WHEN SYSTEM$STREAM_HAS_DATA('raw.orders_stream')  -- only runs if stream has data
+AS CALL etl.sp_merge_orders();
+
+-- Without WHEN guard: task starts warehouse every 5 min, 288 times/day
+-- With WHEN guard: warehouse starts only when data arrives → 80-95% fewer cold starts</pre>
+
+                <p><strong>6. Data Architecture — Move Cold Data to External Tables</strong></p>
+                <pre>-- Data older than 2 years: store in S3 Parquet, query via external table
+-- S3 cost: ~$0.023/GB/month vs Snowflake storage: ~$40/TB/month
+-- 10TB of cold data: $400/month in Snowflake vs $230/month in S3 (~$170/month saved)
+
+CREATE EXTERNAL TABLE archive.orders_historical (
+    order_id    INT    AS (value:order_id::INT),
+    order_date  DATE   AS (value:order_date::DATE),
+    net_revenue FLOAT  AS (value:net_revenue::FLOAT)
+)
+PARTITION BY (order_year INT AS YEAR(order_date))
+LOCATION = @archive.s3_archive_stage/orders/
+FILE_FORMAT = (TYPE = 'PARQUET')
+AUTO_REFRESH = TRUE;</pre>
+
+                <p><strong>7. Tooling Consolidation — Rationalise Ingestion Tools</strong></p>
+                <ul>
+                    <li>Replace Fivetran (per-MAR pricing) with Airbyte (open source) for internal source connectors where Qlik Replicate already handles CDC — avoid double-paying for the same source</li>
+                    <li>Consolidate overlapping dbt Cloud and Airflow orchestration — standardise on one orchestrator to reduce licensing + maintenance cost</li>
+                    <li>Use Snowflake Tasks + Streams for simple Snowflake-internal pipelines instead of triggering Airflow for a single SQL statement</li>
+                </ul>
+
+                <p><strong>Cost Savings Summary Framework</strong></p>
+                <table>
+                    <tr><th>Category</th><th>Action</th><th>Typical Savings</th></tr>
+                    <tr><td>Compute</td><td>Right-size + auto-suspend warehouses</td><td>20–40%</td></tr>
+                    <tr><td>Compute</td><td>Full refresh → incremental models</td><td>50–90% per model</td></tr>
+                    <tr><td>Compute</td><td>Stream-gated tasks (no empty runs)</td><td>80–95% on idle tasks</td></tr>
+                    <tr><td>Storage</td><td>Transient staging tables</td><td>~50% on staging storage</td></tr>
+                    <tr><td>Storage</td><td>Reduce Time Travel retention on raw tables</td><td>10–30%</td></tr>
+                    <tr><td>Storage</td><td>Move cold data to S3 external tables</td><td>30–60% on archive storage</td></tr>
+                    <tr><td>Query</td><td>Clustering keys on large fact tables</td><td>40–70% query time</td></tr>
+                    <tr><td>Licensing</td><td>Consolidate ingestion tools</td><td>Varies by contract</td></tr>
+                </table>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q79">
+            <div class="question-header">
+                <div class="q-badge">79</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 79 — Security / Governance</div>
+                    <div class="question-title">Redaction vs Static Masking vs Dynamic Data Masking vs Row-Level Security — Complete Comparison</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>These four techniques all protect sensitive data but work at different layers, with different performance characteristics and governance implications. Interviewers often conflate them — here is a precise, side-by-side breakdown.</p>
+
+                <p><strong>1. Data Redaction — Data is physically removed or replaced at source</strong></p>
+                <p>Redaction means the sensitive value is <em>permanently removed or overwritten</em> in the storage layer — it does not exist in the table at all. There is no dynamic evaluation — the data is gone. Common in ETL pipelines before loading to analytics environments.</p>
+                <pre>-- Static redaction during ETL: replace PII before loading to Snowflake
+INSERT INTO staging.customers (customer_id, email, phone)
+SELECT
+    customer_id,
+    '***@redacted.com'      AS email,    -- permanently replaced, original gone
+    'XXX-XXX-XXXX'          AS phone
+FROM source.raw_customers;
+
+-- Use case: dev/test environments — load redacted data so developers
+-- can work with realistic data shapes without ever seeing real PII
+-- Unlike masking, there is NO way to recover the original — it never landed</pre>
+
+                <p><strong>2. Static (Format-Preserving) Masking — Data replaced consistently, value-preserving</strong></p>
+                <p>Static masking replaces the value with a fake but realistic one — format is preserved so downstream logic still works. Unlike redaction, the substitution is often consistent (same input → same fake output), enabling joins across masked tables.</p>
+                <pre>-- Static masking: replace with fake but format-preserving values
+-- Used when: test/dev DB needs referential integrity but not real values
+
+-- Mask credit card: keep format, replace digits
+SELECT
+    card_number,
+    REGEXP_REPLACE(card_number, '[0-9]', 'X') AS masked_card
+    -- 4111-1111-1111-1234 → XXXX-XXXX-XXXX-XXXX
+
+-- Format-preserving: keep last 4 digits (realistic for display)
+SELECT
+    RPAD('****', LENGTH(card_number) - 4, '*') || RIGHT(card_number, 4) AS display_card
+    -- 4111-1111-1111-1234 → ****-****-****-1234
+
+-- Consistent substitution using hash (same input → same fake output)
+SELECT MD5(email) || '@fake.com' AS masked_email
+FROM customers;
+-- 'john@real.com' → always maps to same fake email → joins work</pre>
+
+                <p><strong>3. Dynamic Data Masking (DDM) — Real-time masking at query time, role-based</strong></p>
+                <p>DDM is the most powerful technique for production analytics environments. The <em>real data is stored unmasked</em> in Snowflake. When a query runs, the masking policy function is evaluated <em>on the fly</em> and the result depends on the querying user's role. Different roles see different values <em>from the same physical table</em> — with zero data duplication.</p>
+                <pre>-- Step 1: Create masking policy with role-based logic
+CREATE OR REPLACE MASKING POLICY pii.email_mask
+    AS (val VARCHAR) RETURNS VARCHAR ->
+    CASE
+        -- DBA and data owners see the real email
+        WHEN CURRENT_ROLE() IN ('SYSADMIN', 'DATA_OWNER_ROLE')
+            THEN val
+        -- Analysts see first letter + masked domain (useful for support)
+        WHEN CURRENT_ROLE() = 'ANALYST_ROLE'
+            THEN LEFT(val, 1) || '***@***.***'
+        -- All other roles see fully masked value
+        ELSE '***MASKED***'
+    END;
+
+-- Step 2: Apply policy to the column (one-time DDL)
+ALTER TABLE staging.customers
+    MODIFY COLUMN email SET MASKING POLICY pii.email_mask;
+
+-- Step 3: Observe different results for different roles
+USE ROLE DATA_OWNER_ROLE;
+SELECT email FROM staging.customers;
+-- Output: john.doe@gmail.com  (real value)
+
+USE ROLE ANALYST_ROLE;
+SELECT email FROM staging.customers;
+-- Output: j***@***.***  (partially masked)
+
+USE ROLE DEVELOPER_ROLE;
+SELECT email FROM staging.customers;
+-- Output: ***MASKED***
+
+-- KEY: the data in Snowflake storage is ALWAYS the real email.
+-- Masking is applied at query time — zero storage of duplicate masked data.</pre>
+
+                <p><strong>4. Row-Level Security (Row Access Policies) — Control WHICH ROWS a user can see</strong></p>
+                <p>Where DDM controls WHAT VALUE is shown in a column, Row-Level Security controls WHICH ROWS are returned at all. A user simply does not see rows they are not permitted to — the rows are filtered out as if they don't exist.</p>
+                <pre>-- Use case: regional sales managers should only see their own region's data
+-- Without RLS: all 10M rows returned to every user — must rely on WHERE clause
+-- With RLS: Snowflake enforces the filter automatically, user can't bypass it
+
+-- Step 1: Create a mapping table (user → allowed region)
+CREATE TABLE access.region_access (
+    user_name VARCHAR,
+    region    VARCHAR
+);
+INSERT INTO access.region_access VALUES
+('analyst_apac',   'APAC'),
+('analyst_emea',   'EMEA'),
+('analyst_us',     'US-EAST'),
+('analyst_us',     'US-WEST');   -- user can see multiple regions
+
+-- Step 2: Create row access policy
+CREATE OR REPLACE ROW ACCESS POLICY security.region_filter
+    AS (region_col VARCHAR) RETURNS BOOLEAN ->
+    -- ADMIN sees all rows
+    CURRENT_ROLE() = 'ADMIN_ROLE'
+    -- Other users see only their allowed regions
+    OR EXISTS (
+        SELECT 1 FROM access.region_access
+        WHERE user_name = CURRENT_USER()
+          AND region    = region_col
+    );
+
+-- Step 3: Apply to table
+ALTER TABLE marts.fact_orders
+    ADD ROW ACCESS POLICY security.region_filter ON (region);
+
+-- Now analyst_apac runs:
+SELECT * FROM marts.fact_orders;
+-- Only returns rows WHERE region = 'APAC' — automatically, silently, enforced</pre>
+
+                <p><strong>Combining DDM + Row-Level Security</strong></p>
+                <pre>-- Most enterprise setups combine both:
+-- Row Access Policy: analyst sees only their region's rows
+-- Masking Policy:    within those rows, email is masked unless they have DBO role
+-- This gives two independent dimensions of access control</pre>
+
+                <p><strong>Comparison Table</strong></p>
+                <table>
+                    <tr><th>Technique</th><th>Where Data is Protected</th><th>Reversible?</th><th>Role-Based?</th><th>Best For</th></tr>
+                    <tr><td>Redaction</td><td>ETL pipeline (data never lands)</td><td>No — original gone</td><td>No</td><td>Dev/test environments, GDPR deletion</td></tr>
+                    <tr><td>Static Masking</td><td>Physical table (fake values stored)</td><td>No — original replaced</td><td>No</td><td>Test DB clones, consistent anonymisation</td></tr>
+                    <tr><td>Dynamic Masking</td><td>Query time (real data stored, masked at read)</td><td>Yes — real data preserved</td><td>Yes (CURRENT_ROLE)</td><td>Production analytics, PII column-level control</td></tr>
+                    <tr><td>Row-Level Security</td><td>Query time (filter on rows)</td><td>Yes — real data preserved</td><td>Yes (CURRENT_USER/ROLE)</td><td>Multi-tenant, regional access control</td></tr>
+                </table>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q80">
+            <div class="question-header">
+                <div class="q-badge">80</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 80 — NoSQL</div>
+                    <div class="question-title">MongoDB Fundamentals — Documents, Collections, Queries, Aggregations &amp; When to Use It</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>MongoDB is a document-oriented NoSQL database that stores data as JSON-like BSON documents. As a data engineer, you encounter MongoDB as a source system — understanding its data model and query language is essential for designing ingestion pipelines.</p>
+
+                <p><strong>Core Concepts — SQL vs MongoDB Terminology</strong></p>
+                <table>
+                    <tr><th>SQL Concept</th><th>MongoDB Equivalent</th><th>Description</th></tr>
+                    <tr><td>Database</td><td>Database</td><td>Same concept</td></tr>
+                    <tr><td>Table</td><td>Collection</td><td>Group of documents</td></tr>
+                    <tr><td>Row</td><td>Document (BSON)</td><td>JSON-like key-value object</td></tr>
+                    <tr><td>Column</td><td>Field</td><td>Key in a document</td></tr>
+                    <tr><td>Primary Key</td><td>_id</td><td>Auto-generated ObjectId or custom</td></tr>
+                    <tr><td>JOIN</td><td>$lookup (aggregation)</td><td>Expensive — denormalise instead</td></tr>
+                    <tr><td>INDEX</td><td>Index</td><td>Same concept, different syntax</td></tr>
+                    <tr><td>SELECT</td><td>find() / aggregate()</td><td>Query documents</td></tr>
+                </table>
+
+                <p><strong>Document Structure — schemaless, nested, flexible</strong></p>
+                <pre>// A MongoDB order document (BSON stored as JSON)
+{
+    "_id": ObjectId("64f2a1b3c4e5f6789a0b1c2d"),
+    "order_id": "ORD-001",
+    "customer": {
+        "id": 1001,
+        "name": "Suryateja",
+        "email": "surya@example.com"
+    },
+    "items": [
+        { "sku": "SHOE-RED", "qty": 2, "price": 49.99 },
+        { "sku": "BAG-BLUE", "qty": 1, "price": 89.00 }
+    ],
+    "status": "DELIVERED",
+    "created_at": ISODate("2024-01-15T10:30:00Z"),
+    "total": 188.98
+}
+// Key insight: nested objects and arrays are first-class — no JOIN needed
+// But this makes querying and flattening for analytics harder</pre>
+
+                <p><strong>Basic CRUD Operations</strong></p>
+                <pre>// INSERT one document
+db.orders.insertOne({
+    order_id: "ORD-002",
+    customer: { id: 1002, name: "Ravi" },
+    status: "PENDING",
+    total: 75.00
+});
+
+// FIND all delivered orders (equivalent to SELECT WHERE)
+db.orders.find({ status: "DELIVERED" });
+
+// FIND with projection (equivalent to SELECT specific columns)
+db.orders.find(
+    { status: "DELIVERED" },     // filter
+    { order_id: 1, total: 1, _id: 0 }  // projection: 1=include, 0=exclude
+);
+
+// Nested field query: find orders where customer.id = 1001
+db.orders.find({ "customer.id": 1001 });
+
+// Array query: find orders containing SKU 'SHOE-RED' in items
+db.orders.find({ "items.sku": "SHOE-RED" });
+
+// UPDATE one document
+db.orders.updateOne(
+    { order_id: "ORD-001" },
+    { $set: { status: "RETURNED" } }
+);
+
+// DELETE documents older than 1 year
+db.orders.deleteMany({
+    created_at: { $lt: new Date("2023-01-01") }
+});
+
+// Common query operators:
+// $eq, $ne, $gt, $gte, $lt, $lte  → comparison
+// $in, $nin                        → value in/not in array
+// $and, $or, $not                  → logical
+// $exists                          → field exists check
+// $regex                           → regex match</pre>
+
+                <p><strong>Aggregation Pipeline — the MongoDB equivalent of GROUP BY + HAVING + JOIN</strong></p>
+                <pre>// Aggregation pipeline: each stage transforms the document stream
+// Equivalent to: SELECT status, COUNT(*), SUM(total) FROM orders GROUP BY status
+
+db.orders.aggregate([
+    // Stage 1: Filter (WHERE)
+    { $match: { status: { $in: ["DELIVERED", "RETURNED"] } } },
+
+    // Stage 2: Unwind array (like LATERAL FLATTEN — one row per item)
+    { $unwind: "$items" },
+
+    // Stage 3: Project computed fields
+    { $project: {
+        order_id: 1,
+        status: 1,
+        sku: "$items.sku",
+        line_total: { $multiply: ["$items.qty", "$items.price"] }
+    }},
+
+    // Stage 4: Group by (GROUP BY + aggregate)
+    { $group: {
+        _id: "$status",
+        order_count: { $sum: 1 },
+        total_revenue: { $sum: "$line_total" },
+        avg_line_value: { $avg: "$line_total" }
+    }},
+
+    // Stage 5: Sort (ORDER BY)
+    { $sort: { total_revenue: -1 } },
+
+    // Stage 6: Limit (LIMIT)
+    { $limit: 10 }
+]);
+
+// $lookup: LEFT JOIN equivalent (use sparingly — expensive)
+db.orders.aggregate([
+    { $lookup: {
+        from: "customers",           // right collection
+        localField: "customer.id",   // field in orders
+        foreignField: "_id",         // field in customers
+        as: "customer_details"       // output array field
+    }},
+    { $unwind: "$customer_details" }  // flatten the joined array
+]);</pre>
+
+                <p><strong>Indexes — critical for query performance</strong></p>
+                <pre>// Without index: MongoDB does a full collection scan (like Snowflake without pruning)
+// Single field index
+db.orders.createIndex({ status: 1 });           // 1 = ascending, -1 = descending
+
+// Compound index (order matters — most selective field first)
+db.orders.createIndex({ status: 1, created_at: -1 });
+
+// Index on nested field
+db.orders.createIndex({ "customer.id": 1 });
+
+// Check which indexes exist
+db.orders.getIndexes();
+
+// Explain query plan (check if index is used)
+db.orders.find({ status: "DELIVERED" }).explain("executionStats");
+// Look for: winningPlan.stage = "IXSCAN" (index scan) vs "COLLSCAN" (full scan)</pre>
+
+                <p><strong>MongoDB as a Data Engineering Source — CDC &amp; Ingestion</strong></p>
+                <pre>// MongoDB Change Streams — native CDC for downstream pipelines
+// Similar to Oracle redo logs or SQL Server transaction logs but for MongoDB
+
+const changeStream = db.orders.watch([
+    { $match: { operationType: { $in: ['insert', 'update', 'delete'] } } }
+]);
+
+changeStream.on('change', (event) => {
+    // event.operationType: 'insert' | 'update' | 'delete' | 'replace'
+    // event.fullDocument: the document after change (for inserts/updates)
+    // event.documentKey._id: the _id of the changed document
+    // event.updateDescription: fields changed + removed (for updates)
+    console.log(event);
+    // Ship to Kafka topic → Snowflake via Kafka Connect
+});
+
+// Tools for MongoDB → Snowflake ingestion:
+// Debezium MongoDB connector → Kafka → Snowflake Kafka Connector
+// Fivetran MongoDB connector (managed, no-code)
+// MongoDB Atlas Data Federation (if using Atlas cloud)</pre>
+
+                <p><strong>When to use MongoDB vs Snowflake</strong></p>
+                <table>
+                    <tr><th>Factor</th><th>Use MongoDB</th><th>Use Snowflake</th></tr>
+                    <tr><td>Data shape</td><td>Flexible, nested, schema evolves often</td><td>Tabular, defined schema</td></tr>
+                    <tr><td>Access pattern</td><td>Operational reads/writes (OLTP)</td><td>Analytical queries (OLAP)</td></tr>
+                    <tr><td>Scale</td><td>High write throughput, low latency</td><td>Large analytical scans</td></tr>
+                    <tr><td>JOINs</td><td>Avoid — denormalise into documents</td><td>Excellent multi-table joins</td></tr>
+                    <tr><td>Aggregations</td><td>Limited, slower than SQL</td><td>Highly optimised</td></tr>
+                    <tr><td>Typical use</td><td>App backend, product catalogue, CMS</td><td>Data warehouse, analytics, BI</td></tr>
+                </table>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q81">
+            <div class="question-header">
+                <div class="q-badge">81</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 81 — Snowflake / JSON</div>
+                    <div class="question-title">JSON Flattening in Snowflake — Complete Guide: PARSE_JSON, Dot Notation, FLATTEN, TRY_CAST</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>JSON flattening is the process of converting nested JSON structures into relational rows and columns. In Snowflake, the <code>VARIANT</code> type stores arbitrary JSON and a family of operators/functions lets you query and flatten it without pre-defining a schema.</p>
+
+                <p><strong>VARIANT — Snowflake's JSON storage type</strong></p>
+                <pre>-- VARIANT stores any valid JSON: object, array, string, number, boolean, null
+CREATE TABLE raw.events (
+    event_id  INT,
+    payload   VARIANT,      -- entire JSON document stored here
+    loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert raw JSON (common during Snowpipe/COPY INTO loads)
+INSERT INTO raw.events (event_id, payload) SELECT
+    SEQ4() AS event_id,
+    PARSE_JSON('{
+        "user_id": 42,
+        "event_type": "purchase",
+        "amount": 149.99,
+        "metadata": {
+            "device": "mobile",
+            "os": "iOS",
+            "version": "17.2"
+        },
+        "tags": ["sale", "premium", "new_user"]
+    }') AS payload;</pre>
+
+                <p><strong>Accessing values — colon (:) path notation + double-colon (::) casting</strong></p>
+                <pre>-- Colon notation navigates into the JSON structure
+SELECT
+    payload:user_id::INT             AS user_id,          -- top-level field
+    payload:event_type::VARCHAR      AS event_type,
+    payload:amount::DECIMAL(10,2)    AS amount,
+    payload:metadata:device::VARCHAR AS device,           -- nested object field
+    payload:metadata:os::VARCHAR     AS os,
+    payload:metadata.version::VARCHAR AS version          -- dot notation also works
+
+    -- Alternative: GET() function (useful for dynamic field names)
+    -- GET(payload, 'user_id')::INT AS user_id_alt,
+
+    -- GET_PATH() for deep nesting
+    -- GET_PATH(payload, 'metadata.os')::VARCHAR AS os_alt
+
+FROM raw.events;
+
+-- Handling missing fields — returns NULL if path doesn't exist
+SELECT payload:nonexistent_field::VARCHAR FROM raw.events;  -- returns NULL, no error</pre>
+
+                <p><strong>TRY_CAST and safe type coercion</strong></p>
+                <pre>-- Problem: source JSON may have type inconsistencies
+-- payload:amount could be "149.99" (string) in some events, 149.99 (number) in others
+
+-- TRY_CAST: returns NULL instead of ERROR on conversion failure
+SELECT
+    TRY_CAST(payload:amount::VARCHAR AS DECIMAL(10,2)) AS amount_safe,
+    TRY_CAST(payload:user_id::VARCHAR AS INT)          AS user_id_safe
+FROM raw.events;
+
+-- TRY_ prefix functions (Snowflake family):
+-- TRY_CAST, TRY_TO_DATE, TRY_TO_TIMESTAMP, TRY_TO_NUMBER, TRY_TO_DECIMAL
+-- All return NULL on failure instead of raising an error
+-- Essential for production ETL where source data quality is variable</pre>
+
+                <p><strong>Flattening arrays — LATERAL FLATTEN (review + examples)</strong></p>
+                <pre>-- Unpack the "tags" array into individual rows
+SELECT
+    payload:user_id::INT    AS user_id,
+    payload:event_type::VARCHAR AS event_type,
+    tag.value::VARCHAR      AS tag,
+    tag.index               AS tag_position
+FROM raw.events,
+LATERAL FLATTEN(input => payload:tags) AS tag;
+
+-- Result:
+-- user_id | event_type | tag      | tag_position
+-- 42      | purchase   | sale     | 0
+-- 42      | purchase   | premium  | 1
+-- 42      | purchase   | new_user | 2</pre>
+
+                <p><strong>Flattening JSON objects — LATERAL FLATTEN on an object</strong></p>
+                <pre>-- Flatten an object into key-value pairs (useful for EAV-style metadata)
+SELECT
+    payload:user_id::INT    AS user_id,
+    meta.key                AS metadata_key,
+    meta.value::VARCHAR     AS metadata_value
+FROM raw.events,
+LATERAL FLATTEN(input => payload:metadata) AS meta;
+
+-- Result:
+-- user_id | metadata_key | metadata_value
+-- 42      | device       | mobile
+-- 42      | os           | iOS
+-- 42      | version      | 17.2</pre>
+
+                <p><strong>RECURSIVE FLATTEN — flatten all levels at once</strong></p>
+                <pre>-- RECURSIVE = TRUE traverses all nesting levels
+-- Useful for exploration — not recommended for production (output can be unpredictable)
+SELECT
+    f.key,
+    f.value,
+    f.path,
+    f.index
+FROM raw.events,
+LATERAL FLATTEN(input => payload, RECURSIVE => TRUE) AS f;
+
+-- Returns every key-value pair at every nesting level
+-- path shows the dot-notation path: e.g., 'metadata.device', 'tags[0]'</pre>
+
+                <p><strong>Complete flattening pipeline — raw VARIANT → relational staging table</strong></p>
+                <pre>-- models/staging/stg_events.sql  (dbt model)
+-- Full pipeline: VARIANT → typed, flat, relational rows
+
+{{ config(materialized='view') }}
+
+WITH flattened_tags AS (
+    SELECT
+        e.event_id,
+        e.payload:user_id::INT              AS user_id,
+        e.payload:event_type::VARCHAR       AS event_type,
+        TRY_CAST(e.payload:amount::VARCHAR AS DECIMAL(10,2)) AS amount,
+        e.payload:metadata:device::VARCHAR  AS device,
+        e.payload:metadata:os::VARCHAR      AS os,
+        TRY_TO_TIMESTAMP(e.payload:timestamp::VARCHAR)       AS event_timestamp,
+        tag.value::VARCHAR                  AS tag,
+        tag.index                           AS tag_position,
+        e.loaded_at
+    FROM {{ source('raw', 'events') }} e,
+    LATERAL FLATTEN(input => e.payload:tags, OUTER => TRUE) AS tag
+    -- OUTER => TRUE: events with empty tags[] still appear (with NULL tag)
+)
+SELECT * FROM flattened_tags
+WHERE user_id IS NOT NULL   -- filter malformed records</pre>
+
+                <p><strong>PARSE_JSON vs OBJECT_CONSTRUCT vs TO_VARIANT</strong></p>
+                <pre>-- PARSE_JSON: converts a JSON string into VARIANT
+SELECT PARSE_JSON('{"key": "value", "num": 42}');
+
+-- OBJECT_CONSTRUCT: build a VARIANT object from key-value pairs
+SELECT OBJECT_CONSTRUCT('user_id', 42, 'event', 'click', 'score', 9.5);
+-- Useful for creating JSON payloads from relational columns
+
+-- ARRAY_CONSTRUCT: build a VARIANT array
+SELECT ARRAY_CONSTRUCT('tag1', 'tag2', 'tag3');
+
+-- Combine them:
+SELECT OBJECT_CONSTRUCT(
+    'user_id', 42,
+    'tags',    ARRAY_CONSTRUCT('sale', 'premium'),
+    'meta',    OBJECT_CONSTRUCT('device', 'mobile', 'os', 'iOS')
+) AS rebuilt_payload;</pre>
+
+                <p><strong>Common JSON flattening mistakes:</strong></p>
+                <ul>
+                    <li><strong>Casting without TRY</strong> — <code>payload:amount::INT</code> will error if amount is "N/A". Always use TRY_CAST for user-provided or third-party JSON</li>
+                    <li><strong>Missing OUTER on FLATTEN</strong> — if any record has an empty array, it silently disappears. Add <code>OUTER => TRUE</code> to preserve parent rows</li>
+                    <li><strong>Forgetting STRIP_OUTER_ARRAY</strong> in file format — if your JSON file is <code>[{...},{...}]</code> (array at root), add <code>STRIP_OUTER_ARRAY = TRUE</code> to your file format or it loads as one row</li>
+                    <li><strong>NULL vs missing field</strong> — <code>payload:field::VARCHAR</code> returns NULL for both a missing field and a JSON null value. Use <code>IS_NULL_VALUE(payload:field)</code> to distinguish</li>
+                </ul>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
+        <div class="question" id="q82">
+            <div class="question-header">
+                <div class="q-badge">82</div>
+                <div class="question-meta">
+                    <div class="question-number">Question 82 — Data Engineering</div>
+                    <div class="question-title">API Data Acquisition — Elements, Authentication, Pagination, Push vs Pull, Error Handling &amp; Steps</div>
+                </div>
+                <div class="question-toggle">▾</div>
+            </div>
+            <div class="answer">
+                <p>Ingesting data from APIs is one of the most common tasks in data engineering — Stripe, Salesforce, HubSpot, GitHub, and hundreds of SaaS tools expose their data via REST APIs. Understanding every layer of API interaction prevents the silent data gaps that plague naive implementations.</p>
+
+                <p><strong>1. Core API Elements</strong></p>
+                <table>
+                    <tr><th>Element</th><th>Description</th><th>Example</th></tr>
+                    <tr><td>Base URL</td><td>Root endpoint of the API</td><td><code>https://api.stripe.com/v1</code></td></tr>
+                    <tr><td>Endpoint</td><td>Specific resource path</td><td><code>/charges</code>, <code>/customers/{id}</code></td></tr>
+                    <tr><td>HTTP Method</td><td>Action on the resource</td><td>GET (read), POST (create), PUT/PATCH (update), DELETE</td></tr>
+                    <tr><td>Headers</td><td>Metadata sent with request</td><td>Authorization, Content-Type, Accept</td></tr>
+                    <tr><td>Query Parameters</td><td>Filter/sort/paginate in URL</td><td><code>?limit=100&amp;created_after=2024-01-01</code></td></tr>
+                    <tr><td>Request Body</td><td>Data sent (POST/PUT)</td><td>JSON payload</td></tr>
+                    <tr><td>Response Body</td><td>Data returned by API</td><td>JSON, XML, CSV</td></tr>
+                    <tr><td>Status Code</td><td>HTTP result code</td><td>200 OK, 201 Created, 400 Bad Request, 401 Unauthorized, 429 Rate Limited, 500 Server Error</td></tr>
+                </table>
+
+                <p><strong>2. Authentication Methods</strong></p>
+                <pre>import requests
+
+# Method 1: API Key in Header (most common for data APIs)
+headers = {
+    "Authorization": "Bearer sk_live_abc123xyz",   # Stripe pattern
+    "Content-Type": "application/json"
+}
+response = requests.get("https://api.stripe.com/v1/charges", headers=headers)
+
+# Method 2: Basic Auth (username:password base64 encoded)
+import base64
+creds = base64.b64encode(b"api_key:").decode()
+headers = {"Authorization": f"Basic {creds}"}
+
+# Method 3: OAuth 2.0 (Salesforce, Google, HubSpot)
+# Step 1: Get access token
+token_response = requests.post("https://login.salesforce.com/services/oauth2/token", data={
+    "grant_type":    "password",
+    "client_id":     CLIENT_ID,
+    "client_secret": CLIENT_SECRET,
+    "username":      SF_USERNAME,
+    "password":      SF_PASSWORD + SF_SECURITY_TOKEN
+})
+access_token = token_response.json()["access_token"]
+instance_url = token_response.json()["instance_url"]
+
+# Step 2: Use access token for API calls
+headers = {"Authorization": f"Bearer {access_token}"}
+records = requests.get(f"{instance_url}/services/data/v58.0/query",
+                       params={"q": "SELECT Id, Name FROM Account"},
+                       headers=headers).json()
+
+# Method 4: API Key in Query Parameter (less secure, some older APIs)
+response = requests.get("https://api.example.com/data?api_key=MY_KEY")</pre>
+
+                <p><strong>3. HTTP Status Codes — what to do with each</strong></p>
+                <pre>STATUS_HANDLING = {
+    200: "Success — process the response body",
+    201: "Created — resource was created (POST)",
+    204: "No Content — success but empty body (DELETE)",
+    400: "Bad Request — your request is malformed, fix the query/body",
+    401: "Unauthorized — invalid/expired credentials, refresh token",
+    403: "Forbidden — valid credentials but insufficient permissions",
+    404: "Not Found — resource doesn't exist (log + skip, don't retry)",
+    429: "Too Many Requests — rate limited, back off and retry",
+    500: "Internal Server Error — API side issue, retry with backoff",
+    502: "Bad Gateway — transient, retry",
+    503: "Service Unavailable — API down, retry with exponential backoff",
+}</pre>
+
+                <p><strong>4. Pagination Strategies</strong></p>
+                <pre>import time
+
+# Strategy 1: Cursor-based pagination (most reliable — Stripe, GitHub)
+# API returns a cursor pointing to next page; immune to data changes mid-fetch
+
+def fetch_all_charges_cursor(base_url, headers):
+    all_records = []
+    params = {"limit": 100}
+    while True:
+        resp = requests.get(base_url + "/charges", headers=headers, params=params).json()
+        all_records.extend(resp["data"])
+        if not resp.get("has_more"):      # Stripe: has_more = False means last page
+            break
+        params["starting_after"] = resp["data"][-1]["id"]  # cursor = last record ID
+    return all_records
+
+# Strategy 2: Offset/Limit pagination (simple, common in REST APIs)
+# WARNING: if records are inserted mid-fetch, you may miss records or get duplicates
+def fetch_all_offset(base_url, headers):
+    all_records, page, limit = [], 0, 100
+    while True:
+        resp = requests.get(base_url + "/orders",
+                            headers=headers,
+                            params={"limit": limit, "offset": page * limit}).json()
+        if not resp["items"]:
+            break
+        all_records.extend(resp["items"])
+        page += 1
+    return all_records
+
+# Strategy 3: Page-number pagination
+def fetch_all_pages(base_url, headers):
+    all_records, page = [], 1
+    while True:
+        resp = requests.get(base_url + "/records",
+                            params={"page": page, "per_page": 100}).json()
+        all_records.extend(resp["results"])
+        if page >= resp["total_pages"]:
+            break
+        page += 1
+    return all_records
+
+# Strategy 4: Link header pagination (GitHub REST API)
+def fetch_all_link_header(url, headers):
+    all_records = []
+    while url:
+        resp = requests.get(url, headers=headers)
+        all_records.extend(resp.json())
+        url = resp.links.get("next", {}).get("url")  # follow next link
+    return all_records</pre>
+
+                <p><strong>5. Push vs Pull — Two Fundamental Acquisition Strategies</strong></p>
+                <pre># PULL (polling) — your pipeline fetches data on a schedule
+# ─────────────────────────────────────────────────────────
+# - You control the frequency
+# - Simple to implement (cron job + API call)
+# - Always a latency gap between real-time and your data
+# - Can hit rate limits if polling too frequently
+# - Example: fetch Stripe charges every 15 minutes
+
+while True:
+    charges = fetch_charges_since(last_watermark)
+    load_to_snowflake(charges)
+    last_watermark = charges[-1]["created"] if charges else last_watermark
+    time.sleep(900)  # 15-minute poll interval
+
+# PUSH (webhooks/streaming) — the API sends data to YOU as it happens
+# ─────────────────────────────────────────────────────────────────────
+# - Real-time (data arrives seconds after the event)
+# - No polling cost
+# - You need a receiver endpoint (REST endpoint or message queue)
+# - Source must support webhooks
+# - Example: Stripe sends a webhook POST to your endpoint on charge.created
+
+# Webhook receiver (Flask example)
+from flask import Flask, request
+import hmac, hashlib
+
+app = Flask(__name__)
+
+@app.route("/stripe-webhook", methods=["POST"])
+def stripe_webhook():
+    payload   = request.get_data()
+    sig_header = request.headers.get("Stripe-Signature")
+    secret    = "whsec_your_secret"
+
+    # Verify webhook authenticity (CRITICAL — never skip this)
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, secret)
+    except stripe.error.SignatureVerificationError:
+        return "Invalid signature", 400
+
+    if event["type"] == "charge.succeeded":
+        charge = event["data"]["object"]
+        load_charge_to_snowflake(charge)
+
+    return "", 200</pre>
+
+                <p><strong>6. Rate Limiting — Handling 429 with Exponential Backoff</strong></p>
+                <pre>import time, random
+
+def api_request_with_retry(url, headers, params=None, max_retries=5):
+    for attempt in range(max_retries):
+        resp = requests.get(url, headers=headers, params=params)
+
+        if resp.status_code == 200:
+            return resp.json()
+
+        elif resp.status_code == 429:
+            # Check Retry-After header (some APIs tell you exactly how long to wait)
+            retry_after = int(resp.headers.get("Retry-After", 60))
+            wait = retry_after + random.uniform(0, 10)  # jitter to avoid thundering herd
+            print(f"Rate limited. Waiting {wait:.1f}s before retry {attempt+1}/{max_retries}")
+            time.sleep(wait)
+
+        elif resp.status_code in (500, 502, 503):
+            # Exponential backoff: 1s, 2s, 4s, 8s, 16s...
+            wait = (2 ** attempt) + random.uniform(0, 1)
+            print(f"Server error {resp.status_code}. Waiting {wait:.1f}s...")
+            time.sleep(wait)
+
+        elif resp.status_code in (400, 401, 403, 404):
+            # Non-retryable errors: fix the request or skip
+            raise ValueError(f"Non-retryable error: {resp.status_code} {resp.text}")
+
+    raise RuntimeError(f"Max retries exceeded for {url}")</pre>
+
+                <p><strong>7. Complete API Ingestion Pipeline — Steps</strong></p>
+                <pre># STEP 1: Authentication setup
+# - Obtain API key / OAuth token / service account
+# - Store credentials in secrets manager (AWS Secrets Manager, not hardcoded)
+# - Set up credential rotation if tokens expire
+
+# STEP 2: Watermarking / Incremental state management
+# - Store last successful extraction timestamp in a control table
+# - Use this to fetch ONLY new/changed data (avoid re-fetching everything)
+last_run = get_last_run_timestamp('stripe_charges')   # from control table
+
+# STEP 3: Fetch data with pagination and rate limiting
+all_data = []
+for page_data in paginate_api(endpoint, since=last_run):
+    all_data.extend(page_data)
+    time.sleep(0.1)  # respect rate limits proactively
+
+# STEP 4: Validate and transform
+for record in all_data:
+    assert 'id' in record, f"Missing id: {record}"
+    record['_ingested_at'] = datetime.utcnow().isoformat()
+
+# STEP 5: Load to Snowflake (land raw, then transform)
+# Land as VARIANT to handle schema evolution
+write_to_snowflake_stage(all_data, stage_path)
+execute_snowflake_copy_into(target_table)
+
+# STEP 6: Update watermark (only after successful load)
+update_last_run_timestamp('stripe_charges', max(r['created'] for r in all_data))
+
+# STEP 7: Monitor and alert
+# - Log row counts, API response times, error rates
+# - Alert on: zero rows (potential API issue), high error rate, stale watermark</pre>
+
+                <p><strong>Summary — Pull vs Push trade-offs</strong></p>
+                <table>
+                    <tr><th>Dimension</th><th>Pull (Polling)</th><th>Push (Webhooks/Streaming)</th></tr>
+                    <tr><td>Latency</td><td>Poll interval (minutes–hours)</td><td>Near real-time (seconds)</td></tr>
+                    <tr><td>Complexity</td><td>Low (schedule + GET)</td><td>High (receiver + queue + dedup)</td></tr>
+                    <tr><td>Reliability</td><td>You control retries</td><td>Must ACK or webhook resends</td></tr>
+                    <tr><td>Volume handling</td><td>Batch — good for large historical loads</td><td>Event-by-event — good for low-latency</td></tr>
+                    <tr><td>Rate limits</td><td>Must manage carefully</td><td>Not applicable (API pushes to you)</td></tr>
+                    <tr><td>Best for</td><td>Historical backfill, less critical freshness</td><td>Payment events, real-time triggers, notifications</td></tr>
+                </table>
+                <a href="#main-content" class="back-to-toc">↑ Back to top</a>
+            </div>
+        </div>
+
         </main>
     </div>
 
     <!-- SCROLL TO TOP -->
     <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ── SIDEBAR ACTIVE LINK ──
         const sections = document.querySelectorAll('.question[id]');
         const sidebarLinks = document.querySelectorAll('.sidebar-item[data-q]');
@@ -8023,8 +10181,13 @@ Business decisions (the whole point)</pre>
             if (isMobile) {
                 const sb = document.getElementById('sidebar');
                 const ov = document.getElementById('overlay');
+                const isOpen = !sb.classList.contains('open');
+                
                 sb.classList.toggle('open');
                 ov.classList.toggle('visible');
+                
+                // Prevent body scroll when sidebar/overlay is open
+                document.body.classList.toggle('sidebar-overlay-visible', isOpen);
             } else {
                 document.body.classList.toggle('sidebar-collapsed');
                 localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed'));
@@ -8037,6 +10200,33 @@ Business decisions (the whole point)</pre>
                 document.body.classList.add('sidebar-collapsed');
             }
         })();
+
+        // ── ADD TOOLTIPS TO SIDEBAR ITEMS ──
+        (function() {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                const qNum = item.querySelector('.q-num') ? item.querySelector('.q-num').textContent : '';
+                const text = item.textContent.replace(qNum, '').trim();
+                if (text) {
+                    item.setAttribute('title', `${qNum} - ${text}`);
+                }
+            });
+        })();
+
+        // ── AUTO-CLOSE SIDEBAR ON MOBILE WHEN CLICKING LINK ──
+        document.querySelectorAll('.sidebar-item').forEach(link => {
+            link.addEventListener('click', () => {
+                const isMobile = window.innerWidth <= 900;
+                if (isMobile) {
+                    const sb = document.getElementById('sidebar');
+                    const ov = document.getElementById('overlay');
+                    if (sb.classList.contains('open')) {
+                        sb.classList.remove('open');
+                        ov.classList.remove('visible');
+                        document.body.classList.remove('sidebar-overlay-visible');
+                    }
+                }
+            });
+        });
 
         // ── QUESTION COLLAPSE ──
         document.querySelectorAll('.question-header').forEach(header => {
@@ -8105,7 +10295,208 @@ Business decisions (the whole point)</pre>
             if (heroLabel) heroLabel.textContent = '0 / ' + totalQ + ' viewed';
         })();
 
-        // ── THEME TOGGLE ──
+        // ── SEARCH FUNCTIONALITY ──
+        (function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            let allQuestions = [];
+
+            // Build questions index
+            function buildIndex() {
+                allQuestions = [];
+                document.querySelectorAll('.question').forEach((q, idx) => {
+                    const qNum = idx + 1;
+                    const title = q.querySelector('.question-title')?.textContent || '';
+                    const difficulty = q.dataset.difficulty || 'mid';
+                    allQuestions.push({ id: q.id, num: qNum.toString().padStart(2, '0'), title, difficulty });
+                });
+            }
+
+            searchInput?.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                if (query.length < 2) {
+                    searchResults.classList.remove('visible');
+                    return;
+                }
+                const results = allQuestions.filter(q => q.title.toLowerCase().includes(query) || q.title.toLowerCase().includes(query));
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="search-result-item no-results">No questions found</div>';
+                } else {
+                    searchResults.innerHTML = results.map(r => 
+                        `<div class="search-result-item" onclick="document.getElementById('${r.id}').scrollIntoView({behavior:'smooth'}); document.getElementById('searchResults').classList.remove('visible');">
+                            <span class="result-badge">Q${r.num}</span>
+                            <span class="result-title">${r.title}</span>
+                        </div>`
+                    ).join('');
+                }
+                searchResults.classList.add('visible');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-box')) {
+                    searchResults.classList.remove('visible');
+                }
+            });
+
+            buildIndex();
+        })();
+
+
+        // ── DIFFICULTY MAPPING (Q1-Q82) ──
+        (function() {
+            const difficultyMap = {
+                // Q1-Q20: Snowflake Core
+                1: 'medium',  // Compute hours - requires LAG & window functions
+                2: 'easy',    // Architecture - conceptual overview
+                3: 'medium',  // Time Travel - mechanical but important
+                4: 'hard',    // Performance optimization - strategic thinking
+                5: 'easy',    // Micro-partitions - conceptual
+                6: 'medium',  // SCD Types - implementation knowledge
+                7: 'medium',  // JSON ingestion - process steps
+                8: 'easy',    // Load 50GB file - straightforward
+                9: 'easy',    // Stages - basic concept
+                10: 'medium', // Scheduling - configuration knowledge
+                11: 'medium', // Stored procedures - programming concept
+                12: 'medium', // UDFs - advanced functions
+                13: 'easy',   // Git basics - soft skill
+                14: 'medium', // QUALIFY clause - SQL syntax
+                15: 'easy',   // Benefits - product knowledge
+                16: 'medium', // CDC concepts - architectural
+                17: 'easy',   // Python Lists/Tuples - language basics
+                18: 'easy',   // File formats - conceptual comparison
+                19: 'medium', // CTE vs Temp Tables - design decision
+                20: 'easy',   // Table types - Snowflake specifics
+
+                // Q21-Q40: CDC & dbt Basics
+                21: 'medium', // Schema changes - handling strategy
+                22: 'easy',   // Ephemeral vs Permanent dbt - dbt concept
+                23: 'medium', // CDC implementation - technical deep dive
+                24: 'medium', // dbt overview - foundational
+                25: 'medium', // Continuous vs batch - architectural choice
+                26: 'hard',   // End-to-end pipeline design - system design
+                27: 'medium', // CDC vs full loads - practical use case
+                28: 'hard',   // Snowflake Tasks troubleshooting - debugging
+                29: 'easy',   // Zero Copy Clone - feature overview
+                30: 'medium', // Timezone conversion - technical detail
+                31: 'medium', // Clustering keys - optimization
+                32: 'hard',   // Monitoring performance - observability
+                33: 'medium', // Ataccama vs Collibra - tool comparison
+                34: 'medium', // Snowpipe - ingestion concept
+                35: 'medium', // Window functions - SQL pattern
+                36: 'easy',   // Swap gender - simple SQL
+                37: 'medium', // dbt project structure - best practices
+                38: 'medium', // MERGE vs UPSERT - SQL patterns
+                39: 'medium', // Data masking - security feature
+                40: 'easy',   // Hashing vs Encryption - concepts
+
+                // Q41-Q52: Advanced SQL & Data Structures
+                41: 'medium', // S3 storage integration - configuration
+                42: 'hard',   // dbt Models/Tests - foundational dbt
+                43: 'hard',   // dbt Incremental strategies - advanced patterns
+                44: 'medium', // dbt dependencies (ref) - dbt mechanics
+                45: 'hard',   // Jinja templating - advanced dbt
+                46: 'medium', // Data governance - soft/best practices
+                47: 'hard',   // Data quality testing - framework design
+                48: 'hard',   // Modern data stack - architectural
+                49: 'medium', // Future trends - discussion
+                50: 'hard',   // dbt Snapshots (SCD Type 2) - complex pattern
+                51: 'hard',   // Schema drift - detection & handling
+                52: 'hard',   // Late-arriving data - complex patterns
+
+                // Q53-Q68: dbt & Governance
+                53: 'hard',   // dbt Models/Tests deep dive - expert level
+                54: 'hard',   // dbt Incremental merge/append - expert patterns
+                55: 'hard',   // dbt dependencies & ref - advanced
+                56: 'hard',   // Jinja & macros - advanced automation
+                57: 'medium', // RBAC & security - policy concepts
+                58: 'hard',   // AWS + Snowflake integration - infradev
+                59: 'hard',   // dbt CI/CD - DevOps patterns
+                60: 'hard',   // Governance & Collibra - enterprise features
+                61: 'hard',   // Data quality frameworks - comprehensive
+                62: 'hard',   // Monitoring & anomaly detection - advanced
+                63: 'hard',   // Dimensional modelling - data architecture
+                64: 'hard',   // Star schema design - data modelling
+                65: 'hard',   // dbt Artifacts & lineage - advanced
+                66: 'hard',   // Cost optimization - Snowflake tuning
+                67: 'hard',   // Scaling challenges - growth scenarios
+                68: 'hard',   // Multi-cloud strategy - enterprise
+
+                // Q69-Q82: System Design & Architecture
+                69: 'hard',   // CDC pipeline design (Oracle → Snowflake) - system design
+                70: 'hard',   // Scalable ELT platform (5M+ records) - platform design
+                71: 'hard',   // Streams & Tasks automation - event-driven patterns
+                72: 'hard',   // Dimensional modelling at scale - data architecture
+                73: 'hard',   // AWS + Snowflake enterprise - infrastructure
+                74: 'hard',   // dbt Cloud enterprise - large-scale governance
+                75: 'hard',   // Maximum streak (window functions) - algorithmic
+                76: 'medium', // LIKE/ILIKE/REGEXP - SQL patterns
+                77: 'hard',   // Performance tuning (clustering, pruning) - optimization
+                78: 'hard',   // Data quality 4-layer framework - comprehensive design
+                79: 'hard',   // Redshift to Snowflake migration - platform transition
+                80: 'hard',   // Lakehouse architecture - modern patterns
+                81: 'hard',   // Real-time CDC architecture - streaming design
+                82: 'hard'    // Multi-source federation - complex integration
+            };
+
+            document.querySelectorAll('.question').forEach((q, idx) => {
+                const qNum = idx + 1;
+                const difficulty = difficultyMap[qNum] || 'medium';
+                q.dataset.difficulty = difficulty;
+
+                // Add difficulty badge to question header
+                const questionMeta = q.querySelector('.question-meta');
+                if (questionMeta && !questionMeta.querySelector('.difficulty-badge')) {
+                    const badge = document.createElement('div');
+                    badge.className = `difficulty-badge ${difficulty}`;
+                    badge.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+                    questionMeta.insertBefore(badge, questionMeta.firstChild);
+                }
+            });
+        })();
+
+        // ── DIFFICULTY FILTER ──
+        let currentFilter = 'all';
+        function filterByDifficulty(difficulty) {
+            currentFilter = difficulty;
+            
+            // Update button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === difficulty);
+            });
+
+            // Filter questions
+            document.querySelectorAll('.question').forEach(q => {
+                if (difficulty === 'all') {
+                    q.style.display = '';
+                } else {
+                    q.style.display = q.dataset.difficulty === difficulty ? '' : 'none';
+                }
+            });
+
+            // Update sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                const qId = item.dataset.q;
+                const question = document.getElementById(qId);
+                if (question) {
+                    if (difficulty === 'all') {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = question.dataset.difficulty === difficulty ? '' : 'none';
+                    }
+                }
+            });
+
+            // Scroll to first visible question
+            const firstVisible = document.querySelector('.question[style=""]');
+            if (firstVisible) {
+                firstVisible.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Apply filter when difficulty data is set
+        window.addEventListener('load', () => {
+            // Initial check, filter is already "all"
+        });
         function toggleTheme() {
             const isLight = document.documentElement.classList.toggle('light');
             document.getElementById('themeLabel').textContent = isLight ? 'LIGHT' : 'DARK';
@@ -8372,8 +10763,15 @@ Business decisions (the whole point)</pre>
 
         // ── CONTENT PROTECTION ──────────────────────────────────────────────
         (function() {
+            // Display email in offline block
+            const emailDisplay = document.getElementById('email-display');
+            if (emailDisplay) {
+                emailDisplay.textContent = 'vsurya@duck.com';
+            }
 
             // 1. Block if opened as local file (file:// or blob://)
+            // TEMPORARILY DISABLED FOR LOCAL TESTING
+            /*
             const proto = location.protocol;
             if (proto === 'file:' || proto === 'blob:') {
                 document.getElementById('offline-block').classList.add('visible');
@@ -8382,6 +10780,7 @@ Business decisions (the whole point)</pre>
                 document.querySelector('.attr-bar') && (document.querySelector('.attr-bar').style.display = 'none');
                 return;
             }
+            */
 
             // 2. Block right-click context menu
             document.addEventListener('contextmenu', e => e.preventDefault());
@@ -8389,6 +10788,10 @@ Business decisions (the whole point)</pre>
             // 3. Block keyboard shortcuts
             document.addEventListener('keydown', function(e) {
                 const k = e.key.toLowerCase();
+                // Ctrl/Cmd + C, X, V (copy, cut, paste)
+                if ((e.ctrlKey || e.metaKey) && ['c','x','v'].includes(k)) {
+                    e.preventDefault(); return false;
+                }
                 // Ctrl/Cmd + S, U, P
                 if ((e.ctrlKey || e.metaKey) && ['s','u','p'].includes(k)) {
                     e.preventDefault(); return false;
@@ -8401,21 +10804,19 @@ Business decisions (the whole point)</pre>
                 }
             });
 
-            // 4. Watermark every <pre> block
-            function watermark() {
-                document.querySelectorAll('pre:not([data-wm])').forEach(pre => {
-                    pre.dataset.wm = '1';
-                    const wm = document.createElement('span');
-                    wm.className = 'pre-watermark';
-                    wm.textContent = '© vsurya@duck.com';
-                    pre.style.position = 'relative';
-                    pre.appendChild(wm);
-                });
-            }
-            // Run now and after any future DOM additions
-            watermark();
-            new MutationObserver(watermark).observe(document.body, { childList: true, subtree: true });
+            // 4. Disable text selection and drag
+            document.addEventListener('selectstart', e => e.preventDefault());
+            document.body.style.userSelect = 'none';
+            document.body.style.webkitUserSelect = 'none';
+            document.body.style.msUserSelect = 'none';
+            document.body.style.mozUserSelect = 'none';
 
+            // 5. Block copy events
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('cut', e => e.preventDefault());
+
+            // 6. Watermark every <pre> block (DISABLED)
+            // Watermark functionality has been removed per user request
         })();
     </script>
 </body>

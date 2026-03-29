@@ -13,99 +13,44 @@ https://surya7131.github.io/data_engineering_tips/
 
 ---
 
-## 📌 What This Guide Covers (62 Questions)
+## 📌 What This Guide Covers (82 Questions)
 
-### ❄️ Snowflake Core (Q1 – Q15)
-| # | Topic |
-|---|-------|
-| 1 | Write a query to calculate compute hours consumed |
-| 2 | Snowflake three-layer architecture (Storage, Compute, Cloud Services) |
-| 3 | Time Travel: OFFSET, TIMESTAMP, STATEMENT modes |
-| 4 | Query performance optimisation strategy |
-| 5 | Micro-partitions vs traditional partitions |
-| 6 | SCD Types 0–4 with real-world change handling |
-| 7 | JSON ingestion: 6-step process |
-| 8 | Loading a 50GB file into Snowflake |
-| 9 | Internal vs External Stages |
-| 10 | Scheduling data pipelines |
-| 11 | Stored Procedures fundamentals |
-| 12 | User Defined Functions (UDFs) |
-| 13 | Git fundamentals for data teams |
-| 14 | QUALIFY clause |
-| 15 | Key benefits of Snowflake |
+### ❄️ Snowflake Core & Performance (Q1 – Q20)
+- Compute hours, architecture, Time Travel, performance optimisation
+- Micro-partitions, SCD implementation, JSON ingestion, file loading
+- Stages, pipeline scheduling, stored procedures, UDFs, Git basics, QUALIFY
 
-### 🔄 CDC & Ingestion (Q16 – Q27)
-| # | Topic |
-|---|-------|
-| 16 | CDC: concept & mechanisms (timestamp, log-based, trigger-based) |
-| 17 | Python: Lists vs Tuples |
-| 18 | File formats: AVRO, Parquet, ORC comparison |
-| 19 | CTE vs Temporary Tables |
-| 20 | Snowflake table types (permanent, transient, temporary) |
-| 21 | Handling schema changes in downstream systems |
-| 22 | Ephemeral vs Permanent tables in dbt |
-| 23 | Implementing CDC in Snowflake (without tools) |
-| 24 | dbt overview & core concepts |
-| 25 | Continuous data loading vs batch |
-| 26 | End-to-end pipeline design |
-| 27 | CDC vs full loads — real use case |
+### 🔄 CDC, Data Ingestion & dbt Fundamentals (Q21 – Q40)
+- CDC concepts & mechanisms (timestamp, log-based, trigger-based)
+- File formats (AVRO, Parquet, ORC), CTEs, table types, schema evolution
+- dbt overview, ephemeral vs permanent models, incremental patterns
+- Python fundamentals, data loading strategies, pipeline design
 
-### 🧠 SQL & Advanced Concepts (Q28 – Q36)
-| # | Topic |
-|---|-------|
-| 28 | Snowflake Tasks: troubleshooting & optimisation |
-| 29 | Zero Copy Clone: instant data copies |
-| 30 | Timezone conversion (CONVERT_TIMEZONE, AT TIME ZONE) |
-| 31 | Clustering keys & automatic pruning |
-| 32 | Monitoring Snowflake performance (Query History, Metering) |
-| 33 | Ataccama vs Collibra: governance tool comparison |
-| 34 | Snowpipe: continuous data ingestion |
-| 35 | Window functions: RANK, DENSE_RANK, ROW_NUMBER, LAG, LEAD |
-| 36 | Swap gender values query |
+### 🧠 Advanced SQL & Data Structures (Q41 – Q52)
+- Window functions, timezone conversion, clustering keys, query optimization
+- Zero-copy clones, task automation, Snowpipe, data masking policies
+- Hashing vs encryption, storage integration, schema drift handling
+- Late-arriving data patterns, quality frameworks
 
-### 🛠️ dbt Fundamentals (Q37 – Q50)
-| # | Topic |
-|---|-------|
-| 37 | dbt project structure & best practices |
-| 38 | MERGE vs UPSERT explained |
-| 39 | Data masking & masking policies |
-| 40 | Hashing vs Encryption |
-| 41 | Snowflake S3 storage integration |
-| 42 | **dbt Models, Tests, Seeds & Custom Tests — deep dive** |
-| 43 | **dbt Incremental strategies: merge, append, delete+insert & Snapshots** |
-| 44 | Managing dbt dependencies with ref() |
-| 45 | Jinja templating in dbt |
-| 46 | Data governance best practices |
-| 47 | Data quality testing strategies |
-| 48 | Building a modern data stack |
-| 49 | Future trends in data engineering |
-| 50 | dbt Snapshots: implementing SCD Type 2 |
+### 🛠️ dbt Mastery & Governance (Q53 – Q68)
+- **dbt Models, Tests, Seeds & Custom Tests — deep dive**
+- **dbt Incremental strategies: merge, append, delete+insert, Snapshots**
+- dbt dependencies (ref/source), macros, Jinja templating, CI/CD, state comparison
+- Data governance, RBAC, column-level security, Ataccama vs Collibra
+- Data quality testing, modern data stack best practices
 
-### 🧩 Data Quality & Resilience (Q51 – Q52)
-| # | Topic |
-|---|-------|
-| 51 | Schema drift: detection, handling & real-world strategies |
-| 52 | Late-arriving data: patterns, detection & correction strategies |
-
-### 🏗️ Architect & System Design (Q53 – Q62)
-| # | Topic |
-|---|-------|
-| 53 | **System Design: Real-time CDC pipeline — Oracle/SQL Server → Qlik Replicate → Snowflake** |
-| 54 | **System Design: Scalable ELT platform for 5M+ records/day on Snowflake + dbt Cloud** |
-| 55 | Snowflake Streams & Tasks: event-driven pipeline automation |
-| 56 | dbt Macros, Jinja & Exposures — reusable patterns at scale |
-| 57 | Dimensional modelling: Star schema, surrogate keys, conformed dims & Bus Matrix |
-| 58 | AWS + Snowflake integration: S3 Stages, IAM, Snowpipe & event-driven ingestion |
-| 59 | dbt CI/CD with Slim CI, state comparison & Git-based deployment |
-| 60 | Snowflake performance tuning: clustering, query pruning, caching & profiling |
-| 61 | Data quality framework design: 4-layer defence, freshness, anomaly detection |
-| 62 | **Senior Architect: Multi-source Lakehouse — Redshift-to-Snowflake migration** |
+### 🏗️ System Design & Architecture (Q69 – Q82)
+- **CDC pipeline: Oracle/SQL Server → Qlik Replicate → Snowflake**
+- **Scalable ELT platform: 5M+ records/day on Snowflake + dbt Cloud**
+- Snowflake Streams & Tasks, event-driven automation, dimensional modelling
+- AWS + Snowflake integration (S3, IAM, Snowpipe), dbt exposures
+- Performance tuning, multi-source lakehouse, Redshift-to-Snowflake migration
 
 ---
 
 ## 🧭 Key Features
 
-- ✅ **62 comprehensive questions** — entry-level through senior architect
+- ✅ **82 comprehensive questions** — entry-level through senior architect
 - ✅ **Real-world scenarios** grounded in production data engineering experience
 - ✅ Working SQL, dbt config, and architecture diagrams in every answer
 - ✅ Collapsible questions — expand only what you need
@@ -157,12 +102,13 @@ data_engineering_tips/
 ## 🚀 How to Use This Guide
 
 | Goal | Approach |
-|------|---------|
+|------|----------|
 | Interview prep | Read topic sections top-to-bottom; use sidebar to navigate |
 | Quick revision | Jump directly via sidebar links; questions collapse to headers |
-| System design practice | Focus on Q53–Q62 (architect section) |
-| dbt deep-dive | Q42–Q45, Q56, Q59 cover macros, CI/CD, incremental patterns |
-| Snowflake performance | Q4, Q31, Q60 cover optimisation in depth |
+| System design practice | Focus on Q69–Q82 (architect section) |
+| dbt deep-dive | Q53–Q59, Q65 cover models, incremental, macros, CI/CD patterns |
+| Snowflake performance | Q4, Q18, Q27, Q66 cover optimisation in depth |
+| CDC mastery | Q21–Q24 intro + Q69–Q70 real-world architectures |
 | Share with recruiter | Single URL — everything is self-contained |
 
 ---
@@ -175,9 +121,11 @@ data_engineering_tips/
 
 ---
 
+---
+
 ## 🧩 Future Enhancements
 
-- 🔍 Full-text search across all 62 questions
+- 🔍 Full-text search across all 82 questions
 - 🏷️ Difficulty badges (Junior / Mid / Senior / Architect)
 - 📄 PDF export for offline revision
 - 🎯 Topic filter (show only dbt questions, only Snowflake questions, etc.)
