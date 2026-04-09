@@ -1426,14 +1426,12 @@
         }
 
         /* ── CONTENT PROTECTION ── */
-        /* Block text selection on answer content */
+        /* Content protection rules removed */
         .answer, .answer p, .answer li, .answer td, .answer th, pre {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
+            /* user-select rules removed */
         }
         /* Disable all text selection (content protection) */
-        code { -webkit-user-select: none; user-select: none; }
+        code { /* user-select rules removed */ }
 
         /* Subtle watermark on each code block */
         .pre-watermark {
@@ -1444,8 +1442,6 @@
             color: var(--text3);
             opacity: 0.3;
             pointer-events: none;
-            user-select: none;
-            -webkit-user-select: none;
             letter-spacing: 0.04em;
         }
 
@@ -11004,38 +11000,20 @@ update_last_run_timestamp('stripe_charges', max(r['created'] for r in all_data))
             }
             */
 
-            // 2. Block right-click context menu
-            document.addEventListener('contextmenu', e => e.preventDefault());
+            // 2. Content protection rules removed
+            // document.addEventListener('contextmenu', e => e.preventDefault());
 
-            // 3. Block keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                const k = e.key.toLowerCase();
-                // Ctrl/Cmd + C, X, V (copy, cut, paste)
-                if ((e.ctrlKey || e.metaKey) && ['c','x','v'].includes(k)) {
-                    e.preventDefault(); return false;
-                }
-                // Ctrl/Cmd + S, U, P
-                if ((e.ctrlKey || e.metaKey) && ['s','u','p'].includes(k)) {
-                    e.preventDefault(); return false;
-                }
-                // F12
-                if (e.key === 'F12') { e.preventDefault(); return false; }
-                // Ctrl+Shift+I / J / C  (devtools)
-                if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i','j','c'].includes(k)) {
-                    e.preventDefault(); return false;
-                }
-            });
+            // 3. Keyboard shortcut blocking removed
+            // document.addEventListener('keydown', function(e) { ... });
 
-            // 4. Disable text selection and drag
-            document.addEventListener('selectstart', e => e.preventDefault());
-            document.body.style.userSelect = 'none';
-            document.body.style.webkitUserSelect = 'none';
-            document.body.style.msUserSelect = 'none';
-            document.body.style.mozUserSelect = 'none';
+            // 4. Text selection prevention removed
+            // document.addEventListener('selectstart', e => e.preventDefault());
+            // document.body.style.userSelect = 'none';
+            // ...
 
-            // 5. Block copy events
-            document.addEventListener('copy', e => e.preventDefault());
-            document.addEventListener('cut', e => e.preventDefault());
+            // 5. Copy/cut event blocking removed
+            // document.addEventListener('copy', e => e.preventDefault());
+            // document.addEventListener('cut', e => e.preventDefault());
 
             // 6. Watermark every <pre> block (DISABLED)
             // Watermark functionality has been removed per user request
